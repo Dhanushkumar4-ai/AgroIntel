@@ -127,11 +127,11 @@ def make_decision(
     # 3. Seasonality Context
     if crop_title in ["Wheat", "Potato"]:
         reasons.append(
-            f"{crop_title} pricing reflects Rabi harvest season market patterns based on 6-year history."
+            f"{crop_title} pricing reflects Winter Season harvest market patterns based on 6-year history."
         )
     elif crop_title in ["Rice", "Maize"]:
         reasons.append(
-            f"{crop_title} pricing reflects Kharif monsoon crop arrival cycles based on 6-year history."
+            f"{crop_title} pricing reflects Rainy Season crop arrival cycles based on 6-year history."
         )
     else:
         reasons.append(

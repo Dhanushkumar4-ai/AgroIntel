@@ -108,7 +108,9 @@ def get_combined_advisory(request: AdvisoryRequest):
     # 5. Combined Summary (Farmer-Oriented)
     rec_top1 = recs[0] if recs else {}
     expl = rec_top1.get("nlp_explanation", {})
-    why_text = expl.get("why_recommended") or f"{top_crop_name} is recommended for {canon_district} ({request.season} season)."
+    season_friendly_map = {"kharif": "Rainy Season", "rabi": "Winter Season", "zaid": "Summer Season", "summer": "Summer Season", "whole year": "Whole Year"}
+    friendly_season_label = season_friendly_map.get(str(request.season).lower(), request.season)
+    why_text = expl.get("why_recommended") or f"{top_crop_name} is recommended for the {friendly_season_label} in {canon_district}."
 
     if pred_p and curr_p:
         change_pct = round(((pred_p - curr_p) / curr_p) * 100.0, 1)
@@ -118,7 +120,7 @@ def get_combined_advisory(request: AdvisoryRequest):
     else:
         price_summary = f"Market data monitored for regional mandis in {canon_state}."
 
-    combined_summary = f"Recommended crop for {canon_district}, {canon_state} ({request.season}): {top_crop_name}. {price_summary}"
+    combined_summary = f"Recommended crop for {canon_district}, {canon_state} ({friendly_season_label}): {top_crop_name}. {price_summary}"
 
     t_end = time.perf_counter()
     latency_ms = round((t_end - t_start) * 1000.0, 2)

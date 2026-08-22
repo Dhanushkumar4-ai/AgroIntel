@@ -239,12 +239,37 @@ async function submitCropRec(event) {
     }
 }
 
+// ─── Season Display Mapping & Sanitization ──────────────────────────────────
+const SEASON_DISPLAY_MAP = {
+    "Kharif": "Rainy Season",
+    "Rabi": "Winter Season",
+    "Zaid": "Summer Season",
+    "Summer": "Summer Season",
+    "Rainy": "Rainy Season",
+    "Winter": "Winter Season",
+    "Whole Year": "Whole Year / Perennial"
+};
+
+function formatSeasonLabel(season) {
+    if (!season) return "";
+    return SEASON_DISPLAY_MAP[season] || season;
+}
+
+function sanitizeSeasonText(text) {
+    if (!text || typeof text !== 'string') return text;
+    return text
+        .replace(/\bKharif\b/gi, "Rainy Season")
+        .replace(/\bRabi\b/gi, "Winter Season")
+        .replace(/\bZaid\b/gi, "Summer Season");
+}
+
 function renderRecResults(data) {
     const loc  = data.location || {};
     const recs = (data.recommendations || []).slice(0, 5);
+    const displaySeason = formatSeasonLabel(data.season);
 
     if (recs.length === 0) {
-        const msg = data.message || "No suitable candidate crops found.";
+        const msg = sanitizeSeasonText(data.message || "No suitable candidate crops found.");
         document.getElementById("recResults").innerHTML = `
             <div class="placeholder-card glass-card">
                 <span class="material-symbols-rounded ph-icon-sym">grass</span>
@@ -257,9 +282,6 @@ function renderRecResults(data) {
 
     const rankColors = ["first-rank", "second-rank", "third-rank", "", ""];
 
-    // NOTE: rec.nlp_explanation fields (why_recommended, current_situation, considerations)
-    // are intentionally not rendered in the farmer UI.  They remain in the API response
-    // and are available for audit / debugging at /api/phase6/recommend.
     const recHtml = recs.map((rec, i) => {
         const info = rec.crop_information || {};
         return `
@@ -269,7 +291,7 @@ function renderRecResults(data) {
                 <span class="rec-rank" style="flex-shrink:0;font-size:1.1rem;font-weight:800;color:#a3e635;background:rgba(163,230,53,0.12);border:1px solid rgba(163,230,53,0.3);padding:4px 12px;border-radius:20px">#${rec.rank || i + 1}</span>
                 <div>
                     <h3 class="rec-crop-name" style="margin:0;font-size:1.4rem">${rec.crop}</h3>
-                    <div style="font-size:0.8rem;opacity:0.75;margin-top:2px">Recommended for ${data.season || ''} season in ${loc.district || ''}, ${loc.state || ''}</div>
+                    <div style="font-size:0.8rem;opacity:0.75;margin-top:2px">Recommended for ${displaySeason} in ${loc.district || ''}, ${loc.state || ''}</div>
                 </div>
             </div>
 
@@ -279,10 +301,10 @@ function renderRecResults(data) {
                     <span class="material-symbols-rounded" style="font-size:1.1rem;color:#a3e635">grass</span> ABOUT ${rec.crop.toUpperCase()}
                 </h4>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.82rem;line-height:1.45">
-                    <div><strong style="color:#a3e635">Why grown:</strong> <span style="opacity:0.9">${info.why_grown || 'Cultivated for farm revenue and local food demand.'}</span></div>
-                    <div><strong style="color:#38bdf8">Common uses:</strong> <span style="opacity:0.9">${info.common_uses || 'Food grain, pulse, or agricultural produce.'}</span></div>
-                    <div><strong style="color:#fbbf24">Season:</strong> <span style="opacity:0.9">${info.season || 'Standard regional season.'}</span></div>
-                    <div><strong style="color:#c084fc">Soil &amp; Climate:</strong> <span style="opacity:0.9">${info.soil || 'Well-drained soil.'} ${info.climate || ''}</span></div>
+                    <div><strong style="color:#a3e635">Why grown:</strong> <span style="opacity:0.9">${sanitizeSeasonText(info.why_grown || 'Cultivated for farm revenue and local food demand.')}</span></div>
+                    <div><strong style="color:#38bdf8">Common uses:</strong> <span style="opacity:0.9">${sanitizeSeasonText(info.common_uses || 'Food grain, pulse, or agricultural produce.')}</span></div>
+                    <div><strong style="color:#fbbf24">Season:</strong> <span style="opacity:0.9">${sanitizeSeasonText(info.season || displaySeason || 'Standard regional season.')}</span></div>
+                    <div><strong style="color:#c084fc">Soil &amp; Climate:</strong> <span style="opacity:0.9">${sanitizeSeasonText(info.soil || 'Well-drained soil.')} ${sanitizeSeasonText(info.climate || '')}</span></div>
                 </div>
             </div>
         </div>`;
@@ -291,7 +313,7 @@ function renderRecResults(data) {
     document.getElementById("recResults").innerHTML = `
         <div class="rec-header-row" style="margin-bottom:16px">
             <h3>Recommended Crops for <strong>${loc.district || data.district || ''}</strong>, ${loc.state || data.state || ''}</h3>
-            <p class="rec-season-tag">Season: ${data.season || ''}</p>
+            <p class="rec-season-tag">Season: ${displaySeason}</p>
         </div>
         ${recHtml}`;
 }
@@ -717,7 +739,7 @@ function renderAdvisoryResults(data) {
 
     const html = `
         <div class="adv-summary glass-card">
-            <p class="adv-summary-text">${data.combined_summary || "Advisory generated."}</p>
+            <p class="adv-summary-text">${sanitizeSeasonText(data.combined_summary || "Advisory generated.")}</p>
         </div>
 
         ${recs.length > 0 ? `

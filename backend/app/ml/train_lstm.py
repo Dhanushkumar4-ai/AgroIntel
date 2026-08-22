@@ -156,6 +156,8 @@ def run_all_lstm_training():
         for crop, res in results.items():
             if crop in reg.get("registry", {}):
                 reg["registry"][crop]["lstm_availability"] = (res.get("status") == "success")
+                if "all_models_mae" not in reg["registry"][crop]:
+                    reg["registry"][crop]["all_models_mae"] = {}
                 reg["registry"][crop]["all_models_mae"]["lstm"] = res.get("mae")
         with open(reg_path, "w") as f:
             json.dump(reg, f, indent=2)

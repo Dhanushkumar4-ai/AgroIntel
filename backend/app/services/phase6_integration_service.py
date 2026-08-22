@@ -33,6 +33,7 @@ from typing import Dict, List, Optional, Any
 
 logger = logging.getLogger(__name__)
 
+from app.core.constants import normalize_season
 from app.services.location_normalizer import normalize_location
 from app.services.weather_service import get_weather_summary, get_current_monthly_weather
 from app.services.nlp_explanation_service import (
@@ -357,6 +358,7 @@ class AgroIntelPhase6Engine:
         canon_state = dist_obj["state"]
         canon_district = dist_obj["district"]
         canonical_id = dist_obj["canonical_id"]
+        canon_season = normalize_season(season)
 
         # Normalize season aliases (Rainy -> Kharif, Winter -> Rabi, Summer -> Summer)
         canon_season = normalize_season(season)
@@ -434,12 +436,12 @@ class AgroIntelPhase6Engine:
             season_score = 20.0
             season_text = f"Well-suited for the {season} cropping season."
 
-            if not is_perennial and season.lower() not in ["whole year", "perennial"]:
+            if not is_perennial and canon_season.lower() not in ["whole year", "perennial"] and season.lower() not in ["whole year", "perennial"]:
                 cal_info = self.season_calendar.get(crop_name, {}) if isinstance(self.season_calendar, dict) else {}
                 cal_seasons = [s.lower() for s in cal_info.get("seasons", ["Kharif", "Rabi", "Summer", "Whole Year"])]
                 valid_seasons = set(seasons_present + cal_seasons + ["whole year"])
 
-                if season.lower() not in valid_seasons:
+                if canon_season.lower() not in valid_seasons and season.lower() not in valid_seasons:
                     season_suitable = False
                     season_score = 0.0
                     season_text = f"Season mismatch (grows in {', '.join([s.title() for s in valid_seasons if s != 'whole year'])})"

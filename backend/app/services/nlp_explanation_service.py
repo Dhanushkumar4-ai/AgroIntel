@@ -64,12 +64,12 @@ CROP_WATER_GUIDANCE = {
     "soybean": {
         "requirement_level": "MODERATE",
         "annual_need_mm": "450–700 mm",
-        "guidance": "Soybean is well-suited for Kharif monsoon conditions in black soils. Supplementary irrigation is beneficial if dry spells coincide with pod-filling."
+        "guidance": "Soybean is well-suited for Rainy Season conditions in black soils. Supplementary irrigation is beneficial if dry spells coincide with pod-filling."
     },
     "wheat": {
         "requirement_level": "MODERATE",
         "annual_need_mm": "450–650 mm",
-        "guidance": "Rabi wheat requires 4–6 scheduled irrigations, especially at the Crown Root Initiation (CRI) and grain-filling stages."
+        "guidance": "Winter Season wheat requires 4–6 scheduled irrigations, especially at the Crown Root Initiation (CRI) and grain-filling stages."
     },
     "pearl millet (bajra)": {
         "requirement_level": "LOW_DROUGHT_HARDY",
@@ -217,7 +217,9 @@ def explain_crop_recommendation(
     else:
         situation_text = "No major adverse weather warnings or pest outbreaks have been reported in recent verified agricultural advisories."
 
-    summary_text = f"{crop} is recommended for {district}, {state} during {season} season. {why_text}"
+    season_friendly_map = {"kharif": "the Rainy Season", "rabi": "the Winter Season", "zaid": "the Summer Season", "summer": "the Summer Season", "whole year": "the Whole Year"}
+    season_phrase = season_friendly_map.get(str(season).lower(), f"the {season} season")
+    summary_text = f"{crop} is recommended for {season_phrase} in {district}, {state}. {why_text}"
 
     deterministic_res = {
         "summary": summary_text,

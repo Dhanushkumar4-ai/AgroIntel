@@ -25,15 +25,19 @@
       }
     },
     "lstm": {
-      "model_name": "lstm",
-      "status": "skipped",
-      "mae": 999999.0,
-      "rmse": 999999.0,
-      "training_time_sec": 0.0,
+      "status": "success",
+      "mae": 1466.7,
+      "rmse": 1467.2,
+      "training_time_sec": 22.87,
       "hyperparameters": {
         "sequence_length": 30,
-        "architecture": "LSTM(64)->Dropout(0.2)->LSTM(32)->Dense(16)->Dense(1)"
-      }
+        "architecture": "LSTM(64) -> Dropout(0.2) -> LSTM(32) -> Dense(16) -> Dense(1)",
+        "epochs": 25,
+        "batch_size": 32,
+        "optimizer": "adam"
+      },
+      "model_file": "/Users/kaushikpoojary/Downloads/projectphase2/backend/models/lstm_wheat.keras",
+      "scaler_file": "/Users/kaushikpoojary/Downloads/projectphase2/backend/models/lstm_scaler_wheat.pkl"
     },
     "xgboost": {
       "model_name": "xgboost",
