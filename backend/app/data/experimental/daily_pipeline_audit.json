@@ -1,8 +1,8 @@
 {
   "pipeline_name": "AgroIntel Daily Update Pipeline",
-  "run_timestamp": "2026-08-18T16:13:04.983198+00:00",
+  "run_timestamp": "2026-08-19T17:30:55.409383+00:00",
   "overall_status": "PARTIAL_SUCCESS",
-  "total_duration_seconds": 80.93,
+  "total_duration_seconds": 63.71,
   "stages": {
     "fetch_mandi": {
       "status": "FAILED",
@@ -10,16 +10,16 @@
     },
     "fetch_news": {
       "status": "SUCCESS",
-      "sources_active": 14,
-      "articles_ingested": 158
+      "sources_active": 15,
+      "articles_ingested": 35
     },
     "process_news": {
       "status": "SUCCESS",
-      "verified_clusters": 35
+      "verified_clusters": 39
     },
     "update_weather": {
       "status": "SUCCESS",
-      "states_success": 25
+      "states_success": 28
     },
     "build_dataset": {
       "status": "PASS",
@@ -38,14 +38,13 @@
     },
     "validate_models": {
       "status": "SUCCESS",
-      "promoted_count": 5,
-      "rejected_count": 0,
+      "promoted_count": 4,
+      "rejected_count": 1,
       "promoted_crops": [
         "rice",
         "wheat",
         "maize",
-        "onion",
-        "potato"
+        "onion"
       ]
     },
     "promote_models": {
@@ -54,10 +53,9 @@
         "rice",
         "wheat",
         "maize",
-        "onion",
-        "potato"
+        "onion"
       ],
-      "version_tag": "20260818_161425"
+      "version_tag": "20260819_173159"
     }
   },
   "errors_count": 1,

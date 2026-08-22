@@ -1,0 +1,65 @@
+{
+  "pipeline_name": "AgroIntel Daily Update Pipeline",
+  "run_timestamp": "2026-08-21T18:05:06.035945+00:00",
+  "overall_status": "PARTIAL_SUCCESS",
+  "total_duration_seconds": 60.04,
+  "stages": {
+    "fetch_mandi": {
+      "status": "FAILED",
+      "error": "name 'timezone' is not defined"
+    },
+    "fetch_news": {
+      "status": "SUCCESS",
+      "sources_active": 15,
+      "articles_ingested": 15
+    },
+    "process_news": {
+      "status": "SUCCESS",
+      "verified_clusters": 43
+    },
+    "update_weather": {
+      "status": "SUCCESS",
+      "states_success": 28
+    },
+    "build_dataset": {
+      "status": "PASS",
+      "total_records": 178522
+    },
+    "train_all": {
+      "status": "SUCCESS",
+      "crops_trained": 5,
+      "crops": [
+        "rice",
+        "wheat",
+        "maize",
+        "onion",
+        "potato"
+      ]
+    },
+    "validate_models": {
+      "status": "SUCCESS",
+      "promoted_count": 4,
+      "rejected_count": 1,
+      "promoted_crops": [
+        "rice",
+        "wheat",
+        "maize",
+        "onion"
+      ]
+    },
+    "promote_models": {
+      "status": "SUCCESS",
+      "promoted_models": [
+        "rice",
+        "wheat",
+        "maize",
+        "onion"
+      ],
+      "version_tag": "20260821_180606"
+    }
+  },
+  "errors_count": 1,
+  "errors": [
+    "Mandi Ingestion Stage Failed: name 'timezone' is not defined"
+  ]
+}

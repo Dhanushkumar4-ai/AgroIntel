@@ -1,56 +1,56 @@
 [
   {
     "cluster_key": "National::General Agriculture::OTHER",
-    "event_count": 1450,
+    "event_count": 1825,
     "unique_sources": 30,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "SRC_GOOGLE_NEWS_EXPORT",
-      "hindu_businessline",
-      "moes",
-      "chinimandi",
-      "SRC_GOOGLE_NEWS_DIST_2",
-      "SRC_GOOGLE_NEWS_DIST_10",
-      "SRC_GOOGLE_NEWS_DIST_6",
-      "dafew",
-      "SRC_GOOGLE_NEWS_FLOOD_CROP",
       "SRC_GOOGLE_NEWS_DIST_9",
-      "SRC_GOOGLE_NEWS_INTL",
-      "economic_times_agri",
-      "agri_farming",
-      "icar",
-      "times_of_india",
-      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
-      "SRC_GOOGLE_NEWS_REGIONAL_HINDI",
       "reuters_agri",
-      "india_today",
-      "indian_express",
-      "SRC_GOOGLE_NEWS_PEST",
-      "fao_india",
-      "SRC_ICAR_KVK",
+      "SRC_GOOGLE_NEWS_DIST_8",
+      "SRC_GOOGLE_NEWS_DIST_10",
       "SRC_GOOGLE_NEWS_MSP_POLICY",
-      "agriculture_post",
+      "SRC_GOOGLE_NEWS_INTL",
+      "the_hindu",
+      "icar",
+      "SRC_GOOGLE_NEWS_EXPORT",
+      "indian_express",
       "mongabay_india",
+      "agriculture_post",
+      "SRC_GOOGLE_NEWS_FLOOD_CROP",
+      "moes",
+      "dafew",
       "SRC_GOOGLE_NEWS_DIST_7",
+      "times_of_india",
+      "SRC_GOOGLE_NEWS_REGIONAL_HINDI",
+      "SRC_GOOGLE_NEWS_PEST",
+      "SRC_GOOGLE_NEWS_DIST_6",
+      "SRC_GOOGLE_NEWS_DIST_2",
+      "economic_times_agri",
       "SRC_GOOGLE_NEWS_DIST_5",
-      "SRC_GOOGLE_NEWS_DIST_8"
+      "hindu_businessline",
+      "SRC_ICAR_KVK",
+      "india_today",
+      "fao_india",
+      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
+      "agri_farming",
+      "chinimandi"
     ],
     "sample_title": "\u0916\u0947\u0924\u0940 \u091c\u0941\u0932\u093e\u0908 2026"
   },
   {
     "cluster_key": "Maharashtra::General Agriculture::OTHER",
-    "event_count": 25,
+    "event_count": 30,
     "unique_sources": 7,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
-      "hindu_businessline",
-      "indian_express",
-      "economic_times_agri",
       "chinimandi",
-      "times_of_india"
+      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
+      "times_of_india",
+      "the_hindu",
+      "economic_times_agri",
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "Maharashtra's Farm Distress Problem Is Not Debt. It Is Irrigation. - Swarajya"
   },
@@ -60,61 +60,61 @@
     "unique_sources": 4,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "economic_times_agri",
       "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
-      "mongabay_india",
-      "reuters_agri"
+      "reuters_agri",
+      "economic_times_agri",
+      "mongabay_india"
     ],
     "sample_title": "Why heatwaves are emerging as a major risk to India\u2019s food security - ET Edge Insights"
   },
   {
     "cluster_key": "National::Wheat::OTHER",
-    "event_count": 44,
+    "event_count": 45,
     "unique_sources": 5,
     "verification_status": "VERIFIED",
     "sources_involved": [
+      "reuters_agri",
       "fao_india",
       "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
       "SRC_GOOGLE_NEWS_EXPORT",
-      "reuters_agri",
       "SRC_GOOGLE_NEWS_PEST"
     ],
     "sample_title": "Will Pakistan run short of flour? Wheat output likely to fall amid Afghanistan war - India Today"
   },
   {
     "cluster_key": "National::General Agriculture::DISEASE_OUTBREAK",
-    "event_count": 54,
+    "event_count": 72,
     "unique_sources": 12,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
-      "hindu_businessline",
-      "reuters_agri",
       "india_today",
-      "indian_express",
-      "mongabay_india",
-      "economic_times_agri",
-      "agri_farming",
+      "reuters_agri",
+      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
+      "times_of_india",
       "SRC_GOOGLE_NEWS_DIST_4",
+      "mongabay_india",
+      "agri_farming",
+      "the_hindu",
       "SRC_GOOGLE_NEWS_PEST",
-      "times_of_india"
+      "economic_times_agri",
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "Why India\u2019s Stressed Farmers Have Restarted Protests: Modi Repealed Laws, But His Grand Promise Has Failed - article-14.com"
   },
   {
     "cluster_key": "National::Rice::OTHER",
-    "event_count": 23,
+    "event_count": 24,
     "unique_sources": 7,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
-      "hindu_businessline",
-      "SRC_GOOGLE_NEWS_EXPORT",
       "reuters_agri",
+      "SRC_GOOGLE_NEWS_AGRI_NATIONAL",
+      "SRC_GOOGLE_NEWS_EXPORT",
+      "the_hindu",
       "SRC_GOOGLE_NEWS_PEST",
-      "chinimandi"
+      "chinimandi",
+      "hindu_businessline"
     ],
     "sample_title": "Climate change-ready rice varieties: Prominent stride toward food security and sustainability - Global Agriculture"
   },
@@ -124,9 +124,9 @@
     "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
+      "SRC_GOOGLE_NEWS_MSP_POLICY",
       "SRC_GOOGLE_NEWS_DIST_8",
-      "indian_express",
-      "SRC_GOOGLE_NEWS_MSP_POLICY"
+      "indian_express"
     ],
     "sample_title": "Beyond MSP: Farmers need income, not price support - The Indian Express"
   },
@@ -142,23 +142,25 @@
   },
   {
     "cluster_key": "National::General Agriculture::FLOOD",
-    "event_count": 6,
-    "unique_sources": 3,
+    "event_count": 7,
+    "unique_sources": 4,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
+      "times_of_india",
       "SRC_GOOGLE_NEWS_FLOOD_CROP",
+      "the_hindu",
       "indian_express"
     ],
     "sample_title": "After the floods, hunger: Mozambique\u2019s second disaster - Al Jazeera"
   },
   {
     "cluster_key": "National::General Agriculture::DROUGHT",
-    "event_count": 2,
-    "unique_sources": 2,
+    "event_count": 3,
+    "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
       "SRC_GOOGLE_NEWS_FLOOD_CROP",
+      "the_hindu",
       "chinimandi"
     ],
     "sample_title": "El Nino 2026 threat looms over India: IMD warns of weak monsoon, drought risk and extreme weather impact - Moneycontrol.com"
@@ -169,20 +171,21 @@
     "unique_sources": 4,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "hindu_businessline",
-      "indian_express",
       "SRC_GOOGLE_NEWS_EXPORT",
-      "reuters_agri"
+      "reuters_agri",
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "Government Prohibits Sugar Exports Till September 30, 2026; DGFT Revises Export Policy from \u201cRestricted\u201d to \u201cProhibited\u201d to Safeguard Domestic Availability and Food Security, While Allowing Exemptions for EU-USA Quotas, Advance Authorization Scheme - A2Z Taxcorp LLP"
   },
   {
     "cluster_key": "National::General Agriculture::SUPPLY_SHOCK",
-    "event_count": 1,
-    "unique_sources": 1,
-    "verification_status": "SINGLE_SOURCE",
+    "event_count": 2,
+    "unique_sources": 2,
+    "verification_status": "VERIFIED",
     "sources_involved": [
-      "SRC_GOOGLE_NEWS_INTL"
+      "SRC_GOOGLE_NEWS_INTL",
+      "hindu_businessline"
     ],
     "sample_title": "India faces rising food inflation risk amid fertiliser supply disruptions: FAO Chief Economist - The New Indian Express"
   },
@@ -202,22 +205,23 @@
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "indian_express",
-      "SRC_GOOGLE_NEWS_REGIONAL_HINDI"
+      "SRC_GOOGLE_NEWS_REGIONAL_HINDI",
+      "indian_express"
     ],
     "sample_title": "Sugarcane crop at risk as Maharashtra restricts dam water use amid delayed monsoon - ChiniMandi"
   },
   {
     "cluster_key": "Gujarat::General Agriculture::OTHER",
-    "event_count": 19,
-    "unique_sources": 5,
+    "event_count": 25,
+    "unique_sources": 6,
     "verification_status": "VERIFIED",
     "sources_involved": [
+      "india_today",
+      "SRC_GOOGLE_NEWS_DIST_10",
       "the_hindu",
-      "hindu_businessline",
       "SRC_GOOGLE_NEWS_REGIONAL_HINDI",
       "indian_express",
-      "SRC_GOOGLE_NEWS_DIST_10"
+      "hindu_businessline"
     ],
     "sample_title": "PM Modi addresses the National Summit on Agriculture and Food Processing in Anand, Gujarat - Bharatiya Janata Party"
   },
@@ -237,8 +241,8 @@
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "mongabay_india",
-      "SRC_GOOGLE_NEWS_DIST_3"
+      "SRC_GOOGLE_NEWS_DIST_3",
+      "mongabay_india"
     ],
     "sample_title": "GST Cuts Empower Farmers, Artisans & MSMEs in Arunachal Pradesh - pib.gov.in"
   },
@@ -254,35 +258,37 @@
   },
   {
     "cluster_key": "Assam::General Agriculture::FLOOD",
-    "event_count": 6,
-    "unique_sources": 2,
+    "event_count": 7,
+    "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "SRC_GOOGLE_NEWS_DIST_4",
-      "mongabay_india"
+      "indian_express",
+      "mongabay_india",
+      "SRC_GOOGLE_NEWS_DIST_4"
     ],
     "sample_title": "Flood-hit Upper Assam reels under food price surge, sparking calls for probe - The Assam Tribune"
   },
   {
     "cluster_key": "Bihar::General Agriculture::OTHER",
-    "event_count": 8,
-    "unique_sources": 3,
+    "event_count": 11,
+    "unique_sources": 4,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "SRC_GOOGLE_NEWS_DIST_5",
       "indian_express",
-      "times_of_india"
+      "the_hindu",
+      "times_of_india",
+      "SRC_GOOGLE_NEWS_DIST_5"
     ],
     "sample_title": "Lightning strikes Bihar, 13 killed; CM announces Rs 4 lakh ex-gratia - Business Standard"
   },
   {
     "cluster_key": "Haryana::General Agriculture::OTHER",
-    "event_count": 4,
+    "event_count": 6,
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "indian_express",
-      "SRC_GOOGLE_NEWS_DIST_6"
+      "SRC_GOOGLE_NEWS_DIST_6",
+      "indian_express"
     ],
     "sample_title": "Haryana proposes up to 75% hike in collector rates across residential, agricultural, commercial lands - The Indian Express"
   },
@@ -298,15 +304,15 @@
   },
   {
     "cluster_key": "Goa::General Agriculture::OTHER",
-    "event_count": 10,
+    "event_count": 11,
     "unique_sources": 5,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "hindu_businessline",
-      "indian_express",
       "SRC_GOOGLE_NEWS_DIST_9",
-      "times_of_india"
+      "times_of_india",
+      "the_hindu",
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "Dragon fruit offers Goa\u2019s young farmers a low-input path to higher returns - The Times of India"
   },
@@ -316,8 +322,8 @@
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "indian_express",
-      "SRC_GOOGLE_NEWS_DIST_9"
+      "SRC_GOOGLE_NEWS_DIST_9",
+      "indian_express"
     ],
     "sample_title": "'Development' Or Death Sentence?: Why Goans Are Protesting Section 39A Of The Goa TCP Act - homegrown.co.in"
   },
@@ -334,41 +340,45 @@
   },
   {
     "cluster_key": "Jharkhand::General Agriculture::OTHER",
-    "event_count": 7,
-    "unique_sources": 5,
+    "event_count": 10,
+    "unique_sources": 7,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
       "dafew",
-      "indian_express",
       "mongabay_india",
-      "times_of_india"
+      "times_of_india",
+      "the_hindu",
+      "economic_times_agri",
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "State: JHARKHAND Agriculture Contingency Plan for District: Latehar - Department of Agriculture & Farmers Welfare"
   },
   {
     "cluster_key": "Uttar Pradesh::General Agriculture::OTHER",
-    "event_count": 7,
-    "unique_sources": 4,
+    "event_count": 8,
+    "unique_sources": 5,
     "verification_status": "VERIFIED",
     "sources_involved": [
+      "dafew",
+      "times_of_india",
       "the_hindu",
       "indian_express",
-      "dafew",
-      "times_of_india"
+      "hindu_businessline"
     ],
     "sample_title": "State: Uttar Pradesh Agriculture Contingency Plan for District: Azamgarh - Department of Agriculture & Farmers Welfare"
   },
   {
     "cluster_key": "West Bengal::General Agriculture::OTHER",
-    "event_count": 7,
-    "unique_sources": 4,
+    "event_count": 9,
+    "unique_sources": 5,
     "verification_status": "VERIFIED",
     "sources_involved": [
+      "dafew",
+      "times_of_india",
       "the_hindu",
       "indian_express",
-      "dafew",
-      "times_of_india"
+      "hindu_businessline"
     ],
     "sample_title": "State: WEST BENGAL Agriculture Contingency Plan for District: BANKURA - Department of Agriculture & Farmers Welfare"
   },
@@ -418,16 +428,16 @@
     "unique_sources": 4,
     "verification_status": "VERIFIED",
     "sources_involved": [
+      "indian_express",
       "the_hindu",
       "agriculture_post",
-      "indian_express",
       "mongabay_india"
     ],
     "sample_title": "Raisen Agri Conclave Pivots to Pulses Push, Processing Infra and Precision Farming"
   },
   {
     "cluster_key": "Odisha::General Agriculture::OTHER",
-    "event_count": 5,
+    "event_count": 6,
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
@@ -478,7 +488,7 @@
   },
   {
     "cluster_key": "Tamil Nadu::General Agriculture::DISEASE_OUTBREAK",
-    "event_count": 1,
+    "event_count": 2,
     "unique_sources": 1,
     "verification_status": "SINGLE_SOURCE",
     "sources_involved": [
@@ -488,7 +498,7 @@
   },
   {
     "cluster_key": "Telangana::General Agriculture::OTHER",
-    "event_count": 7,
+    "event_count": 9,
     "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
@@ -500,12 +510,13 @@
   },
   {
     "cluster_key": "Kerala::General Agriculture::OTHER",
-    "event_count": 12,
-    "unique_sources": 2,
+    "event_count": 22,
+    "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
       "the_hindu",
-      "indian_express"
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "Demand to install advanced screening systems in blood banks in Kerala to detect infections"
   },
@@ -521,30 +532,30 @@
   },
   {
     "cluster_key": "Tamil Nadu::General Agriculture::OTHER",
-    "event_count": 15,
+    "event_count": 18,
     "unique_sources": 5,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "hindu_businessline",
-      "indian_express",
       "mongabay_india",
-      "times_of_india"
+      "times_of_india",
+      "the_hindu",
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "Tamil Nadu Minister Sarathkumar faces question in Assembly over action resembling \u2018drug use\u2019"
   },
   {
     "cluster_key": "Karnataka::General Agriculture::OTHER",
-    "event_count": 27,
+    "event_count": 38,
     "unique_sources": 6,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "the_hindu",
-      "hindu_businessline",
       "dafew",
-      "indian_express",
+      "times_of_india",
+      "the_hindu",
       "economic_times_agri",
-      "times_of_india"
+      "indian_express",
+      "hindu_businessline"
     ],
     "sample_title": "No difference between Jaish-e-Mohammed, Taliban, RSS: KPCC\u2019s B.K. Hariprasad says all three \u201cnot registered in India\u201d"
   },
@@ -611,13 +622,13 @@
   },
   {
     "cluster_key": "Jharkhand::General Agriculture::DISEASE_OUTBREAK",
-    "event_count": 7,
+    "event_count": 11,
     "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
       "the_hindu",
-      "indian_express",
-      "times_of_india"
+      "times_of_india",
+      "indian_express"
     ],
     "sample_title": "Pressure mounting over Jharkhand protest, Congress sends a message to ally"
   },
@@ -627,30 +638,31 @@
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "indian_express",
-      "fao_india"
+      "fao_india",
+      "indian_express"
     ],
     "sample_title": "India vs Sri Lanka Live Score, 1st Test Day 3: SL 214/5 at Tea, trail by 248 runs vs IND at Galle"
   },
   {
     "cluster_key": "Punjab::General Agriculture::OTHER",
-    "event_count": 9,
-    "unique_sources": 2,
+    "event_count": 12,
+    "unique_sources": 3,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "indian_express",
-      "chinimandi"
+      "chinimandi",
+      "times_of_india",
+      "indian_express"
     ],
     "sample_title": "Attack on Sukhbir Badal is disturbing, deepens unease in Punjab"
   },
   {
     "cluster_key": "Rajasthan::General Agriculture::OTHER",
-    "event_count": 4,
+    "event_count": 5,
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
-      "indian_express",
-      "mongabay_india"
+      "mongabay_india",
+      "indian_express"
     ],
     "sample_title": "Rajasthan CM Bhajan Lal called him \u2018Jaadugar\u2019, Ashok Gehlot now offers him a magic show"
   },
@@ -747,7 +759,7 @@
   },
   {
     "cluster_key": "Meghalaya::General Agriculture::OTHER",
-    "event_count": 2,
+    "event_count": 3,
     "unique_sources": 2,
     "verification_status": "VERIFIED",
     "sources_involved": [
@@ -758,10 +770,11 @@
   },
   {
     "cluster_key": "Uttarakhand::General Agriculture::OTHER",
-    "event_count": 2,
-    "unique_sources": 1,
-    "verification_status": "SINGLE_SOURCE",
+    "event_count": 4,
+    "unique_sources": 2,
+    "verification_status": "VERIFIED",
     "sources_involved": [
+      "times_of_india",
       "indian_express"
     ],
     "sample_title": "\u2018You did purification after my Uttarakhand visit, your religion teaches this?\u2019: Kharge tears into BJP, RSS"
@@ -788,10 +801,11 @@
   },
   {
     "cluster_key": "National::General Agriculture::DEMAND_SHOCK",
-    "event_count": 1,
-    "unique_sources": 1,
-    "verification_status": "SINGLE_SOURCE",
+    "event_count": 2,
+    "unique_sources": 2,
+    "verification_status": "VERIFIED",
     "sources_involved": [
+      "the_hindu",
       "chinimandi"
     ],
     "sample_title": "Kolhapur: Festive demand pushes sugar prices higher, retail rates touch Rs 55 a kilo"
@@ -838,10 +852,12 @@
   },
   {
     "cluster_key": "Bihar::General Agriculture::DISEASE_OUTBREAK",
-    "event_count": 2,
-    "unique_sources": 1,
-    "verification_status": "SINGLE_SOURCE",
+    "event_count": 4,
+    "unique_sources": 3,
+    "verification_status": "VERIFIED",
     "sources_involved": [
+      "indian_express",
+      "the_hindu",
       "times_of_india"
     ],
     "sample_title": "Bihar transfers 17 IPS officers amid row over AK-47 use during student protests"
@@ -905,5 +921,85 @@
       "indian_express"
     ],
     "sample_title": "Manipur hit by 48-hour strike, women injured in clashes with security forces"
+  },
+  {
+    "cluster_key": "National::Coffee::OTHER",
+    "event_count": 3,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "hindu_businessline"
+    ],
+    "sample_title": "Sweet Karam Coffee posts double digit m-o-m growth in Mumbai market"
+  },
+  {
+    "cluster_key": "National::Onion::OTHER",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "hindu_businessline"
+    ],
+    "sample_title": "Agrograde\u2019s automated onion grading system installed at Pimpalgaon market"
+  },
+  {
+    "cluster_key": "Tamil Nadu::General Agriculture::MSP_POLICY",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "hindu_businessline"
+    ],
+    "sample_title": "Tamil Nadu raises milk procurement price to \u20b941/litre"
+  },
+  {
+    "cluster_key": "National::Maize::DROUGHT",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "reuters_agri"
+    ],
+    "sample_title": "French drought could halve maize crop, deepen EU harvest losses - Reuters"
+  },
+  {
+    "cluster_key": "Madhya Pradesh::General Agriculture::DISEASE_OUTBREAK",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "indian_express"
+    ],
+    "sample_title": "A man in a dog suit, a peculiar protest in Madhya Pradesh Collectorate office"
+  },
+  {
+    "cluster_key": "Kerala::General Agriculture::FLOOD",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "indian_express"
+    ],
+    "sample_title": "\u2018Sudden flooding from ocean waves\u2019: 48-hour warning for Kerala, south Tamil Nadu"
+  },
+  {
+    "cluster_key": "Tripura::General Agriculture::OTHER",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "indian_express"
+    ],
+    "sample_title": "\u2018Abusive posts against Prime Minister illegal\u2019: Tripura High Court refuses to quash cases"
+  },
+  {
+    "cluster_key": "Arunachal Pradesh::General Agriculture::DISEASE_OUTBREAK",
+    "event_count": 1,
+    "unique_sources": 1,
+    "verification_status": "SINGLE_SOURCE",
+    "sources_involved": [
+      "times_of_india"
+    ],
+    "sample_title": "Evening news wrap: Kiren Rijiju rejects China incursion claim; US envoy Sergio Gor visits Srinagar, and more"
   }
 ]

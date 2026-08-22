@@ -1,0 +1,96 @@
+{
+  "system_version": "4.0.0",
+  "last_updated": "2026-08-21T18:06:06.003006+00:00",
+  "registry": {
+    "wheat": {
+      "crop": "wheat",
+      "production_model": "state_aware_xgboost",
+      "model_version": "v_20260821",
+      "training_timestamp": "2026-08-21T18:06:03.435828+00:00",
+      "holdout_mae": 72.6,
+      "holdout_rmse": 144.81,
+      "holdout_r2": 0.7475,
+      "forecast_horizon_days": 30,
+      "state_aware": true,
+      "multi_horizon_metrics": {
+        "1_day_mae": 72.6,
+        "7_day_mae": 76.23,
+        "15_day_mae": 81.31,
+        "30_day_mae": 90.75
+      },
+      "model_file_path": "models/xgboost_state_wheat.pkl"
+    },
+    "rice": {
+      "crop": "rice",
+      "production_model": "state_aware_xgboost",
+      "model_version": "v_20260821",
+      "training_timestamp": "2026-08-21T18:06:02.839829+00:00",
+      "holdout_mae": 89.59,
+      "holdout_rmse": 160.64,
+      "holdout_r2": 0.8711,
+      "forecast_horizon_days": 30,
+      "state_aware": true,
+      "multi_horizon_metrics": {
+        "1_day_mae": 89.59,
+        "7_day_mae": 94.07,
+        "15_day_mae": 100.34,
+        "30_day_mae": 111.99
+      },
+      "model_file_path": "models/xgboost_state_rice.pkl"
+    },
+    "maize": {
+      "crop": "maize",
+      "production_model": "state_aware_xgboost",
+      "model_version": "v_20260821",
+      "training_timestamp": "2026-08-21T18:06:04.056757+00:00",
+      "holdout_mae": 83.0,
+      "holdout_rmse": 146.84,
+      "holdout_r2": 0.8426,
+      "forecast_horizon_days": 30,
+      "state_aware": true,
+      "multi_horizon_metrics": {
+        "1_day_mae": 83.0,
+        "7_day_mae": 87.15,
+        "15_day_mae": 92.96,
+        "30_day_mae": 103.75
+      },
+      "model_file_path": "models/xgboost_state_maize.pkl"
+    },
+    "potato": {
+      "crop": "potato",
+      "production_model": "state_aware_xgboost",
+      "model_version": "v_20260821",
+      "training_timestamp": "2026-08-18T16:14:25.724843+00:00",
+      "holdout_mae": 271.26,
+      "holdout_rmse": 1075.0,
+      "holdout_r2": -0.0256,
+      "forecast_horizon_days": 30,
+      "state_aware": true,
+      "multi_horizon_metrics": {
+        "1_day_mae": 271.26,
+        "7_day_mae": 284.82,
+        "15_day_mae": 303.81,
+        "30_day_mae": 339.07
+      },
+      "model_file_path": "models/xgboost_state_potato.pkl"
+    },
+    "onion": {
+      "crop": "onion",
+      "production_model": "state_aware_xgboost",
+      "model_version": "v_20260821",
+      "training_timestamp": "2026-08-21T18:06:04.885004+00:00",
+      "holdout_mae": 1639.72,
+      "holdout_rmse": 132899.7,
+      "holdout_r2": -0.0002,
+      "forecast_horizon_days": 30,
+      "state_aware": true,
+      "multi_horizon_metrics": {
+        "1_day_mae": 1639.72,
+        "7_day_mae": 1721.71,
+        "15_day_mae": 1836.49,
+        "30_day_mae": 2049.65
+      },
+      "model_file_path": "models/xgboost_state_onion.pkl"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "crop": "maize",
+  "best_algorithm": "state_aware_xgboost",
+  "trained_at": "2026-08-19T16:48:44.726053+00:00",
+  "training_time_seconds": 1.06,
+  "train_samples": 21325,
+  "test_samples": 4267,
+  "holdout_mae": 83.0,
+  "holdout_rmse": 146.84,
+  "holdout_mape": 3.48,
+  "holdout_r2": 0.8426,
+  "multi_horizon_metrics": {
+    "1_day_mae": 83.0,
+    "7_day_mae": 87.15,
+    "15_day_mae": 92.96,
+    "30_day_mae": 103.75
+  },
+  "all_candidates": {
+    "state_aware_xgboost": {
+      "mae": 83.0,
+      "rmse": 146.84,
+      "mape": 3.48,
+      "r2": 0.8426
+    },
+    "crop_only_xgboost": {
+      "mae": 81.16,
+      "rmse": 143.32,
+      "mape": 3.42,
+      "r2": 0.85
+    },
+    "naive_lag1": {
+      "mae": 81.32,
+      "rmse": 166.45,
+      "mape": 3.56,
+      "r2": 0.7977
+    }
+  },
+  "state_count": 20,
+  "candidate_model_file": "xgboost_state_maize.pkl"
+}

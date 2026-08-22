@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-08-21T18:05:37.715032+00:00",
+  "total_articles_processed": 2775,
+  "total_event_clusters": 94,
+  "verified_events_count": 2713,
+  "single_source_events_count": 62,
+  "verified_clusters_count": 43,
+  "single_source_clusters_count": 51
+}

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-08-18T16:13:41.884563+00:00",
-  "total_articles_processed": 1863,
-  "total_event_clusters": 79,
-  "verified_events_count": 1805,
-  "single_source_events_count": 58,
-  "verified_clusters_count": 35,
-  "single_source_clusters_count": 44
+  "timestamp": "2026-08-19T17:31:22.464305+00:00",
+  "total_articles_processed": 2337,
+  "total_event_clusters": 87,
+  "verified_events_count": 2274,
+  "single_source_events_count": 63,
+  "verified_clusters_count": 39,
+  "single_source_clusters_count": 48
 }

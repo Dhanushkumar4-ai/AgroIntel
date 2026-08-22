@@ -1,0 +1,40 @@
+{
+  "crop": "onion",
+  "best_algorithm": "state_aware_xgboost",
+  "trained_at": "2026-08-19T16:48:46.447021+00:00",
+  "training_time_seconds": 1.69,
+  "train_samples": 37303,
+  "test_samples": 8253,
+  "holdout_mae": 1639.72,
+  "holdout_rmse": 132899.7,
+  "holdout_mape": 10.61,
+  "holdout_r2": -0.0002,
+  "multi_horizon_metrics": {
+    "1_day_mae": 1639.72,
+    "7_day_mae": 1721.71,
+    "15_day_mae": 1836.49,
+    "30_day_mae": 2049.65
+  },
+  "all_candidates": {
+    "state_aware_xgboost": {
+      "mae": 1639.72,
+      "rmse": 132899.7,
+      "mape": 10.61,
+      "r2": -0.0002
+    },
+    "crop_only_xgboost": {
+      "mae": 1637.76,
+      "rmse": 132899.55,
+      "mape": 9.89,
+      "r2": -0.0002
+    },
+    "naive_lag1": {
+      "mae": 3092.4,
+      "rmse": 187949.92,
+      "mape": 90.93,
+      "r2": -1.0004
+    }
+  },
+  "state_count": 30,
+  "candidate_model_file": "xgboost_state_onion.pkl"
+}

@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-08-21T18:06:01.693315+00:00",
+  "anti_leakage_shift1_verified": true,
+  "leakage_detected": false,
+  "feature_columns_verified": [
+    "state_enc",
+    "lag_1",
+    "lag_7",
+    "lag_14",
+    "lag_30",
+    "rolling_7",
+    "rolling_30",
+    "rolling_std_7",
+    "price_range",
+    "day_of_year",
+    "month",
+    "day_of_week",
+    "year",
+    "black_swan"
+  ],
+  "chronological_holdout_enforced": "Train: 2019-2023, Test: 2024",
+  "leakage_status": "SAFE_NO_LEAKAGE"
+}

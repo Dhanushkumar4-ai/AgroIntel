@@ -1,0 +1,40 @@
+{
+  "crop": "rice",
+  "best_algorithm": "state_aware_xgboost",
+  "trained_at": "2026-08-19T16:46:05.129342+00:00",
+  "training_time_seconds": 1.62,
+  "train_samples": 28339,
+  "test_samples": 5798,
+  "holdout_mae": 89.59,
+  "holdout_rmse": 160.64,
+  "holdout_mape": 3.53,
+  "holdout_r2": 0.8711,
+  "multi_horizon_metrics": {
+    "1_day_mae": 89.59,
+    "7_day_mae": 94.07,
+    "15_day_mae": 100.34,
+    "30_day_mae": 111.99
+  },
+  "all_candidates": {
+    "state_aware_xgboost": {
+      "mae": 89.59,
+      "rmse": 160.64,
+      "mape": 3.53,
+      "r2": 0.8711
+    },
+    "crop_only_xgboost": {
+      "mae": 87.17,
+      "rmse": 158.53,
+      "mape": 3.46,
+      "r2": 0.8744
+    },
+    "naive_lag1": {
+      "mae": 94.25,
+      "rmse": 187.43,
+      "mape": 3.8,
+      "r2": 0.8244
+    }
+  },
+  "state_count": 24,
+  "candidate_model_file": "xgboost_state_rice.pkl"
+}

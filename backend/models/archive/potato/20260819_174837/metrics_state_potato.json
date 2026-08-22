@@ -1,0 +1,40 @@
+{
+  "crop": "potato",
+  "best_algorithm": "state_aware_xgboost",
+  "trained_at": "2026-08-18T16:14:25.724843+00:00",
+  "training_time_seconds": 0.94,
+  "train_samples": 38289,
+  "test_samples": 8518,
+  "holdout_mae": 271.26,
+  "holdout_rmse": 1075.0,
+  "holdout_mape": 16.77,
+  "holdout_r2": -0.0256,
+  "multi_horizon_metrics": {
+    "1_day_mae": 271.26,
+    "7_day_mae": 284.82,
+    "15_day_mae": 303.81,
+    "30_day_mae": 339.07
+  },
+  "all_candidates": {
+    "state_aware_xgboost": {
+      "mae": 271.26,
+      "rmse": 1075.0,
+      "mape": 16.77,
+      "r2": -0.0256
+    },
+    "crop_only_xgboost": {
+      "mae": 259.1,
+      "rmse": 1082.8,
+      "mape": 15.46,
+      "r2": -0.0405
+    },
+    "naive_lag1": {
+      "mae": 142.3,
+      "rmse": 318.65,
+      "mape": 9.19,
+      "r2": 0.9099
+    }
+  },
+  "state_count": 30,
+  "candidate_model_file": "xgboost_state_potato.pkl"
+}

@@ -1,0 +1,40 @@
+{
+  "crop": "wheat",
+  "best_algorithm": "state_aware_xgboost",
+  "trained_at": "2026-08-19T16:48:43.632457+00:00",
+  "training_time_seconds": 1.07,
+  "train_samples": 18784,
+  "test_samples": 3938,
+  "holdout_mae": 72.6,
+  "holdout_rmse": 144.81,
+  "holdout_mape": 2.79,
+  "holdout_r2": 0.7475,
+  "multi_horizon_metrics": {
+    "1_day_mae": 72.6,
+    "7_day_mae": 76.23,
+    "15_day_mae": 81.31,
+    "30_day_mae": 90.75
+  },
+  "all_candidates": {
+    "state_aware_xgboost": {
+      "mae": 72.6,
+      "rmse": 144.81,
+      "mape": 2.79,
+      "r2": 0.7475
+    },
+    "crop_only_xgboost": {
+      "mae": 68.35,
+      "rmse": 129.58,
+      "mape": 2.61,
+      "r2": 0.7978
+    },
+    "naive_lag1": {
+      "mae": 66.75,
+      "rmse": 138.4,
+      "mape": 2.51,
+      "r2": 0.7694
+    }
+  },
+  "state_count": 18,
+  "candidate_model_file": "xgboost_state_wheat.pkl"
+}

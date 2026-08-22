@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroIntel AI — Agricultural Decision Support System</title>
+    <meta name="description" content="AI-powered crop recommendation and price prediction for Indian farmers. Get intelligent guidance on what to grow and when to sell.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Material Symbols for professional icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-layer">
+        <div class="bg-orb orb-green"></div>
+        <div class="bg-orb orb-teal"></div>
+        <div class="bg-orb orb-gold"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-inner">
+            <button class="nav-brand" onclick="showPage('landing')" aria-label="Go to home">
+                <span class="material-symbols-rounded brand-icon-sym">grass</span>
+                <div>
+                    <div class="brand-name">AgroIntel <span class="brand-ai">AI</span></div>
+                </div>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <button class="nav-btn" id="navRecommend" onclick="showPage('recommendation')">
+                    <span class="material-symbols-rounded nav-sym">eco</span> Crop Recommendation
+                </button>
+                <button class="nav-btn" id="navPrediction" onclick="showPage('prediction')">
+                    <span class="material-symbols-rounded nav-sym">trending_up</span> Price Prediction
+                </button>
+                <button class="nav-btn" id="navAdvisory" onclick="showPage('advisory')">
+                    <span class="material-symbols-rounded nav-sym">lightbulb</span> Farmer Advisory
+                </button>
+            </nav>
+
+            <div class="nav-actions">
+                <div class="sys-badge" id="sysBadge">
+                    <span class="pulse-dot"></span>
+                    <span id="sysText">Connecting</span>
+                </div>
+                <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">
+                    <span class="material-symbols-rounded" id="themeIcon">dark_mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Pages Container -->
+    <main class="page-host">
+
+        <!-- ═══════════════ LANDING PAGE ═══════════════ -->
+        <section class="page active" id="page-landing">
+            <div class="landing-wrap">
+
+                <div class="landing-hero">
+                    <div class="hero-badge">India — AI Powered Agriculture</div>
+                    <h1 class="hero-title">AgroIntel <span class="accent-green">AI</span></h1>
+                    <p class="hero-sub">AI-Based Agricultural Decision Support System</p>
+                    <p class="hero-desc">
+                        AgroIntel is an AI-powered platform designed to support Indian farmers by providing intelligent
+                        crop recommendations and crop price forecasts. It analyzes soil, season, weather, and historical
+                        market trends to help farmers choose suitable crops and make informed selling decisions.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn-primary-lg" onclick="showPage('recommendation')">
+                            Get Crop Recommendation
+                        </button>
+                        <button class="btn-outline-lg" onclick="showPage('prediction')">
+                            Check Price Forecast
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-cards">
+                    <div class="feat-card glass-card" onclick="showPage('recommendation')">
+                        <div class="feat-icon-wrap green-icon">
+                            <span class="material-symbols-rounded feat-sym">eco</span>
+                        </div>
+                        <h3>Crop Recommendation</h3>
+                        <p>Find the most suitable crops for your district based on season, soil, weather, rotation and news intelligence.</p>
+                        <button class="feat-btn" onclick="event.stopPropagation(); showPage('recommendation')">Start Recommendation</button>
+                    </div>
+
+                    <div class="feat-card glass-card" onclick="showPage('prediction')">
+                        <div class="feat-icon-wrap gold-icon">
+                            <span class="material-symbols-rounded feat-sym">trending_up</span>
+                        </div>
+                        <h3>Price Prediction</h3>
+                        <p>Forecast commodity prices, check latest Mandi market rates, and receive intelligent Sell/Hold advisories.</p>
+                        <button class="feat-btn" onclick="event.stopPropagation(); showPage('prediction')">Start Prediction</button>
+                    </div>
+
+                    <div class="feat-card glass-card" onclick="showPage('advisory')">
+                        <div class="feat-icon-wrap teal-icon">
+                            <span class="material-symbols-rounded feat-sym">lightbulb</span>
+                        </div>
+                        <h3>Farmer Advisory</h3>
+                        <p>Get a combined crop and market advisory — what to grow and when to sell, in one unified view.</p>
+                        <button class="feat-btn" onclick="event.stopPropagation(); showPage('advisory')">Get Advisory</button>
+                    </div>
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-num">28</span>
+                        <span class="stat-lbl">States Covered</span>
+                    </div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">8</span>
+                        <span class="stat-lbl">Union Territories</span>
+                    </div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">652</span>
+                        <span class="stat-lbl">Canonical Districts</span>
+                    </div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">6 Years</span>
+                        <span class="stat-lbl">Mandi Price History</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════ CROP RECOMMENDATION PAGE ═══════════════ -->
+        <section class="page" id="page-recommendation">
+            <div class="page-wrap">
+                <div class="page-header">
+                    <h2>Crop Recommendation</h2>
+                    <p>Enter your location, season, soil parameters and previous crop to receive multi-source evidence-backed crop recommendations.</p>
+                </div>
+
+                <div class="split-layout">
+                    <div class="glass-card form-panel">
+                        <form id="recForm" onsubmit="submitCropRec(event)">
+                            <div class="form-group">
+                                <label for="recState">State <span class="req">*</span></label>
+                                <select id="recState" class="form-select" required onchange="onStateChange('recState','recDistrict')">
+                                    <option value="">Loading states...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="recDistrict">District <span class="req">*</span></label>
+                                <select id="recDistrict" class="form-select" required>
+                                    <option value="">Select a state first</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="recSeason">Season <span class="req">*</span></label>
+                                <select id="recSeason" class="form-select" required>
+                                    <option value="Rainy">Rainy Season</option>
+                                    <option value="Winter">Winter Season</option>
+                                    <option value="Summer">Summer Season</option>
+                                    <option value="Whole Year">Whole Year</option>
+                                </select>
+                            </div>
+
+                            <div class="optional-section">
+                                <div class="optional-label">
+                                    <span>Soil & Crop History Parameters</span>
+                                    <span class="optional-tag">Optional</span>
+                                </div>
+                                <div class="npk-grid">
+                                    <div class="form-group">
+                                        <label for="recN">Nitrogen (N)</label>
+                                        <input type="number" id="recN" class="form-input" min="0" max="300" placeholder="e.g. 55">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recP">Phosphorus (P)</label>
+                                        <input type="number" id="recP" class="form-input" min="0" max="300" placeholder="e.g. 30">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recK">Potassium (K)</label>
+                                        <input type="number" id="recK" class="form-input" min="0" max="300" placeholder="e.g. 65">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recPh">Soil pH</label>
+                                    <input type="number" step="0.1" id="recPh" class="form-input" min="1" max="14" placeholder="e.g. 7.2">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recPrevCrop">Previous Crop <span class="optional-tag">Optional</span></label>
+                                    <input type="text" id="recPrevCrop" class="form-input" placeholder="e.g. Rice, Wheat...">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="submit-btn green-btn" id="btnRec">
+                                <span class="material-symbols-rounded btn-ico">search</span>
+                                <span class="btn-label">Recommend Best Crops</span>
+                                <span class="btn-spin hidden" id="recSpin">
+                                    <span class="material-symbols-rounded spin-ico">progress_activity</span>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="results-panel" id="recResults">
+                        <div class="placeholder-card glass-card">
+                            <span class="material-symbols-rounded ph-icon-sym">eco</span>
+                            <h3>Ready to Recommend</h3>
+                            <p>Select your state, district and season, then click Recommend Best Crops.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════ PRICE PREDICTION PAGE ═══════════════ -->
+        <section class="page" id="page-prediction">
+            <div class="page-wrap">
+                <div class="page-header">
+                    <h2>Price Prediction & Mandi Intelligence</h2>
+                    <p>Check latest Mandi market rates, forecast commodity prices, and receive market advisories.</p>
+                </div>
+
+                <div class="split-layout">
+                    <div class="glass-card form-panel">
+                        <form id="predForm" onsubmit="submitPricePred(event)">
+                            <div class="form-group">
+                                <label for="predCrop">Crop <span class="req">*</span></label>
+                                <select id="predCrop" class="form-select" required>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="rice">Rice</option>
+                                    <option value="maize">Maize</option>
+                                    <option value="potato">Potato</option>
+                                    <option value="onion">Onion</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="predState">State (for Mandi Price) <span class="req">*</span></label>
+                                <select id="predState" class="form-select" required>
+                                    <option value="">Loading states...</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="font-size:0.78rem;opacity:0.7;padding:6px 10px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08)">
+                                <span class="material-symbols-rounded" style="font-size:0.9rem;vertical-align:middle;margin-right:4px">info</span>
+                                Price prediction uses a crop-level ML model. State determines the current Mandi price lookup.
+                            </div>
+
+                            <div class="form-group">
+                                <label for="predHorizon">Forecast Horizon <span class="req">*</span></label>
+                                <select id="predHorizon" class="form-select" required>
+                                    <option value="7">7 Days — Short-term</option>
+                                    <option value="15">15 Days — Mid-term</option>
+                                    <option value="30" selected>30 Days — Standard</option>
+                                    <option value="60">60 Days — Extended</option>
+                                    <option value="90">90 Days — Full Season</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="submit-btn gold-btn" id="btnPred">
+                                <span class="material-symbols-rounded btn-ico">bar_chart</span>
+                                <span class="btn-label">Generate Price Forecast</span>
+                                <span class="btn-spin hidden" id="predSpin">
+                                    <span class="material-symbols-rounded spin-ico">progress_activity</span>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="results-panel" id="predResults">
+                        <div class="placeholder-card glass-card">
+                            <span class="material-symbols-rounded ph-icon-sym">bar_chart</span>
+                            <h3>Ready to Forecast</h3>
+                            <p>Select a crop and state, then click Generate Price Forecast to see the latest Mandi price and 30-day ML forecast.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════ FARMER ADVISORY PAGE ═══════════════ -->
+        <section class="page" id="page-advisory">
+            <div class="page-wrap">
+                <div class="page-header">
+                    <h2>Farmer Advisory</h2>
+                    <p>Get a combined recommendation — which crop to grow and whether to sell or hold your harvest — in one step.</p>
+                </div>
+
+                <div class="split-layout">
+                    <div class="glass-card form-panel">
+                        <form id="advForm" onsubmit="submitAdvisory(event)">
+                            <div class="form-group">
+                                <label for="advState">State <span class="req">*</span></label>
+                                <select id="advState" class="form-select" required onchange="onStateChange('advState','advDistrict')">
+                                    <option value="">Loading states...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="advDistrict">District <span class="req">*</span></label>
+                                <select id="advDistrict" class="form-select" required>
+                                    <option value="">Select a state first</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="advSeason">Season <span class="req">*</span></label>
+                                <select id="advSeason" class="form-select" required>
+                                    <option value="Rainy">Rainy Season</option>
+                                    <option value="Winter">Winter Season</option>
+                                    <option value="Summer">Summer Season</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="advCrop">Crop for Market Analysis <span class="optional-tag">Optional</span></label>
+                                <select id="advCrop" class="form-select">
+                                    <option value="">Auto-select from recommendation</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="rice">Rice</option>
+                                    <option value="maize">Maize</option>
+                                    <option value="potato">Potato</option>
+                                    <option value="onion">Onion</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="submit-btn teal-btn" id="btnAdv">
+                                <span class="material-symbols-rounded btn-ico">lightbulb</span>
+                                <span class="btn-label">Generate Advisory</span>
+                                <span class="btn-spin hidden" id="advSpin">
+                                    <span class="material-symbols-rounded spin-ico">progress_activity</span>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="results-panel" id="advResults">
+                        <div class="placeholder-card glass-card">
+                            <span class="material-symbols-rounded ph-icon-sym">lightbulb</span>
+                            <h3>Ready for Advisory</h3>
+                            <p>Select your location and season to receive your integrated farm advisory.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <span class="footer-brand">AgroIntel AI — Agricultural Decision Support System</span>
+            <span class="footer-copy">Price predictions are estimates based on available historical market data and other analyzed factors. They are for analysis and decision support only and are not guaranteed future prices.</span>
+        </div>
+    </footer>
+
+
+    <!-- Toast Notifications -->
+    <div id="toastBox" class="toast-box"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

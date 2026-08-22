@@ -1,0 +1,59 @@
+{
+  "crop": "maize",
+  "best_baseline": "arima",
+  "production_model": "xgboost",
+  "models": {
+    "arima": {
+      "model_name": "arima",
+      "status": "trained",
+      "mae": 42.11,
+      "rmse": 54.8,
+      "training_time_sec": 0.1,
+      "hyperparameters": {
+        "order": "(1,1,1)"
+      }
+    },
+    "prophet": {
+      "model_name": "prophet",
+      "status": "trained",
+      "mae": 98.7,
+      "rmse": 105.53,
+      "training_time_sec": 0.66,
+      "hyperparameters": {
+        "yearly_seasonality": true,
+        "weekly_seasonality": true
+      }
+    },
+    "lstm": {
+      "status": "success",
+      "mae": 1400.22,
+      "rmse": 1401.15,
+      "training_time_sec": 18.76,
+      "hyperparameters": {
+        "sequence_length": 30,
+        "architecture": "LSTM(64) -> Dropout(0.2) -> LSTM(32) -> Dense(16) -> Dense(1)",
+        "epochs": 25,
+        "batch_size": 32,
+        "optimizer": "adam"
+      },
+      "model_file": "/Users/kaushikpoojary/Downloads/projectphase2/backend/models/lstm_maize.keras",
+      "scaler_file": "/Users/kaushikpoojary/Downloads/projectphase2/backend/models/lstm_scaler_maize.pkl"
+    },
+    "xgboost": {
+      "model_name": "xgboost",
+      "status": "trained",
+      "mae": 23.79,
+      "rmse": 35.88,
+      "training_time_sec": 1.84,
+      "hyperparameters": {
+        "max_depth": 3,
+        "learning_rate": 0.05,
+        "n_estimators": 100
+      }
+    }
+  },
+  "training_rows": 2102,
+  "validation_rows": 60,
+  "dataset_range": "2019-01-31 to 2024-12-31",
+  "selected_production_model": "xgboost"
+}

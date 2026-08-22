@@ -1,37 +1,38 @@
 {
   "job_name": "validate_models",
-  "timestamp": "2026-08-18T16:14:25.888888+00:00",
-  "execution_time_seconds": 0.16,
-  "promoted_crops_count": 5,
-  "rejected_crops_count": 0,
+  "timestamp": "2026-08-19T17:31:59.021682+00:00",
+  "execution_time_seconds": 0.53,
+  "promoted_crops_count": 4,
+  "rejected_crops_count": 1,
   "promoted_crops": [
     "rice",
     "wheat",
     "maize",
-    "onion",
+    "onion"
+  ],
+  "rejected_crops": [
     "potato"
   ],
-  "rejected_crops": [],
   "validation_details": {
     "rice": {
       "crop": "rice",
       "decision": "PROMOTE",
-      "reason": "Candidate passed all safety checks. Candidate MAE: 93.81 (Production: 93.81)",
-      "candidate_mae": 93.81,
-      "production_mae": 93.81,
+      "reason": "Candidate passed all safety checks. Candidate MAE: 89.59 (Production: 89.59)",
+      "candidate_mae": 89.59,
+      "production_mae": 89.59,
       "sample_30d_forecast_head": [
-        2203.83,
-        2179.08,
-        2176.03,
-        2175.96,
-        2160.62
+        2240.44,
+        2215.05,
+        2205.9,
+        2207.59,
+        2179.39
       ],
       "sample_30d_forecast_tail": [
-        2113.65,
-        2100.79,
-        2109.03,
-        2098.04,
-        2108.72
+        2117.24,
+        2131.57,
+        2132.75,
+        2130.91,
+        2130.52
       ],
       "checks": {
         "artifacts_exist": true,
@@ -44,22 +45,22 @@
     "wheat": {
       "crop": "wheat",
       "decision": "PROMOTE",
-      "reason": "Candidate passed all safety checks. Candidate MAE: 79.0 (Production: 79.0)",
-      "candidate_mae": 79.0,
-      "production_mae": 79.0,
+      "reason": "Candidate passed all safety checks. Candidate MAE: 72.6 (Production: 72.6)",
+      "candidate_mae": 72.6,
+      "production_mae": 72.6,
       "sample_30d_forecast_head": [
-        2357.55,
-        2359.6,
-        2361.05,
-        2291.23,
-        2291.07
+        2363.95,
+        2362.37,
+        2348.53,
+        2272.33,
+        2263.89
       ],
       "sample_30d_forecast_tail": [
-        2230.83,
-        2264.83,
-        2282.26,
-        2281.47,
-        2279.92
+        2207.5,
+        2258.3,
+        2284.28,
+        2284.87,
+        2286.31
       ],
       "checks": {
         "artifacts_exist": true,
@@ -72,22 +73,22 @@
     "maize": {
       "crop": "maize",
       "decision": "PROMOTE",
-      "reason": "Candidate passed all safety checks. Candidate MAE: 84.3 (Production: 84.3)",
-      "candidate_mae": 84.3,
-      "production_mae": 84.3,
+      "reason": "Candidate passed all safety checks. Candidate MAE: 83.0 (Production: 83.0)",
+      "candidate_mae": 83.0,
+      "production_mae": 83.0,
       "sample_30d_forecast_head": [
-        2328.42,
-        2378.52,
-        2474.25,
-        2437.26,
-        2432.07
+        2242.9,
+        2280.76,
+        2358.63,
+        2343.85,
+        2360.17
       ],
       "sample_30d_forecast_tail": [
-        2214.38,
-        2165.25,
-        2206.85,
-        2201.06,
-        2211.78
+        2225.3,
+        2230.21,
+        2222.94,
+        2217.81,
+        2221.48
       ],
       "checks": {
         "artifacts_exist": true,
@@ -100,22 +101,22 @@
     "onion": {
       "crop": "onion",
       "decision": "PROMOTE",
-      "reason": "Candidate passed all safety checks. Candidate MAE: 1642.16 (Production: 1642.16)",
-      "candidate_mae": 1642.16,
-      "production_mae": 1642.16,
+      "reason": "Candidate passed all safety checks. Candidate MAE: 1639.72 (Production: 1639.72)",
+      "candidate_mae": 1639.72,
+      "production_mae": 1639.72,
       "sample_30d_forecast_head": [
-        6771.47,
-        6431.87,
-        6578.36,
-        6468.67,
-        6536.92
+        6272.62,
+        5758.54,
+        5871.68,
+        6118.29,
+        6070.43
       ],
       "sample_30d_forecast_tail": [
-        6692.51,
-        6794.67,
-        6689.06,
-        6761.18,
-        6688.02
+        6484.85,
+        6461.62,
+        6262.55,
+        6596.48,
+        6474.79
       ],
       "checks": {
         "artifacts_exist": true,
@@ -127,30 +128,30 @@
     },
     "potato": {
       "crop": "potato",
-      "decision": "PROMOTE",
-      "reason": "Candidate passed all safety checks. Candidate MAE: 271.26 (Production: 271.26)",
-      "candidate_mae": 271.26,
+      "decision": "REJECT",
+      "reason": "Candidate MAE (303.42) is >10% worse than current production MAE (271.26)",
+      "candidate_mae": 303.42,
       "production_mae": 271.26,
       "sample_30d_forecast_head": [
-        8209.65,
-        8077.63,
-        8230.6,
-        5292.54,
-        4904.4
+        7760.43,
+        7649.32,
+        8299.26,
+        5609.25,
+        5120.93
       ],
       "sample_30d_forecast_tail": [
-        4995.76,
-        5841.99,
-        5899.47,
-        5721.03,
-        5565.09
+        5020.62,
+        6013.43,
+        6026.81,
+        6005.83,
+        5648.78
       ],
       "checks": {
         "artifacts_exist": true,
         "forecast_30d_simulation": true,
         "non_negative_prices": true,
         "no_extreme_spikes": true,
-        "mae_within_acceptance_bound": true
+        "mae_within_acceptance_bound": false
       }
     }
   }
