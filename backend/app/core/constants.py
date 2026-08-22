@@ -9,13 +9,44 @@ from datetime import date
 
 # ── Indian Agricultural Seasons ───────────────────────────────────────────────
 
-SEASONS = {
-    "Kharif": {"months": [6, 7, 8, 9, 10], "label": "Kharif (Monsoon, Jun–Oct)"},
-    "Rabi": {"months": [11, 12, 1, 2, 3], "label": "Rabi (Winter, Nov–Mar)"},
-    "Zaid": {"months": [4, 5], "label": "Zaid (Summer, Apr–May)"},
+SEASON_ALIASES: dict[str, str] = {
+    "rainy": "Kharif",
+    "rainy season": "Kharif",
+    "monsoon": "Kharif",
+    "kharif": "Kharif",
+    "winter": "Rabi",
+    "winter season": "Rabi",
+    "rabi": "Rabi",
+    "summer": "Summer",
+    "summer season": "Summer",
+    "zaid": "Summer",
+    "whole year": "Whole Year",
+    "all year": "Whole Year",
+    "perennial": "Whole Year",
 }
 
-SEASON_ENCODING = {"Kharif": 0, "Rabi": 1, "Zaid": 2}
+SEASONS = {
+    "Kharif": {"months": [6, 7, 8, 9, 10], "label": "Rainy (Monsoon, Jun–Oct)"},
+    "Rabi": {"months": [11, 12, 1, 2, 3], "label": "Winter (Nov–Mar)"},
+    "Zaid": {"months": [4, 5], "label": "Summer (Apr–May)"},
+    "Summer": {"months": [4, 5], "label": "Summer (Apr–May)"},
+    "Rainy": {"months": [6, 7, 8, 9, 10], "label": "Rainy (Monsoon, Jun–Oct)"},
+    "Winter": {"months": [11, 12, 1, 2, 3], "label": "Winter (Nov–Mar)"},
+    "Whole Year": {"months": list(range(1, 13)), "label": "Whole Year / Perennial"},
+}
+
+SEASON_ENCODING = {
+    "Kharif": 0, "Rabi": 1, "Zaid": 2, "Summer": 2,
+    "Rainy": 0, "Winter": 1, "Whole Year": 0,
+}
+
+
+def normalize_season(season_input: str | None) -> str:
+    """Normalize any season name (e.g. Rainy, Winter, Summer, Kharif, Rabi, Zaid) to canonical season."""
+    if not season_input:
+        return get_current_season()
+    s = season_input.strip().lower()
+    return SEASON_ALIASES.get(s, season_input.strip().capitalize())
 
 
 def get_current_season() -> str:

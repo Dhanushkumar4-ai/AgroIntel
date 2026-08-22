@@ -35,6 +35,7 @@ from app.core.constants import (
     MANDI_TO_RF_LABEL,
     SEASONS,
     get_current_season,
+    normalize_season,
 )
 from app.data.agro_zone_validator import validate_crop_for_region
 from app.ml.crop_recommender import predict_crop_probabilities
@@ -162,7 +163,7 @@ def recommend_crops(
     Execute complete multi-stage Crop Recommendation Engine with candidate probability normalization.
     """
     t_start = time.perf_counter()
-    target_season = season.capitalize() if season else get_current_season()
+    target_season = normalize_season(season) if season else get_current_season()
 
     # ── STEP 1: District Resolution ───────────────────────────────────────────
     dist_info = get_district_info(state, district)

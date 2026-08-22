@@ -48,6 +48,7 @@ from app.services.news_intelligence_service import (
     verify_cross_source,
     calculate_bounded_news_adjustment
 )
+from app.core.constants import normalize_season
 
 try:
     from app.services import mandi_service
@@ -357,8 +358,15 @@ class AgroIntelPhase6Engine:
         canon_district = dist_obj["district"]
         canonical_id = dist_obj["canonical_id"]
 
+        # Normalize season aliases (Rainy -> Kharif, Winter -> Rabi, Summer -> Summer)
+        canon_season = normalize_season(season)
+
         # Fetch candidate crops strictly from APY evidence matrix
-        raw_candidates = self.cand_lookup.get((canonical_id, season.lower()), [])
+        raw_candidates = self.cand_lookup.get((canonical_id, canon_season.lower()), [])
+        if not raw_candidates:
+            raw_candidates = self.cand_lookup.get((canonical_id, season.lower()), [])
+        if not raw_candidates:
+            raw_candidates = self.cand_lookup.get((canon_state.lower(), canon_district.lower(), canon_season.lower()), [])
         if not raw_candidates:
             raw_candidates = self.cand_lookup.get((canon_state.lower(), canon_district.lower(), season.lower()), [])
         if not raw_candidates:
