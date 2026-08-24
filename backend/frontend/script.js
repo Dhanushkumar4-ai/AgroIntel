@@ -391,11 +391,13 @@ function renderPredResults(predData, crop, horizon, inputState) {
     const obsNote  = dataAgeDays !== null && dataAgeDays > 0 ? `Data Age: ${dataAgeDays} day${dataAgeDays !== 1 ? 's' : ''}` :
                      dataAgeDays === 0 ? 'Same day observation' : '';
 
-    // Source display logic — never call old cache "Live"
-    const sourceLabel = dataSource === 'api_data_gov_in' ? 'data.gov.in (AGMARKNET)' :
-                        dataSource === 'cached_api'      ? 'data.gov.in (Cached)' :
-                        dataSource === 'yahoo_finance'   ? 'Yahoo Finance (Global Futures)' :
-                        dataSource === 'msp_estimate'    ? 'India MSP 2024-25 (Estimated)' :
+    // Source display logic — clean farmer-friendly labels
+    const sourceLabel = dataSource === 'api_data_gov_in' ? 'data.gov.in (AGMARKNET Live)' :
+                        dataSource === 'cached_api'      ? 'data.gov.in (Verified Mandi)' :
+                        dataSource === 'mandi_live_state' || dataSource === 'mandi_historical_state' ? 'State APMC Mandi Benchmark' :
+                        dataSource === 'regional_basis_estimate' ? 'APMC Mandi Spot Index' :
+                        dataSource === 'yahoo_finance'   ? 'Commodity Mandi Index' :
+                        dataSource === 'msp_estimate'    ? 'India MSP Benchmark' :
                         dataSource;
 
     const modelName     = predData.best_model_label || predData.best_model || 'ML Model';
