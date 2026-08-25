@@ -284,13 +284,21 @@ function renderRecResults(data) {
 
     const recHtml = recs.map((rec, i) => {
         const info = rec.crop_information || {};
+        const isLocal = rec.is_local_crop === true;
+        const localBadge = isLocal 
+            ? `<span style="background:rgba(250,204,21,0.15);color:#facc15;border:1px solid rgba(250,204,21,0.35);padding:2px 8px;border-radius:12px;font-size:0.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px">⭐ Signature Local Crop</span>` 
+            : ``;
+
         return `
         <div class="rec-card glass-card ${rankColors[i] || ''}" style="margin-bottom:16px;padding:18px">
             <!-- Header: rank + crop name + location subtitle -->
             <div class="rec-card-top" style="margin-bottom:14px;display:flex;align-items:center;gap:12px">
                 <span class="rec-rank" style="flex-shrink:0;font-size:1.1rem;font-weight:800;color:#a3e635;background:rgba(163,230,53,0.12);border:1px solid rgba(163,230,53,0.3);padding:4px 12px;border-radius:20px">#${rec.rank || i + 1}</span>
                 <div>
-                    <h3 class="rec-crop-name" style="margin:0;font-size:1.4rem">${rec.crop}</h3>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                        <h3 class="rec-crop-name" style="margin:0;font-size:1.4rem">${rec.crop}</h3>
+                        ${localBadge}
+                    </div>
                     <div style="font-size:0.8rem;opacity:0.75;margin-top:2px">Recommended for ${displaySeason} in ${loc.district || ''}, ${loc.state || ''}</div>
                 </div>
             </div>

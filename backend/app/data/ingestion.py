@@ -4,7 +4,7 @@ import requests
 import logging
 import json
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)

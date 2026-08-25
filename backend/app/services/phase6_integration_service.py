@@ -92,12 +92,13 @@ def _normalize_district_name(text: str) -> str:
 
 PERENNIAL_CROPS = {
     "Arecanut", "Coconut", "Coffee", "Tea", "Rubber", "Banana",
-    "Black Pepper", "Cardamom", "Cashew", "Sugarcane"
+    "Black Pepper", "Cardamom", "Cashewnut", "Cashew", "Sugarcane",
+    "Cocoa", "Mango", "Papaya", "Pomegranate", "Citrus Fruit", "Orange", "Apple"
 }
 
 LEGUME_CROPS = {
     "Moong (Green Gram)", "Black Gram (Urad)", "Pigeonpea (Arhar/Tur)",
-    "Chickpea (Gram)", "Lentil (Masur)", "Groundnut", "Soybean"
+    "Chickpea (Gram)", "Lentil (Masur)", "Groundnut", "Soybean", "Cowpea(lobia)"
 }
 
 CROP_FAMILIES = {
@@ -108,6 +109,199 @@ CROP_FAMILIES = {
     "Potato": "Solanaceae", "Tomato": "Solanaceae", "Brinjal": "Solanaceae", "Chilli": "Solanaceae",
     "Onion": "Amaryllidaceae", "Garlic": "Amaryllidaceae",
     "Cotton": "Malvaceae", "Arecanut": "Arecaceae", "Coconut": "Arecaceae"
+}
+
+CROP_CANONICAL_NAMES = {
+    "arcanut (processed)": "Arecanut",
+    "atcanut (raw)": "Arecanut",
+    "arecanut": "Arecanut",
+    "cashewnut processed": "Cashewnut",
+    "cashewnut raw": "Cashewnut",
+    "cashewnut": "Cashewnut",
+    "cashew": "Cashewnut",
+    "coffee (arabica)": "Coffee",
+    "coffee (robusta)": "Coffee",
+    "coffee": "Coffee",
+    "paddy (dhan)(common)": "Rice",
+    "paddy": "Rice",
+    "rice": "Rice",
+    "dry chillies": "Chilli (Dry)",
+    "chilli (dry)": "Chilli (Dry)",
+    "chilli": "Chilli (Dry)",
+    "dry ginger": "Ginger",
+    "ginger": "Ginger",
+    "moong(green gram)": "Moong (Green Gram)",
+    "moong (green gram)": "Moong (Green Gram)",
+    "urad": "Black Gram (Urad)",
+    "black gram (urad)": "Black Gram (Urad)",
+    "gram": "Chickpea (Gram)",
+    "chickpea (gram)": "Chickpea (Gram)",
+    "bengal gram": "Chickpea (Gram)",
+    "tur": "Pigeonpea (Arhar/Tur)",
+    "arhar/tur": "Pigeonpea (Arhar/Tur)",
+    "pigeonpea (arhar/tur)": "Pigeonpea (Arhar/Tur)",
+    "ragi": "Finger Millet (Ragi)",
+    "finger millet (ragi)": "Finger Millet (Ragi)",
+    "jowar": "Sorghum (Jowar)",
+    "sorghum (jowar)": "Sorghum (Jowar)",
+    "bajra": "Pearl Millet (Bajra)",
+    "pearl millet (bajra)": "Pearl Millet (Bajra)",
+    "soyabean": "Soybean",
+    "soybean": "Soybean",
+    "groundnut": "Groundnut",
+    "peanut": "Groundnut",
+    "banana": "Banana",
+    "coconut": "Coconut",
+    "rubber": "Rubber",
+    "tea": "Tea",
+    "black pepper": "Black Pepper",
+    "cardamom": "Cardamom",
+    "tapioca": "Tapioca (Cassava)",
+    "tapioca (cassava)": "Tapioca (Cassava)",
+    "sweet potato": "Sweet Potato",
+    "sugarcane": "Sugarcane",
+    "turmeric": "Turmeric",
+    "cotton": "Cotton",
+    "onion": "Onion",
+    "potato": "Potato",
+    "tomato": "Tomato",
+    "apple": "Apple",
+    "grapes": "Grapes",
+    "grape": "Grapes",
+    "pomegranate": "Pomegranate",
+    "mango": "Mango",
+}
+
+# ── Major District Signature Staples & Local Agro-Climatic Priorities ────────
+DISTRICT_SIGNATURE_CROPS = {
+    # Karnataka - Coastal (Karavali / Tulunadu)
+    "karnataka::dakshin kannad": ["Arecanut", "Coconut", "Cashewnut", "Rice", "Black Pepper", "Banana", "Ginger", "Cocoa"],
+    "karnataka::udupi": ["Arecanut", "Coconut", "Cashewnut", "Rice", "Black Pepper", "Banana", "Sugarcane"],
+    "karnataka::uttar kannad": ["Arecanut", "Coconut", "Cashewnut", "Rice", "Black Pepper", "Cardamom", "Sugarcane"],
+
+    # Karnataka - Malnad (Western Ghats)
+    "karnataka::kodagu": ["Coffee", "Black Pepper", "Cardamom", "Arecanut", "Ginger", "Rice", "Banana"],
+    "karnataka::chikmagalur": ["Coffee", "Arecanut", "Black Pepper", "Cardamom", "Ginger", "Rice", "Tea"],
+    "karnataka::shimoga": ["Arecanut", "Rice", "Ginger", "Maize", "Sugarcane", "Banana", "Black Pepper"],
+    "karnataka::hassan": ["Coffee", "Potato", "Cardamom", "Black Pepper", "Ginger", "Coconut", "Rice"],
+
+    # Karnataka - Southern & Northern Plains
+    "karnataka::mysore": ["Sugarcane", "Rice", "Banana", "Cotton", "Finger Millet (Ragi)", "Coconut"],
+    "karnataka::mandya": ["Sugarcane", "Rice", "Finger Millet (Ragi)", "Banana", "Coconut"],
+    "karnataka::chamarajanagar": ["Banana", "Turmeric", "Sugarcane", "Finger Millet (Ragi)", "Coconut"],
+    "karnataka::tumkur": ["Coconut", "Arecanut", "Finger Millet (Ragi)", "Groundnut", "Pigeonpea (Arhar/Tur)"],
+    "karnataka::chitradurga": ["Arecanut", "Groundnut", "Onion", "Pomegranate", "Maize", "Cotton"],
+    "karnataka::davanagere": ["Arecanut", "Maize", "Rice", "Sugarcane", "Cotton"],
+    "karnataka::belgaum": ["Sugarcane", "Soybean", "Maize", "Cotton", "Groundnut", "Wheat"],
+    "karnataka::dharwad": ["Cotton", "Soybean", "Chilli (Dry)", "Maize", "Wheat", "Chickpea (Gram)"],
+    "karnataka::bellary": ["Rice", "Chilli (Dry)", "Cotton", "Maize", "Groundnut", "Pigeonpea (Arhar/Tur)"],
+    "karnataka::haveri": ["Chilli (Dry)", "Cotton", "Maize", "Groundnut", "Arecanut", "Soybean"],
+    "karnataka::gulbarga": ["Pigeonpea (Arhar/Tur)", "Chickpea (Gram)", "Cotton", "Soybean", "Sorghum (Jowar)"],
+    "karnataka::kalaburagi": ["Pigeonpea (Arhar/Tur)", "Chickpea (Gram)", "Cotton", "Soybean", "Sorghum (Jowar)"],
+    "karnataka::bidar": ["Soybean", "Pigeonpea (Arhar/Tur)", "Black Gram (Urad)", "Sugarcane", "Chickpea (Gram)"],
+    "karnataka::bagalkot": ["Sugarcane", "Pomegranate", "Maize", "Chickpea (Gram)", "Sorghum (Jowar)"],
+    "karnataka::bijapur": ["Grape", "Pomegranate", "Sorghum (Jowar)", "Sugarcane", "Chickpea (Gram)", "Onion"],
+    "karnataka::vijayapura": ["Grape", "Pomegranate", "Sorghum (Jowar)", "Sugarcane", "Chickpea (Gram)", "Onion"],
+    "karnataka::koppal": ["Rice", "Maize", "Pomegranate", "Paddy", "Chilli (Dry)"],
+    "karnataka::raichur": ["Rice", "Cotton", "Chilli (Dry)", "Groundnut", "Pigeonpea (Arhar/Tur)"],
+    "karnataka::yadgir": ["Rice", "Cotton", "Pigeonpea (Arhar/Tur)", "Groundnut"],
+    "karnataka::gadag": ["Chilli (Dry)", "Cotton", "Onion", "Maize", "Chickpea (Gram)"],
+    "karnataka::kolar": ["Tomato", "Mango", "Finger Millet (Ragi)", "Mulberry", "Groundnut"],
+    "karnataka::chikkaballapur": ["Tomato", "Grape", "Finger Millet (Ragi)", "Groundnut", "Mulberry"],
+    "karnataka::bangalore rural": ["Finger Millet (Ragi)", "Grape", "Mulberry", "Vegetables", "Mango"],
+    "karnataka::ramanagara": ["Silk/Mulberry", "Finger Millet (Ragi)", "Mango", "Coconut", "Banana"],
+
+    # Maharashtra
+    "maharashtra::nashik": ["Onion", "Grapes", "Pomegranate", "Sugarcane", "Soybean", "Tomato", "Wheat"],
+    "maharashtra::ratnagiri": ["Mango", "Cashewnut", "Coconut", "Rice", "Arecanut"],
+    "maharashtra::sindhudurg": ["Mango", "Cashewnut", "Coconut", "Rice", "Arecanut"],
+    "maharashtra::ahmednagar": ["Sugarcane", "Onion", "Pomegranate", "Soybean", "Wheat", "Pearl Millet (Bajra)"],
+    "maharashtra::pune": ["Sugarcane", "Onion", "Tomato", "Grapes", "Wheat", "Soybean"],
+    "maharashtra::jalgaon": ["Banana", "Cotton", "Maize", "Soybean", "Sorghum (Jowar)"],
+    "maharashtra::nagpur": ["Orange", "Cotton", "Soybean", "Pigeonpea (Arhar/Tur)"],
+    "maharashtra::solapur": ["Pomegranate", "Sugarcane", "Sorghum (Jowar)", "Grapes", "Onion"],
+    "maharashtra::kolhapur": ["Sugarcane", "Soybean", "Rice", "Groundnut", "Jaggery Cane"],
+    "maharashtra::satara": ["Sugarcane", "Strawberry", "Soybean", "Ginger", "Turmeric", "Wheat"],
+    "maharashtra::sangli": ["Grapes", "Sugarcane", "Turmeric", "Pomegranate", "Soybean"],
+    "maharashtra::amravati": ["Cotton", "Soybean", "Orange", "Pigeonpea (Arhar/Tur)"],
+    "maharashtra::aurangabad": ["Cotton", "Maize", "Soybean", "Pigeonpea (Arhar/Tur)", "Wheat"],
+    "maharashtra::beed": ["Cotton", "Soybean", "Sugarcane", "Pigeonpea (Arhar/Tur)", "Pearl Millet (Bajra)"],
+    "maharashtra::latur": ["Soybean", "Pigeonpea (Arhar/Tur)", "Sugarcane", "Chickpea (Gram)"],
+
+    # Kerala
+    "kerala::kottayam": ["Rubber", "Coconut", "Black Pepper", "Banana", "Tapioca (Cassava)", "Arecanut"],
+    "kerala::wayanad": ["Coffee", "Black Pepper", "Cardamom", "Tea", "Arecanut", "Ginger", "Banana", "Rice"],
+    "kerala::idukki": ["Cardamom", "Tea", "Black Pepper", "Coffee", "Cocoa", "Rubber"],
+    "kerala::palakkad": ["Rice", "Coconut", "Groundnut", "Banana", "Sugarcane"],
+    "kerala::alappuzha": ["Rice", "Coconut", "Banana", "Tapioca (Cassava)"],
+    "kerala::ernakulam": ["Rubber", "Coconut", "Pineapple", "Banana", "Nutmeg"],
+    "kerala::kannur": ["Coconut", "Cashewnut", "Rubber", "Black Pepper", "Arecanut"],
+    "kerala::kasaragod": ["Arecanut", "Coconut", "Cashewnut", "Rubber", "Black Pepper"],
+    "kerala::thrissur": ["Coconut", "Rice", "Banana", "Nutmeg", "Rubber"],
+
+    # Himachal Pradesh / J&K / Uttarakhand
+    "himachal pradesh::shimla": ["Apple", "Cherry", "Pear", "Potato", "Maize", "Barley"],
+    "himachal pradesh::kullu": ["Apple", "Plum", "Pomegranate", "Maize", "Barley"],
+    "himachal pradesh::kangra": ["Tea", "Rice", "Wheat", "Maize", "Mustard"],
+    "himachal pradesh::mandi": ["Maize", "Rice", "Wheat", "Apple", "Ginger"],
+    "himachal pradesh::solan": ["Tomato", "Mushroom", "Apple", "Maize", "Ginger"],
+    "jammu and kashmir::srinagar": ["Apple", "Walnut", "Almond", "Cherry", "Saffron", "Rice"],
+    "jammu and kashmir::anantnag": ["Apple", "Walnut", "Rice", "Mustard", "Trout"],
+    "jammu and kashmir::baramulla": ["Apple", "Walnut", "Cherry", "Paddy"],
+    "uttarakhand::dehradun": ["Basmati Rice", "Sugarcane", "Wheat", "Litchi", "Mango"],
+    "uttarakhand::nainital": ["Apple", "Peach", "Pear", "Potato", "Soybean"],
+
+    # Andhra Pradesh & Telangana
+    "andhra pradesh::guntur": ["Chilli (Dry)", "Cotton", "Tobacco", "Rice", "Turmeric"],
+    "andhra pradesh::prakasam": ["Tobacco", "Chilli (Dry)", "Cotton", "Chickpea (Gram)", "Rice"],
+    "andhra pradesh::kurnool": ["Cotton", "Groundnut", "Onion", "Rice", "Sunflower"],
+    "andhra pradesh::anantapur": ["Groundnut", "Sweet Orange", "Pomegranate", "Pigeonpea (Arhar/Tur)"],
+    "andhra pradesh::east godavari": ["Rice", "Coconut", "Cashewnut", "Oil Palm", "Cocoa"],
+    "andhra pradesh::west godavari": ["Rice", "Coconut", "Oil Palm", "Cocoa", "Sugarcane"],
+    "andhra pradesh::chittoor": ["Mango", "Tomato", "Sugarcane", "Groundnut"],
+    "telangana::warangal": ["Chilli (Dry)", "Cotton", "Rice", "Maize", "Turmeric"],
+    "telangana::nizamabad": ["Turmeric", "Rice", "Soybean", "Maize", "Sugarcane"],
+    "telangana::khammam": ["Chilli (Dry)", "Cotton", "Rice", "Mango", "Cashewnut"],
+    "telangana::karimnagar": ["Rice", "Cotton", "Maize", "Turmeric"],
+
+    # Punjab & Haryana
+    "punjab::ludhiana": ["Wheat", "Rice", "Potato", "Maize", "Mustard"],
+    "punjab::jalandhar": ["Potato", "Wheat", "Rice", "Maize", "Sunflower"],
+    "punjab::amritsar": ["Basmati Rice", "Wheat", "Pear", "Maize"],
+    "punjab::bathinda": ["Cotton", "Wheat", "Mustard", "Kinnow"],
+    "punjab::hoshiarpur": ["Citrus Fruit", "Wheat", "Maize", "Potato"],
+    "haryana::karnal": ["Basmati Rice", "Wheat", "Sugarcane", "Mustard"],
+    "haryana::sirsa": ["Cotton", "Wheat", "Mustard", "Guar Seed"],
+    "haryana::hisar": ["Cotton", "Wheat", "Mustard", "Pearl Millet (Bajra)"],
+
+    # Tamil Nadu
+    "tamil nadu::thanjavur": ["Rice", "Coconut", "Sugarcane", "Banana", "Black Gram (Urad)"],
+    "tamil nadu::coimbatore": ["Coconut", "Cotton", "Maize", "Banana", "Tea"],
+    "tamil nadu::salem": ["Tapioca (Cassava)", "Mango", "Arecanut", "Turmeric", "Sugarcane"],
+    "tamil nadu::erode": ["Turmeric", "Sugarcane", "Coconut", "Banana", "Tapioca (Cassava)"],
+    "tamil nadu::madurai": ["Rice", "Banana", "Jasmine/Flower", "Cotton", "Millets"],
+    "tamil nadu::dindigul": ["Banana", "Coconut", "Drumstick", "Cotton", "Onion"],
+
+    # West Bengal, Bihar, UP, Rajasthan, Gujarat
+    "west bengal::malda": ["Mango", "Jute", "Rice", "Silk/Mulberry"],
+    "west bengal::murshidabad": ["Jute", "Rice", "Wheat", "Mustard", "Mango"],
+    "west bengal::darjeeling": ["Tea", "Cardamom", "Ginger", "Orange", "Potato"],
+    "west bengal::hooghly": ["Potato", "Rice", "Jute", "Vegetables"],
+    "west bengal::burdwan": ["Rice", "Potato", "Mustard", "Jute"],
+    "bihar::muzaffarpur": ["Litchi", "Mango", "Maize", "Rice", "Wheat"],
+    "bihar::vaishali": ["Banana", "Tobacco", "Maize", "Wheat", "Litchi"],
+    "bihar::bhagalpur": ["Silk", "Mango", "Rice", "Maize", "Wheat"],
+    "uttar pradesh::agra": ["Potato", "Wheat", "Mustard", "Pearl Millet (Bajra)"],
+    "uttar pradesh::varanasi": ["Rice", "Wheat", "Mango", "Vegetables"],
+    "uttar pradesh::barabanki": ["Mentha/Mint", "Rice", "Wheat", "Sugarcane", "Potato"],
+    "uttar pradesh::muzaffarnagar": ["Sugarcane", "Wheat", "Mustard", "Rice"],
+    "rajasthan::nagaur": ["Cumin (Jeera)", "Fenugreek (Methi)", "Mustard", "Guar Seed", "Moong (Green Gram)"],
+    "rajasthan::jodhpur": ["Cumin (Jeera)", "Guar Seed", "Pearl Millet (Bajra)", "Moong (Green Gram)"],
+    "rajasthan::kota": ["Soybean", "Wheat", "Mustard", "Paddy", "Coriander"],
+    "rajasthan::baran": ["Garlic", "Soybean", "Mustard", "Wheat", "Coriander"],
+    "gujarat::junagadh": ["Groundnut", "Mango (Kesar)", "Cotton", "Wheat", "Sesame (Sesamum)"],
+    "gujarat::rajkot": ["Cotton", "Groundnut", "Wheat", "Cumin (Jeera)", "Sesame (Sesamum)"],
+    "gujarat::anand": ["Tobacco", "Banana", "Rice", "Wheat", "Dairy/Fodder"],
 }
 
 CROP_TO_COMMODITY_MAP = {
@@ -405,9 +599,34 @@ class AgroIntelPhase6Engine:
 
         unique_candidates = {}
         for c in raw_candidates:
-            c_name = c.get("crop")
-            if c_name and c_name not in unique_candidates:
-                unique_candidates[c_name] = c
+            raw_name = c.get("crop", "")
+            canon_cname = CROP_CANONICAL_NAMES.get(raw_name.lower(), raw_name)
+            if not canon_cname:
+                continue
+            if canon_cname not in unique_candidates:
+                unique_candidates[canon_cname] = dict(c)
+                unique_candidates[canon_cname]["crop"] = canon_cname
+            else:
+                exist_conf = unique_candidates[canon_cname].get("data_confidence") or 0.5
+                new_conf = c.get("data_confidence") or 0.5
+                unique_candidates[canon_cname]["data_confidence"] = max(exist_conf, new_conf)
+
+        # Include recognized signature crops for this district if present in historical evidence
+        sig_candidates = DISTRICT_SIGNATURE_CROPS.get(canonical_id.lower(), []) or \
+                         DISTRICT_SIGNATURE_CROPS.get(f"{canon_state.lower()}::{canon_district.lower()}", [])
+
+        for sig_crop in sig_candidates:
+            sig_canon = CROP_CANONICAL_NAMES.get(sig_crop.lower(), sig_crop)
+            if sig_canon not in unique_candidates:
+                ev_check = self.district_crop_evidence_map.get((canonical_id.lower(), sig_canon.lower())) or \
+                           self.district_crop_evidence_map.get((canon_state.lower(), canon_district.lower(), sig_canon.lower()))
+                if ev_check:
+                    unique_candidates[sig_canon] = {
+                        "crop": sig_canon,
+                        "source": "data.gov.in APY (District Signature)",
+                        "evidence_score": 0.95,
+                        "data_confidence": 0.95
+                    }
 
         scored_recommendations = []
         rejected_crops = []
@@ -415,39 +634,75 @@ class AgroIntelPhase6Engine:
         for crop_name, cand_info in unique_candidates.items():
             is_perennial = crop_name in PERENNIAL_CROPS
 
-            # 1. District Evidence
+            # 1. District Evidence & Local Volume Footprint
             ev_item = self.district_crop_evidence_map.get((canonical_id.lower(), crop_name.lower()))
             if not ev_item:
                 ev_item = self.district_crop_evidence_map.get((canon_state.lower(), canon_district.lower(), crop_name.lower()))
+
+            # Check if this crop is a recognized district signature crop
+            is_signature_local = False
+            sig_list = DISTRICT_SIGNATURE_CROPS.get(canonical_id.lower(), []) or \
+                       DISTRICT_SIGNATURE_CROPS.get(f"{canon_state.lower()}::{canon_district.lower()}", [])
+            if any(sig.lower() == crop_name.lower() or crop_name.lower() in sig.lower() for sig in sig_list):
+                is_signature_local = True
+
+            tot_area = 0.0
+            tot_prod = 0.0
+            volume_bonus = 0.0
 
             if ev_item:
                 years_present = ev_item.get("years_present", [])
                 n_years = len(years_present)
                 tot_prod = ev_item.get("total_production", 0)
+                tot_area = ev_item.get("total_area", 0)
                 seasons_present = [s.lower() for s in ev_item.get("seasons_present", [])]
 
+                # Base historical evidence score (up to 22.0)
                 if n_years >= 10:
-                    evidence_score = 25.0 if tot_prod > 10000 else 20.0
-                    evidence_text = f"{crop_name} has strong historical cultivation evidence in {canon_district}."
+                    evidence_score = 22.0 if tot_prod > 10000 else 18.0
                 elif n_years >= 5:
-                    evidence_score = 15.0
-                    evidence_text = f"{crop_name} has established historical cultivation records in {canon_district}."
+                    evidence_score = 14.0
                 elif n_years >= 1:
                     evidence_score = 8.0
-                    evidence_text = f"{crop_name} is grown in {canon_district}."
                 else:
                     evidence_score = 4.0
-                    evidence_text = f"{crop_name} has regional presence."
+
+                # Cultivation Volume & Area Dominance Bonus (up to 14.0 pts)
+                # Major staples with large farming footprint get priority over minor garden crops
+                if tot_area >= 50000 or tot_prod >= 200000:
+                    volume_bonus = 14.0
+                elif tot_area >= 15000 or tot_prod >= 50000:
+                    volume_bonus = 10.0
+                elif tot_area >= 3000 or tot_prod >= 10000:
+                    volume_bonus = 6.0
+                elif tot_area >= 500 or tot_prod >= 2000:
+                    volume_bonus = 3.0
             else:
                 years_present = []
                 seasons_present = []
                 c_ev = cand_info.get("evidence_score", 0.5)
                 evidence_score = round(float(c_ev) * 6.0, 1) if isinstance(c_ev, (int, float)) else 3.0
-                evidence_text = f"{crop_name} is cultivated in the agro-climatic zone."
+
+            # Local Signature Priority Boost (15.0 pts for signature crops)
+            local_priority_score = 15.0 if is_signature_local else 0.0
+
+            # Format Human-Friendly Evidence & Local Heritage Text
+            if is_signature_local and (tot_area >= 5000 or tot_prod >= 20000):
+                evidence_text = f"{crop_name} is a premier signature commercial staple with extensive acreage in {canon_district}."
+            elif is_signature_local:
+                evidence_text = f"{crop_name} is a high-priority traditional crop of {canon_district}."
+            elif tot_area >= 20000:
+                evidence_text = f"{crop_name} has widespread major cultivation ({int(tot_area):,} ha) in {canon_district}."
+            elif n_years >= 10:
+                evidence_text = f"{crop_name} has strong historical cultivation evidence in {canon_district}."
+            elif n_years >= 5:
+                evidence_text = f"{crop_name} has established historical cultivation records in {canon_district}."
+            else:
+                evidence_text = f"{crop_name} is cultivated in the agro-climatic zone of {canon_district}."
 
             # 2. Season Filter & Compatibility
             season_suitable = True
-            season_score = 20.0
+            season_score = 15.0
             season_text = f"Well-suited for the {season} cropping season."
 
             if not is_perennial and canon_season.lower() not in ["whole year", "perennial"] and season.lower() not in ["whole year", "perennial"]:
@@ -478,11 +733,11 @@ class AgroIntelPhase6Engine:
 
             if soil_ph is not None:
                 if min_ph <= soil_ph <= max_ph:
-                    soil_score = 15.0
+                    soil_score = 12.0
                     soil_status = "SUITABLE"
                     soil_text = f"Soil pH {soil_ph} is within optimal range ({min_ph}–{max_ph})."
                 elif (min_ph - 0.5) <= soil_ph <= (max_ph + 0.5):
-                    soil_score = 7.0
+                    soil_score = 6.0
                     soil_status = "PARTIALLY_SUITABLE"
                     soil_text = f"Soil pH {soil_ph} is acceptable for {crop_name}."
                 else:
@@ -501,10 +756,10 @@ class AgroIntelPhase6Engine:
             # 4. Water Status (4-State Classification)
             if water_available_mm is not None:
                 if water_available_mm >= 800:
-                    water_score = 10.0
+                    water_score = 8.0
                     water_status = "SUITABLE"
                 elif water_available_mm >= 400:
-                    water_score = 6.0
+                    water_score = 5.0
                     water_status = "LIMITED"
                 else:
                     water_score = 2.0
@@ -521,18 +776,18 @@ class AgroIntelPhase6Engine:
                     rotation_score = 2.0
                     rotation_text = f"Same crop repetition ({previous_crop} → {crop_name})"
                 elif CROP_FAMILIES.get(previous_crop) and CROP_FAMILIES.get(previous_crop) == CROP_FAMILIES.get(crop_name):
-                    rotation_score = 5.0
+                    rotation_score = 4.0
                     rotation_text = f"Same family repetition ({CROP_FAMILIES.get(crop_name)})"
                 elif previous_crop in LEGUME_CROPS:
-                    rotation_score = 15.0
+                    rotation_score = 12.0
                     rotation_text = f"Beneficial legume rotation after {previous_crop} (Nitrogen restoration)"
                 else:
-                    rotation_score = 10.0
+                    rotation_score = 8.0
                     rotation_text = f"Compatible rotation after {previous_crop}"
 
             # 6. ML Suitability Score
             data_conf = cand_info.get("data_confidence") or cand_info.get("evidence_score") or 0.7
-            ml_score = min(15.0, round(float(data_conf) * 15.0, 2)) if isinstance(data_conf, (int, float)) else 8.0
+            ml_score = min(12.0, round(float(data_conf) * 12.0, 2)) if isinstance(data_conf, (int, float)) else 7.0
 
             # 7. News Intelligence Risk Adjustment
             intel_records = self.intel_lookup.get((canon_state.lower(), crop_name.lower()), [])
@@ -542,12 +797,12 @@ class AgroIntelPhase6Engine:
             m_data = self.mandi_lookup.get((canon_district.lower(), crop_name.lower()))
             if not m_data:
                 m_data = self.mandi_lookup.get((canon_state.lower(), crop_name.lower()))
-            market_score = 5.0 if m_data else 0.0
+            market_score = 4.0 if m_data else 0.0
 
             # Composite Score (0-100)
             final_score = round(
-                evidence_score + season_score + soil_score +
-                water_score + rotation_score + ml_score + news_adj + market_score, 1
+                evidence_score + volume_bonus + local_priority_score + season_score +
+                soil_score + water_score + rotation_score + ml_score + news_adj + market_score, 1
             )
             final_score = max(0.0, min(100.0, final_score))
 
@@ -557,9 +812,12 @@ class AgroIntelPhase6Engine:
             if rotation_text:
                 reasons.append(rotation_text)
 
+            is_local = is_signature_local or (tot_area >= 10000 or tot_prod >= 40000)
+
             scored_recommendations.append({
                 "crop": crop_name,
                 "is_perennial": is_perennial,
+                "is_local_crop": is_local,
                 "final_score": final_score,
                 "rank": 0,
                 "reasons": reasons,
