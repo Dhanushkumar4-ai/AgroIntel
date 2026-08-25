@@ -304,6 +304,14 @@ DISTRICT_SIGNATURE_CROPS = {
     "gujarat::anand": ["Tobacco", "Banana", "Rice", "Wheat", "Dairy/Fodder"],
 }
 
+INVALID_CROP_NAMES = {
+    "total foodgrain", "oilseeds total", "pulses total", "foodgrain total",
+    "other kharif pulses", "other rabi pulses", "other misc. pulses",
+    "other cereals & millets", "other oilseeds", "other fresh fruits",
+    "other citrus fruit", "other dry fruit", "other vegetables", "other fibres",
+    "cond-spcs other", "total"
+}
+
 CROP_TO_COMMODITY_MAP = {
     "rice": "rice", "wheat": "wheat", "maize": "maize", "onion": "onion",
     "potato": "potato", "arecanut": "arecanut", "arcanut (processed)": "arecanut",
@@ -443,22 +451,52 @@ class AgroIntelPhase6Engine:
                 self.intel_lookup[key].append(intel)
 
         self.district_crop_evidence_map = {}
+        self.district_top_crops = defaultdict(list)
         if isinstance(self.crop_evidence, list):
             for d_item in self.crop_evidence:
                 d_cid = d_item.get("district_id", "").lower()
                 d_st = d_item.get("state", "").lower()
                 d_dt = d_item.get("district", "").lower()
 
+                canon = self.canonicalize_district(d_dt, d_st)
+                resolved_cid = canon["canonical_id"].lower() if canon else d_cid
+
+                crop_stats = defaultdict(lambda: {"total_area": 0.0, "total_prod": 0.0, "years": 0, "seasons": set(), "entry": None})
+
                 for c_entry in d_item.get("crops", []):
-                    c_name = c_entry.get("crop", "").lower()
+                    c_raw = c_entry.get("crop", "")
+                    if c_raw.lower() in INVALID_CROP_NAMES:
+                        continue
+                    c_canon = CROP_CANONICAL_NAMES.get(c_raw.lower(), c_raw)
+                    c_lower = c_canon.lower()
                     canon_c = c_entry.get("canonical_crop", "").lower()
 
-                    if c_name:
-                        self.district_crop_evidence_map[(d_cid, c_name)] = c_entry
-                        self.district_crop_evidence_map[(d_st, d_dt, c_name)] = c_entry
-                    if canon_c:
+                    if c_lower:
+                        self.district_crop_evidence_map[(d_cid, c_lower)] = c_entry
+                        self.district_crop_evidence_map[(d_st, d_dt, c_lower)] = c_entry
+                        if resolved_cid:
+                            self.district_crop_evidence_map[(resolved_cid, c_lower)] = c_entry
+                    if canon_c and canon_c not in INVALID_CROP_NAMES:
                         self.district_crop_evidence_map[(d_cid, canon_c)] = c_entry
                         self.district_crop_evidence_map[(d_st, d_dt, canon_c)] = c_entry
+                        if resolved_cid:
+                            self.district_crop_evidence_map[(resolved_cid, canon_c)] = c_entry
+
+                    crop_stats[c_canon]["total_area"] += c_entry.get("total_area", 0)
+                    crop_stats[c_canon]["total_prod"] += c_entry.get("total_production", 0)
+                    crop_stats[c_canon]["years"] = max(crop_stats[c_canon]["years"], len(c_entry.get("years_present", [])))
+                    crop_stats[c_canon]["seasons"].update([s.lower() for s in c_entry.get("seasons_present", [])])
+                    if not crop_stats[c_canon]["entry"]:
+                        crop_stats[c_canon]["entry"] = c_entry
+
+                # Sort crops by acreage and production to find the true local agricultural staples
+                sorted_crops = sorted(crop_stats.items(), key=lambda x: (x[1]["total_area"], x[1]["total_prod"]), reverse=True)
+                top_ranked = [name for name, stats in sorted_crops[:8]]
+
+                self.district_top_crops[d_cid] = top_ranked
+                self.district_top_crops[(d_st, d_dt)] = top_ranked
+                if resolved_cid:
+                    self.district_top_crops[resolved_cid] = top_ranked
 
         reqs_raw = self._load_json(EXP_DIR / "crop_requirements.json")
         self.crop_requirements = reqs_raw.get("crop_requirements", {}) if isinstance(reqs_raw, dict) else {}
@@ -600,8 +638,10 @@ class AgroIntelPhase6Engine:
         unique_candidates = {}
         for c in raw_candidates:
             raw_name = c.get("crop", "")
+            if raw_name.lower() in INVALID_CROP_NAMES:
+                continue
             canon_cname = CROP_CANONICAL_NAMES.get(raw_name.lower(), raw_name)
-            if not canon_cname:
+            if not canon_cname or canon_cname.lower() in INVALID_CROP_NAMES:
                 continue
             if canon_cname not in unique_candidates:
                 unique_candidates[canon_cname] = dict(c)
@@ -611,19 +651,30 @@ class AgroIntelPhase6Engine:
                 new_conf = c.get("data_confidence") or 0.5
                 unique_candidates[canon_cname]["data_confidence"] = max(exist_conf, new_conf)
 
-        # Include recognized signature crops for this district if present in historical evidence
-        sig_candidates = DISTRICT_SIGNATURE_CROPS.get(canonical_id.lower(), []) or \
-                         DISTRICT_SIGNATURE_CROPS.get(f"{canon_state.lower()}::{canon_district.lower()}", [])
+        # Collect signature and top empirical local agricultural staples for this specific district
+        sig_crops = DISTRICT_SIGNATURE_CROPS.get(canonical_id.lower(), []) or \
+                    DISTRICT_SIGNATURE_CROPS.get(f"{canon_state.lower()}::{canon_district.lower()}", [])
 
-        for sig_crop in sig_candidates:
-            sig_canon = CROP_CANONICAL_NAMES.get(sig_crop.lower(), sig_crop)
-            if sig_canon not in unique_candidates:
-                ev_check = self.district_crop_evidence_map.get((canonical_id.lower(), sig_canon.lower())) or \
-                           self.district_crop_evidence_map.get((canon_state.lower(), canon_district.lower(), sig_canon.lower()))
+        emp_top_crops = self.district_top_crops.get(canonical_id.lower(), []) or \
+                        self.district_top_crops.get((canon_state.lower(), canon_district.lower()), [])
+
+        district_priority_crops = []
+        for c in sig_crops + emp_top_crops:
+            c_norm = CROP_CANONICAL_NAMES.get(c.lower(), c)
+            if c_norm.lower() not in INVALID_CROP_NAMES and c_norm not in district_priority_crops:
+                district_priority_crops.append(c_norm)
+
+        # Ensure priority district crops are evaluated if historical records exist in this district
+        for p_crop in district_priority_crops:
+            if p_crop.lower() in INVALID_CROP_NAMES:
+                continue
+            if p_crop not in unique_candidates:
+                ev_check = self.district_crop_evidence_map.get((canonical_id.lower(), p_crop.lower())) or \
+                           self.district_crop_evidence_map.get((canon_state.lower(), canon_district.lower(), p_crop.lower()))
                 if ev_check:
-                    unique_candidates[sig_canon] = {
-                        "crop": sig_canon,
-                        "source": "data.gov.in APY (District Signature)",
+                    unique_candidates[p_crop] = {
+                        "crop": p_crop,
+                        "source": "data.gov.in APY (District Staple)",
                         "evidence_score": 0.95,
                         "data_confidence": 0.95
                     }
@@ -632,6 +683,8 @@ class AgroIntelPhase6Engine:
         rejected_crops = []
 
         for crop_name, cand_info in unique_candidates.items():
+            if crop_name.lower() in INVALID_CROP_NAMES:
+                continue
             is_perennial = crop_name in PERENNIAL_CROPS
 
             # 1. District Evidence & Local Volume Footprint
@@ -639,12 +692,8 @@ class AgroIntelPhase6Engine:
             if not ev_item:
                 ev_item = self.district_crop_evidence_map.get((canon_state.lower(), canon_district.lower(), crop_name.lower()))
 
-            # Check if this crop is a recognized district signature crop
-            is_signature_local = False
-            sig_list = DISTRICT_SIGNATURE_CROPS.get(canonical_id.lower(), []) or \
-                       DISTRICT_SIGNATURE_CROPS.get(f"{canon_state.lower()}::{canon_district.lower()}", [])
-            if any(sig.lower() == crop_name.lower() or crop_name.lower() in sig.lower() for sig in sig_list):
-                is_signature_local = True
+            # Check if this crop is a recognized district signature or empirical top staple
+            is_signature_local = any(p.lower() == crop_name.lower() or crop_name.lower() in p.lower() for p in district_priority_crops)
 
             tot_area = 0.0
             tot_prod = 0.0
