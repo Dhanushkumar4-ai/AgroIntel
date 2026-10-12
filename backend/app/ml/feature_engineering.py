@@ -130,20 +130,24 @@ def compute_features_for_row(
     ds_series: pd.Series,
     weather_lookup_fn=get_weather_features,
 ) -> dict:
-    prices_up_to = price_series.iloc[: row_idx + 1].values
+    # prices_up_to includes the current row value — we use only past prices to avoid leakage.
+    # prices_up_to[-1] = current day price (target y)
+    # prices_up_to[-2] = yesterday (lag_1) — this matches df["y"].shift(1) in training
+    past_prices = price_series.iloc[: row_idx].values  # exclude current row
     target_dt = pd.to_datetime(ds_series.iloc[row_idx]).date()
 
-    n = len(prices_up_to)
-    lag_1 = float(prices_up_to[-2]) if n >= 2 else float(prices_up_to[-1])
-    lag_7 = float(prices_up_to[-8]) if n >= 8 else lag_1
-    lag_14 = float(prices_up_to[-15]) if n >= 15 else lag_7
-    lag_30 = float(prices_up_to[-31]) if n >= 31 else lag_14
+    n = len(past_prices)
+    lag_1  = float(past_prices[-1])  if n >= 1  else 0.0
+    lag_7  = float(past_prices[-7])  if n >= 7  else lag_1
+    lag_14 = float(past_prices[-14]) if n >= 14 else lag_7
+    lag_30 = float(past_prices[-30]) if n >= 30 else lag_14
 
-    window_7 = prices_up_to[-7:] if n >= 7 else prices_up_to
-    rolling_mean_7 = float(np.mean(window_7))
+    # Rolling windows over past prices only (no leakage)
+    window_7  = past_prices[-7:]  if n >= 7  else past_prices
+    rolling_7 = float(np.mean(window_7))  if len(window_7) > 0 else lag_1
 
-    window_30 = prices_up_to[-30:] if n >= 30 else prices_up_to
-    rolling_mean_30 = float(np.mean(window_30))
+    window_30  = past_prices[-30:] if n >= 30 else past_prices
+    rolling_30 = float(np.mean(window_30)) if len(window_30) > 0 else lag_1
 
     month = target_dt.month
     season_code = SEASON_ENCODING.get(month, 1)
@@ -151,17 +155,17 @@ def compute_features_for_row(
     bs_flag = is_black_swan_period(target_dt)
 
     return {
-        "lag_1": round(lag_1, 2),
-        "lag_7": round(lag_7, 2),
-        "lag_14": round(lag_14, 2),
-        "lag_30": round(lag_30, 2),
-        "rolling_mean_7": round(rolling_mean_7, 2),
-        "rolling_mean_30": round(rolling_mean_30, 2),
-        "month": month,
-        "season": season_code,
-        "monthly_avg_temp": round(avg_temp, 2),
+        "lag_1":                  round(lag_1, 2),
+        "lag_7":                  round(lag_7, 2),
+        "lag_14":                 round(lag_14, 2),
+        "lag_30":                 round(lag_30, 2),
+        "rolling_mean_7":         round(rolling_7, 2),
+        "rolling_mean_30":        round(rolling_30, 2),
+        "month":                  month,
+        "season":                 season_code,
+        "monthly_avg_temp":       round(avg_temp, 2),
         "monthly_total_rainfall": round(total_rain, 2),
-        "black_swan": bs_flag,
+        "black_swan":             bs_flag,
     }
 
 
@@ -197,41 +201,58 @@ add_features = build_training_features
 
 
 def build_inference_features(
-    price_tail: list[float],
+    price_tail: list,
     target_date: date,
     monthly_avg_temp: float = 25.0,
     monthly_total_rainfall: float = 50.0,
 ) -> pd.DataFrame:
+    """
+    Build a single-row feature DataFrame for inference.
+
+    price_tail: list of PAST prices (NOT including today's price).
+                The last element is yesterday's price (lag_1).
+                Minimum 30 values required; shorter tails are padded.
+    target_date: the date being predicted (tomorrow from caller's perspective).
+    """
     if len(price_tail) < 30:
         pad_val = price_tail[0] if price_tail else 1000.0
-        price_tail = [pad_val] * (30 - len(price_tail)) + price_tail
+        price_tail = [pad_val] * (30 - len(price_tail)) + list(price_tail)
 
-    prices_up_to = np.array(price_tail, dtype=float)
+    # price_tail[-1] = yesterday = lag_1  (matches df["y"].shift(1) in training)
+    past = np.array(price_tail, dtype=float)
 
-    lag_1 = float(prices_up_to[-1])
-    lag_7 = float(prices_up_to[-7])
-    lag_14 = float(prices_up_to[-14])
-    lag_30 = float(prices_up_to[-30])
+    lag_1  = float(past[-1])   # yesterday
+    lag_7  = float(past[-7])   # 7 days ago
+    lag_14 = float(past[-14])  # 14 days ago
+    lag_30 = float(past[-30])  # 30 days ago
 
-    rolling_mean_7 = float(np.mean(prices_up_to[-7:]))
-    rolling_mean_30 = float(np.mean(prices_up_to[-30:]))
+    # Rolling means over past values (no current-day leakage)
+    rolling_mean_7  = float(np.mean(past[-7:]))
+    rolling_mean_30 = float(np.mean(past[-30:]))
 
-    month = target_date.month
+    month       = target_date.month
     season_code = SEASON_ENCODING.get(month, 1)
-    bs_flag = is_black_swan_period(target_date)
+    bs_flag     = is_black_swan_period(target_date)
+
+    # Try to get actual weather for target month if not explicitly provided
+    if monthly_avg_temp == 25.0 and monthly_total_rainfall == 50.0:
+        try:
+            monthly_avg_temp, monthly_total_rainfall = get_weather_features(target_date)
+        except Exception:
+            pass  # keep defaults if weather lookup fails
 
     feat_dict = {
-        "lag_1": [round(lag_1, 2)],
-        "lag_7": [round(lag_7, 2)],
-        "lag_14": [round(lag_14, 2)],
-        "lag_30": [round(lag_30, 2)],
-        "rolling_mean_7": [round(rolling_mean_7, 2)],
-        "rolling_mean_30": [round(rolling_mean_30, 2)],
-        "month": [month],
-        "season": [season_code],
-        "monthly_avg_temp": [round(monthly_avg_temp, 2)],
+        "lag_1":                  [round(lag_1, 2)],
+        "lag_7":                  [round(lag_7, 2)],
+        "lag_14":                 [round(lag_14, 2)],
+        "lag_30":                 [round(lag_30, 2)],
+        "rolling_mean_7":         [round(rolling_mean_7, 2)],
+        "rolling_mean_30":        [round(rolling_mean_30, 2)],
+        "month":                  [month],
+        "season":                 [season_code],
+        "monthly_avg_temp":       [round(monthly_avg_temp, 2)],
         "monthly_total_rainfall": [round(monthly_total_rainfall, 2)],
-        "black_swan": [bs_flag],
+        "black_swan":             [bs_flag],
     }
 
     feat_df = pd.DataFrame(feat_dict)

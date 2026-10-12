@@ -1,28 +1,41 @@
 """
-process_news.py — Daily News Intelligence Extraction, Classification & Cross-Verification Job.
-
+process_news.py — Daily Agricultural News Intelligence Extraction, Classification & Verification Job.
+======================================================================================================
 Processes raw articles from news_articles.json:
-  1. Extracts State, District, and Crop entities using canonical gazetteers.
-  2. Classifies agricultural events into 21 precise categories.
-  3. Clusters related events and performs cross-source verification:
-     - VERIFIED: >= 2 independent sources with high credibility
-     - SINGLE_SOURCE: exactly 1 source reporting the event
-     - CONFLICTING: divergent direction or severity reports
-     - UNVERIFIED: unconfirmed or tier-4 only
-     - STALE: older than half-life decay window
-  4. Calculates bounded risk weights (-5 to +3 points) for recommendation integration.
-  5. Updates news_events.json, news_event_clusters.json, and current_intelligence.json.
+  1. Filters out non-agricultural noise (equities, sports, cinema, real estate) to prevent false market alerts.
+  2. Extracts State and Crop entities using canonical gazetteers.
+  3. Classifies agricultural events and market direction (BULLISH, BEARISH, MIXED, UNCERTAIN).
+  4. Assigns impact strength (HIGH, MEDIUM, LOW) and geographic scope (NATIONAL, STATE, REGIONAL, INTERNATIONAL).
+  5. Performs entity-aware cross-source verification:
+     - VERIFIED: >= 2 independent sources with matching direction and credible tier.
+     - CORROBORATED: Supported by Tier 1/2 official or research authorities.
+     - SINGLE_SOURCE: 1 credible source.
+     - CONFLICTING: Divergent directional market signals.
+     - UNVERIFIED: Uncorroborated single tier-4 or discovery source.
+     - STALE: Older than 45 days.
+  6. Calculates transparent multi-factor relevance and recency decay scores (0-100).
+  7. Outputs news_events.json, news_event_clusters.json, current_intelligence.json, and audit report.
 """
 
 import hashlib
 import json
 import logging
-import re
 import time
 from collections import defaultdict
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
+
+from app.services.news_intelligence_service import (
+    classify_source_credibility,
+    is_agricultural_article,
+    extract_entities,
+    classify_market_impact,
+    calculate_article_relevance_score,
+    parse_publication_date,
+    DEFAULT_NEWS_SCORING_CONFIG,
+    SOURCE_TIERS,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("app.jobs.process_news")
@@ -41,203 +54,220 @@ CURRENT_INTEL_PATH = EXP_DIR / "current_intelligence.json"
 VERIF_REPORT_PATH = EXP_DIR / "news_cross_verification_report.json"
 AUDIT_COPY_PATH = AUDIT_DIR / "news_cross_verification_report.json"
 
-# 21 Event Categories with Keywords
-EVENT_KEYWORDS = {
-    "FLOOD": ["flood", "flooding", "waterlogged", "inundated", "submerged", "dam overflow"],
-    "DROUGHT": ["drought", "dry spell", "water scarcity", "monsoon deficit", "rain deficit"],
-    "HEAVY_RAIN": ["heavy rainfall", "torrential rain", "excess rain", "cloudburst", "downpour"],
-    "HEATWAVE": ["heatwave", "scorching heat", "temperature surge", "extreme temperature"],
-    "PEST_OUTBREAK": ["locust", "fall armyworm", "bollworm", "pest attack", "pest infestation", "stem borer"],
-    "DISEASE_OUTBREAK": ["blast disease", "rust disease", "blight", "mosaic virus", "fungal disease", "rot"],
-    "CROP_DAMAGE": ["crop damage", "crop loss", "yield loss", "hailstorm damage", "standing crop damaged"],
-    "EXPORT_RESTRICTION": ["export ban", "export curb", "minimum export price", "export duty", "mep", "export prohibited"],
-    "IMPORT_RESTRICTION": ["import duty", "import tariff", "import relaxed", "duty-free import"],
-    "MSP_POLICY": ["msp", "minimum support price", "procurement price", "cpc procurement", "cabinet approves msp"],
-    "FERTILIZER": ["fertilizer subsidy", "urea shortage", "dap shortage", "npk subsidy", "fertilizer price"],
-    "FUEL_PRICE": ["diesel price", "fuel subsidy", "pump price", "tractor fuel"],
-    "SUPPLY_SHOCK": ["supply disruption", "mandi arrival halted", "transport strike", "supply crisis"],
-    "DEMAND_SHOCK": ["festive demand", "bulk purchase", "offseason demand", "consumption rise"],
-    "TRADE_POLICY": ["tariff", "customs duty", "quota", "trade agreement"],
-    "CYCLONE": ["cyclone", "cyclonic storm", "depression in bay", "landfall"],
-    "COLD_WAVE": ["cold wave", "frost", "ground frost", "winter freeze"],
-    "MARKET_PRICE_EVENT": ["price crash", "price surge", "mandi rate drops", "record high price", "price spiked"],
-}
-
-# 28 States for Entity Recognition
-INDIAN_STATES = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa",
-    "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
-    "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland",
-    "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-    "Uttar Pradesh", "Uttarakhand", "West Bengal"
-]
-
-CANONICAL_CROPS = [
-    "Rice", "Wheat", "Maize", "Onion", "Potato", "Sugarcane", "Cotton", "Soybean",
-    "Chickpea", "Groundnut", "Mustard", "Barley", "Jowar", "Bajra", "Ragi", "Urad",
-    "Moong", "Tur", "Arecanut", "Coconut", "Banana", "Black Pepper", "Cardamom",
-    "Ginger", "Turmeric", "Tea", "Coffee", "Tobacco", "Jute", "Cashew"
-]
-
 
 class NewsProcessingJob:
-    """Production News Processing & Cross-Verification Job."""
+    """Production Agricultural News Processing & Cross-Verification Job."""
 
     def __init__(self):
-        self.state_patterns = {st: re.compile(rf"\b{re.escape(st)}\b", re.IGNORECASE) for st in INDIAN_STATES}
-        self.crop_patterns = {c: re.compile(rf"\b{re.escape(c)}\b", re.IGNORECASE) for c in CANONICAL_CROPS}
+        self.config = DEFAULT_NEWS_SCORING_CONFIG
 
-    def _extract_state(self, text: str) -> Optional[str]:
-        for st, pat in self.state_patterns.items():
-            if pat.search(text):
-                return st
-        return None
-
-    def _extract_crop(self, text: str) -> Optional[str]:
-        for c, pat in self.crop_patterns.items():
-            if pat.search(text):
-                return c
-        return None
-
-    def _classify_event(self, text: str) -> Tuple[str, float]:
-        text_lower = text.lower()
-        for event_type, keywords in EVENT_KEYWORDS.items():
-            for kw in keywords:
-                if kw in text_lower:
-                    return event_type, 0.85
-        return "OTHER", 0.30
-
-    def process_articles(self, articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Extract structured events from raw articles."""
+    def process_articles(self, articles: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], int]:
+        """
+        Filter non-ag articles and extract structured events with market impact classification.
+        Returns: (events_list, non_ag_filtered_count)
+        """
         events = []
-        now = datetime.now(timezone.utc)
+        non_ag_count = 0
+        now_utc = datetime.now(timezone.utc)
 
         for art in articles:
             title = art.get("title", "")
             desc = art.get("description", "")
-            full_text = f"{title}. {desc}"
 
-            state = self._extract_state(full_text) or "National"
-            crop = self._extract_crop(full_text) or "General Agriculture"
-            event_type, confidence = self._classify_event(full_text)
+            # 1. Agricultural Domain Filter: Exclude non-ag noise
+            if not is_agricultural_article(title, desc):
+                non_ag_count += 1
+                continue
 
-            # Publication date parsing
-            pub_date_str = art.get("pub_date", "")
-            pub_dt = now
-            # Try parsing ISO or RFC formats
-            for fmt in ["%a, %d %b %Y %H:%M:%S %z", "%a, %d %b %Y %H:%M:%S %Z", "%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%d"]:
+            full_text = f"{title}. {desc}".strip()
+
+            # 2. Extract Entities
+            state, crop = extract_entities(full_text)
+            state_label = state or "National"
+            crop_label = crop or "General Agriculture"
+
+            # 3. Classify Market Impact & Event Category
+            impact_info = classify_market_impact(full_text)
+            event_type = impact_info["event_type"]
+            market_effect = impact_info["market_effect"]
+            impact_strength = impact_info["impact_strength"]
+            geo_scope = impact_info["geographic_scope"]
+            reasoning = impact_info["reasoning"]
+            confidence = impact_info["confidence"]
+
+            # 4. Publication Date & Age in Days (Publication time, NOT fetch time!)
+            raw_date_candidate = art.get("pub_date") or art.get("pub_date_raw") or ""
+            pub_date_iso, is_missing = parse_publication_date(raw_date_candidate)
+
+            if pub_date_iso and not is_missing:
                 try:
-                    pub_dt = datetime.strptime(pub_date_str.strip(), fmt)
+                    pub_dt = datetime.fromisoformat(pub_date_iso)
                     if not pub_dt.tzinfo:
                         pub_dt = pub_dt.replace(tzinfo=timezone.utc)
-                    break
+                    age_days = max(0.0, round((now_utc - pub_dt).total_seconds() / 86400.0, 1))
+                    pub_missing = False
                 except Exception:
-                    continue
+                    pub_dt = now_utc
+                    age_days = 0.0
+                    pub_missing = True
+            else:
+                pub_dt = now_utc
+                age_days = 0.0
+                pub_missing = True
 
-            age_days = max(0.0, round((now - pub_dt).total_seconds() / 86400.0, 1))
+            # Freshness label
+            if age_days <= 3.0:
+                freshness = "VERY_FRESH"
+            elif age_days <= 14.0:
+                freshness = "FRESH"
+            elif age_days <= 30.0:
+                freshness = "RECENT"
+            elif age_days <= 45.0:
+                freshness = "BACKGROUND"
+            else:
+                freshness = "STALE"
 
-            tier = art.get("tier", "TIER_4")
-            source_weight = 1.0 if tier == "TIER_1" else (0.8 if tier == "TIER_2" else (0.6 if tier == "TIER_3" else 0.4))
+            # 5. Source Credibility Tier
+            source_name = art.get("source_name", "Unknown")
+            source_url = art.get("link", "")
+            cred_info = classify_source_credibility(source_name, source_url)
+            tier = cred_info["tier"]
+            cred_weight = cred_info["credibility_weight"]
 
-            event_id = "EVT_" + hashlib.sha256((art.get("article_id", "") + event_type).encode("utf-8")).hexdigest()[:16]
+            event_id = "EVT_" + hashlib.sha256(
+                f"{art.get('article_id', '')}::{event_type}::{market_effect}".encode("utf-8")
+            ).hexdigest()[:16]
 
-            events.append({
+            event_obj = {
                 "event_id": event_id,
                 "article_id": art.get("article_id"),
                 "title": title,
+                "description": desc,
+                "url": art.get("link") or art.get("original_link", ""),
                 "source_id": art.get("source_id", "unknown"),
-                "source_name": art.get("source_name", "Unknown"),
+                "source_name": source_name,
                 "tier": tier,
-                "source_credibility_weight": source_weight,
-                "state": state,
-                "crop": crop,
+                "source_tier_label": cred_info["label"],
+                "source_credibility_weight": cred_weight,
+                "state": state_label,
+                "crop": crop_label,
                 "event_type": event_type,
+                "market_effect": market_effect,
+                "impact_strength": impact_strength,
+                "geographic_scope": geo_scope,
                 "confidence": confidence,
-                "published_at": pub_dt.isoformat(),
+                "classification_reason": reasoning,
+                "published_at": pub_date_iso or pub_dt.isoformat(),
+                "pub_date_missing": pub_missing,
                 "age_days": age_days,
-                "freshness_status": "VERY_FRESH" if age_days <= 3 else ("FRESH" if age_days <= 14 else ("RECENT" if age_days <= 30 else "STALE")),
-            })
+                "freshness_status": freshness,
+                "fetched_at": art.get("fetched_at", now_utc.isoformat()),
+            }
 
-        return events
+            events.append(event_obj)
 
-    def cluster_and_verify(self, events: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-        """Cluster events and perform cross-source verification."""
+        return events, non_ag_count
+
+    def cluster_and_verify(
+        self, events: List[Dict[str, Any]]
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]], Dict[str, Any]]:
+        """
+        Group events into entity-specific clusters, perform cross-source verification,
+        and calculate transparent multi-factor relevance scores.
+        """
+        # Cluster key requires specific event matching; general other items are clustered by headline fingerprint
         clusters = defaultdict(list)
         for ev in events:
-            # Cluster key: (state, crop, event_type)
-            key = f"{ev['state']}::{ev['crop']}::{ev['event_type']}"
+            # Distinguish specific events from generic items
+            if ev["crop"] != "General Agriculture" or ev["event_type"] != "GENERAL_AGRI":
+                key = f"{ev['state']}::{ev['crop']}::{ev['event_type']}"
+            else:
+                # Group by first 3 words of title to prevent broad false-positive clustering
+                title_words = "_".join(ev["title"].lower().split()[:3])
+                key = f"{ev['state']}::{ev['crop']}::{title_words}"
             clusters[key].append(ev)
 
         verified_clusters = []
-        total_events = len(events)
         verified_count = 0
+        corroborated_count = 0
         single_source_count = 0
+        conflicting_count = 0
 
         for key, ev_list in clusters.items():
-            sources = {e["source_id"] for e in ev_list}
+            sources = {e["source_name"] for e in ev_list}
             tiers = {e["tier"] for e in ev_list}
-            has_authoritative = "TIER_1" in tiers or "TIER_2" in tiers
+            effects = {e["market_effect"] for e in ev_list if e["market_effect"] in ["BULLISH", "BEARISH"]}
 
-            if len(sources) >= 2 and has_authoritative:
+            # Verification logic
+            if "BULLISH" in effects and "BEARISH" in effects:
+                status = "CONFLICTING"
+                conflicting_count += len(ev_list)
+            elif len(sources) >= 2 and ("TIER_1_OFFICIAL" in tiers or "TIER_2_AGRI_RESEARCH" in tiers):
                 status = "VERIFIED"
                 verified_count += len(ev_list)
             elif len(sources) >= 2:
                 status = "VERIFIED"
                 verified_count += len(ev_list)
+            elif "TIER_1_OFFICIAL" in tiers or "TIER_2_AGRI_RESEARCH" in tiers:
+                status = "CORROBORATED"
+                corroborated_count += len(ev_list)
             elif len(sources) == 1:
                 status = "SINGLE_SOURCE"
                 single_source_count += len(ev_list)
             else:
                 status = "UNVERIFIED"
 
-            # Tag events with status
             for e in ev_list:
                 e["verification_status"] = status
+                # Compute transparent relevance score
+                rel_res = calculate_article_relevance_score(
+                    e,
+                    target_crop=e["crop"] if e["crop"] != "General Agriculture" else None,
+                    target_state=e["state"] if e["state"] != "National" else None,
+                    config=self.config
+                )
+                e["relevance_score"] = rel_res
 
             verified_clusters.append({
                 "cluster_key": key,
                 "event_count": len(ev_list),
                 "unique_sources": len(sources),
+                "sources": list(sources),
                 "verification_status": status,
-                "sources_involved": list(sources),
                 "sample_title": ev_list[0]["title"],
+                "market_effect": ev_list[0]["market_effect"],
             })
 
-        # Build current intelligence state/crop map
-        current_intelligence = {}
-        for ev in events:
-            st = ev["state"]
-            cr = ev["crop"]
-            if st not in current_intelligence:
-                current_intelligence[st] = {}
-            if cr not in current_intelligence[st]:
-                current_intelligence[st][cr] = []
-            
-            # Keep top 5 latest events per state/crop
-            if len(current_intelligence[st][cr]) < 5:
-                current_intelligence[st][cr].append({
-                    "event_type": ev["event_type"],
-                    "title": ev["title"],
-                    "published_at": ev["published_at"],
-                    "status": ev["verification_status"],
-                    "source": ev["source_name"],
-                    "tier": ev["tier"],
-                })
+        # Sort events by composite relevance and freshness
+        events_sorted = sorted(
+            events,
+            key=lambda x: (
+                x.get("relevance_score", {}).get("composite_score", 0),
+                -float(x.get("age_days", 999))
+            ),
+            reverse=True
+        )
+
+        # Build current intelligence: list format for phase6_integration_service compatibility
+        # Keep top 100 most relevant events
+        current_intelligence_list = events_sorted[:100]
 
         report = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "total_articles_processed": total_events,
+            "total_agricultural_events": len(events),
             "total_event_clusters": len(clusters),
             "verified_events_count": verified_count,
+            "corroborated_events_count": corroborated_count,
             "single_source_events_count": single_source_count,
+            "conflicting_events_count": conflicting_count,
             "verified_clusters_count": sum(1 for c in verified_clusters if c["verification_status"] == "VERIFIED"),
             "single_source_clusters_count": sum(1 for c in verified_clusters if c["verification_status"] == "SINGLE_SOURCE"),
         }
 
-        return events, verified_clusters, current_intelligence, report
+        return events_sorted, verified_clusters, current_intelligence_list, report
 
     def run(self) -> Dict[str, Any]:
-        """Execute full news processing & verification."""
+        """Execute full news processing & cross-verification."""
         t_start = time.time()
         logger.info("Starting Daily News Processing & Cross-Verification Job...")
 
@@ -248,22 +278,30 @@ class NewsProcessingJob:
         with open(ARTICLES_PATH, "r", encoding="utf-8") as f:
             articles = json.load(f)
 
-        events = self.process_articles(articles)
-        events, clusters, intel, report = self.cluster_and_verify(events)
+        events, non_ag_filtered = self.process_articles(articles)
+        events, clusters, intel_list, report = self.cluster_and_verify(events)
 
+        report["raw_articles_evaluated"] = len(articles)
+        report["non_agricultural_noise_excluded"] = non_ag_filtered
+
+        # Save artifacts
         with open(EVENTS_PATH, "w", encoding="utf-8") as f:
             json.dump(events, f, indent=2)
         with open(CLUSTERS_PATH, "w", encoding="utf-8") as f:
             json.dump(clusters, f, indent=2)
         with open(CURRENT_INTEL_PATH, "w", encoding="utf-8") as f:
-            json.dump(intel, f, indent=2)
+            # Saved as list for direct phase6_integration_service compatibility
+            json.dump(intel_list, f, indent=2)
         with open(VERIF_REPORT_PATH, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
         with open(AUDIT_COPY_PATH, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
 
         elapsed = round(time.time() - t_start, 2)
-        logger.info(f"News Processing Complete in {elapsed}s: {len(events)} events processed, {report['verified_clusters_count']} verified clusters.")
+        logger.info(
+            f"News Processing Complete in {elapsed}s: {len(events)} agricultural events processed "
+            f"({non_ag_filtered} non-ag excluded). {report['verified_clusters_count']} verified clusters."
+        )
         return report
 
 

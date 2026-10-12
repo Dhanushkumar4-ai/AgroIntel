@@ -1,59 +1,51 @@
 {
   "crop": "rice",
   "best_baseline": "prophet",
-  "production_model": "xgboost",
+  "production_model": "prophet",
   "models": {
     "arima": {
-      "model_name": "arima",
-      "status": "trained",
-      "mae": 63.98,
-      "rmse": 69.39,
-      "training_time_sec": 0.14,
-      "hyperparameters": {
-        "order": "(1,1,1)"
-      }
+      "mae": 51.51,
+      "rmse": 63.79,
+      "training_time_sec": 0.25
     },
     "prophet": {
-      "model_name": "prophet",
-      "status": "trained",
-      "mae": 63.81,
-      "rmse": 78.63,
-      "training_time_sec": 0.57,
-      "hyperparameters": {
-        "yearly_seasonality": true,
-        "weekly_seasonality": true
-      }
+      "mae": 44.07,
+      "rmse": 54.73,
+      "training_time_sec": 0.65
     },
     "lstm": {
       "status": "success",
-      "mae": 1148.14,
-      "rmse": 1148.48,
-      "training_time_sec": 18.67,
+      "framework": "PyTorch 2.7+",
+      "mae": 66.05,
+      "rmse": 78.4,
+      "mape": 2.53,
+      "r2": -1.8746,
+      "training_time_sec": 17.97,
+      "train_rows": 2744,
+      "val_rows": 60,
       "hyperparameters": {
         "sequence_length": 30,
         "architecture": "LSTM(64) -> Dropout(0.2) -> LSTM(32) -> Dense(16) -> Dense(1)",
-        "epochs": 25,
+        "epochs": 30,
         "batch_size": 32,
-        "optimizer": "adam"
+        "learning_rate": 0.003,
+        "optimizer": "Adam"
       },
-      "model_file": "/Users/kaushikpoojary/Downloads/projectphase2/backend/models/lstm_rice.keras",
-      "scaler_file": "/Users/kaushikpoojary/Downloads/projectphase2/backend/models/lstm_scaler_rice.pkl"
+      "model_file": "lstm_rice.pt",
+      "scaler_file": "lstm_scaler_rice.pkl"
     },
     "xgboost": {
-      "model_name": "xgboost",
-      "status": "trained",
-      "mae": 23.98,
-      "rmse": 30.12,
-      "training_time_sec": 1.84,
-      "hyperparameters": {
-        "max_depth": 5,
-        "learning_rate": 0.03,
+      "mae": 56.81,
+      "rmse": 69.19,
+      "best_params": {
+        "max_depth": 3,
+        "learning_rate": 0.1,
         "n_estimators": 100
-      }
+      },
+      "training_time_sec": 1.79
     }
   },
-  "training_rows": 2102,
+  "training_rows": 2744,
   "validation_rows": 60,
-  "dataset_range": "2019-01-31 to 2024-12-31",
-  "selected_production_model": "xgboost"
+  "dataset_range": "2019-01-31 to 2026-10-04"
 }

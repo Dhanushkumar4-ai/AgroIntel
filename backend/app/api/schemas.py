@@ -121,6 +121,9 @@ class CropRecommendationRequest(BaseModel):
         description="Optional GPS longitude",
         example=73.85,
     )
+    temperature: Optional[float] = Field(None, description="Optional temperature in °C", example=26.5)
+    humidity: Optional[float] = Field(None, ge=0.0, le=100.0, description="Optional relative humidity in %", example=70.0)
+    rainfall: Optional[float] = Field(None, ge=0.0, description="Optional rainfall in mm", example=800.0)
 
 
 # ── Response Models ───────────────────────────────────────────────────────────

@@ -1,29 +1,29 @@
 {
   "pipeline_name": "AgroIntel Daily Update Pipeline",
-  "run_timestamp": "2026-08-21T18:05:06.035945+00:00",
-  "overall_status": "PARTIAL_SUCCESS",
-  "total_duration_seconds": 60.04,
+  "run_timestamp": "2026-10-12T15:50:35.624036+00:00",
+  "overall_status": "SUCCESS",
+  "total_duration_seconds": 74.38,
   "stages": {
     "fetch_mandi": {
-      "status": "FAILED",
-      "error": "name 'timezone' is not defined"
+      "status": "SUCCESS",
+      "records_added": 0
     },
     "fetch_news": {
       "status": "SUCCESS",
       "sources_active": 15,
-      "articles_ingested": 15
+      "articles_ingested": 343
     },
     "process_news": {
       "status": "SUCCESS",
-      "verified_clusters": 43
+      "verified_clusters": 60
     },
     "update_weather": {
       "status": "SUCCESS",
-      "states_success": 28
+      "states_success": 25
     },
     "build_dataset": {
       "status": "PASS",
-      "total_records": 178522
+      "total_records": 258988
     },
     "train_all": {
       "status": "SUCCESS",
@@ -38,13 +38,14 @@
     },
     "validate_models": {
       "status": "SUCCESS",
-      "promoted_count": 4,
-      "rejected_count": 1,
+      "promoted_count": 5,
+      "rejected_count": 0,
       "promoted_crops": [
         "rice",
         "wheat",
         "maize",
-        "onion"
+        "onion",
+        "potato"
       ]
     },
     "promote_models": {
@@ -53,13 +54,12 @@
         "rice",
         "wheat",
         "maize",
-        "onion"
+        "onion",
+        "potato"
       ],
-      "version_tag": "20260821_180606"
+      "version_tag": "20261012_155149"
     }
   },
-  "errors_count": 1,
-  "errors": [
-    "Mandi Ingestion Stage Failed: name 'timezone' is not defined"
-  ]
+  "errors_count": 0,
+  "errors": []
 }

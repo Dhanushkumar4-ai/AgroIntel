@@ -116,7 +116,9 @@ class ModelPromotionJob:
                 except Exception:
                     pass
 
+            existing_crop_entry = registry["registry"].get(crop, {})
             crop_entry = {
+                **existing_crop_entry,
                 "crop": crop,
                 "production_model": "state_aware_xgboost",
                 "model_version": f"v_{timestamp_iso[:10].replace('-', '')}",

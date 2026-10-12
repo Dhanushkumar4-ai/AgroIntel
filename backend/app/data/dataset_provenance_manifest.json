@@ -1,0 +1,83 @@
+{
+  "manifest_version": "1.0.0",
+  "audit_reference": "Second-Stage Independent Technical Audit — Fix 7",
+  "generated_at": "2026-10-12T12:55:00+05:30",
+  "datasets": {
+    "national": {
+      "file_path": "backend/app/data/real_historical_prices.csv",
+      "row_count": 14170,
+      "date_range": {
+        "start": "2019-01-01",
+        "end": "2026-10-04"
+      },
+      "crops": ["maize", "onion", "potato", "rice", "wheat"],
+      "rows_per_crop": 2834,
+      "columns": ["ds", "crop", "y"],
+      "unit": "₹/quintal",
+      "duplicate_rows": 0,
+      "provenance_segments": [
+        {
+          "period": "2019-01-01 to 2024-05-31",
+          "source": "Kaggle Indian Agricultural Commodity APMC Dataset",
+          "aggregation": "National daily arithmetic mean across reporting APMC mandis",
+          "precision": "Multi-decimal float (12-14 decimals)",
+          "missing_data_imputation": "Calendar-day forward fill for market closed days (Sundays/Gazetted Holidays)"
+        },
+        {
+          "period": "2024-06-01 to 2026-10-04",
+          "source": "Agmarknet 2.0 / data.gov.in Official APMC Mandi Ingestion",
+          "aggregation": "Daily median modal price across reporting mandis",
+          "precision": "Two-decimal float",
+          "missing_data_imputation": "Forward fill on non-reporting days"
+        }
+      ]
+    },
+    "state": {
+      "file_path": "backend/app/data/real_historical_prices_state.csv",
+      "row_count": 258988,
+      "date_range": {
+        "start": "2019-01-01",
+        "end": "2026-10-12"
+      },
+      "crops": ["maize", "onion", "potato", "rice", "wheat"],
+      "crop_row_counts": {
+        "maize": 40377,
+        "onion": 65769,
+        "potato": 67021,
+        "rice": 50973,
+        "wheat": 34848
+      },
+      "columns": ["ds", "crop", "state", "y", "min_price", "max_price", "market_count", "price_range", "rolling_std_7"],
+      "unit": "₹/quintal",
+      "duplicate_rows": 0,
+      "provenance_segments": [
+        {
+          "period": "2019-01-01 to 2024-05-31",
+          "source": "Kaggle APMC Mandi Historical Records (State-Grouped)",
+          "aggregation": "Grouped by date, crop, normalized state; modal price aggregated",
+          "min_max_provenance": "Observed minimum and maximum prices across mandis in that state"
+        },
+        {
+          "period": "2024-06-01 to 2026-10-12",
+          "source": "Agmarknet 2.0 Daily Ingestion Job (fetch_mandi.py)",
+          "aggregation": "State-level APMC modal price with observed market_count and authentic min_price/max_price",
+          "min_max_provenance": "Official reported min and max prices from reporting APMC mandis"
+        }
+      ]
+    }
+  },
+  "data_integrity_notes": {
+    "zero_fabrication_rule": "Prices are derived strictly from official APMC market records. Synthetic ±5% bands and hardcoded price floors have been eliminated.",
+    "continuous_grid_caveat": "Daily continuous date indexing includes market non-trading days where prices reflect previous market close forward-fills rather than independent market auctions.",
+    "state_filtering": "State models are evaluated strictly on observations within each canonical state identifier.",
+    "outlier_investigation_and_correction": {
+      "crop": "onion",
+      "date": "2024-12-23",
+      "state": "Maharashtra",
+      "corrupted_value": 12075330.28,
+      "root_cause": "Clerical data entry error where total daily market auction turnover (₹1.207 Crore across 76 reporting mandis) was recorded in the rate per quintal field instead of modal rate.",
+      "evidence": "Adjacent observation dates: 2024-12-22 modal price was ₹1,981.20 (min ₹1,146.59, max ₹2,659.30) and 2024-12-24 modal price was ₹1,737.46 (min ₹952.27, max ₹2,377.93). National modal price was ₹3,997.17. Reported spread (max - min = ₹1,566.41) matched normal trading spreads.",
+      "impact": "This single row contributed (1.207e7)^2 / 27564 = 5.288e9 to MSE, inflating Onion RMSE to ₹72,722.51. When corrected to the median rate of adjacent dates (₹1,859.33), Onion RMSE drops to ₹520.82 and MAE drops to ₹278.94 (Maharashtra state RMSE drops to ₹307.74)."
+    }
+  }
+}

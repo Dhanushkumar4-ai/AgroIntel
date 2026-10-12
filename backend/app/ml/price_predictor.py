@@ -125,12 +125,12 @@ def _forecast_state_aware_xgboost(
     Generate State-Aware XGBoost predictions using 14-feature state-encoded vector.
     Feature set: state_enc, lag_1, lag_7, lag_14, lag_30, rolling_7, rolling_30,
                  rolling_std_7, price_range, day_of_year, month, day_of_week, year, black_swan
+
+    Black swan flag now reads from black_swan_config.json (same source as inference.py),
+    NOT from a hardcoded list.
     """
-    BLACK_SWAN_EVENTS = [
-        {"start": pd.to_datetime("2020-03-01"), "end": pd.to_datetime("2020-12-31")},
-        {"start": pd.to_datetime("2022-02-24"), "end": pd.to_datetime("2022-12-31")},
-        {"start": pd.to_datetime("2023-01-01"), "end": pd.to_datetime("2023-06-30")},
-    ]
+    # Use the shared is_black_swan_period function so training and inference flags match
+    from app.ml.feature_engineering import is_black_swan_period
 
     # Load state encoder
     encoder_path = MODELS_DIR / f"state_encoder_{crop}.pkl"
@@ -183,10 +183,7 @@ def _forecast_state_aware_xgboost(
     for _ in range(total_days):
         dt = pd.to_datetime(current_dt)
 
-        # Black swan flag
-        black_swan = int(any(
-            e["start"] <= dt <= e["end"] for e in BLACK_SWAN_EVENTS
-        ))
+        black_swan = int(is_black_swan_period(current_dt))
 
         # Safe lag extraction from rolling price tail
         def safe_lag(n: int) -> float:
@@ -402,10 +399,16 @@ def predict_crop_price(
     if mandi_res:
         current_price = mandi_res.modal_price
         freshness     = mandi_res.freshness_label   # Fresh / Recent / Historical
-        current_price_source = f"Government Mandi Data (data.gov.in) — {freshness}"
+        current_price_source = f"{mandi_res.source} — {freshness}"
         current_price_date   = mandi_res.arrival_date
         data_age_days        = mandi_res.data_age_days
         price_timestamp      = mandi_res.arrival_date
+        price_type           = getattr(mandi_res, "price_type", "APMC Modal Average")
+        period_start         = getattr(mandi_res, "period_start", mandi_res.arrival_date)
+        period_end           = getattr(mandi_res, "period_end", mandi_res.arrival_date)
+        price_unit           = getattr(mandi_res, "unit", "₹/quintal")
+        min_price            = getattr(mandi_res, "min_price", None)
+        max_price            = getattr(mandi_res, "max_price", None)
         # data_status mirrors freshness for the frontend badge
         market_data_status   = freshness.upper()   # FRESH / RECENT / HISTORICAL
         logger.warning(
@@ -414,37 +417,54 @@ def predict_crop_price(
             f"record_date={current_price_date} | age={data_age_days}d | fallback=No"
         )
     else:
+        price_type   = "Historical APMC Baseline"
+        price_unit   = "₹/quintal"
+        min_price    = None
+        max_price    = None
         if isinstance(data_tail_df, dict):
             state_clean = state.strip().title() if state else ""
             state_recs = data_tail_df.get(state_clean) if state_clean else None
             if state_recs:
-                recent_p = [float(r["y"]) for r in state_recs[-7:] if "y" in r]
-                avg_p = float(np.mean(recent_p)) if recent_p else float(state_recs[-1]["y"])
-                last_p = float(state_recs[-1]["y"])
-                spot = round(last_p * 0.6 + avg_p * 0.4, 2)
-                if crop_lower == "wheat":
-                    if state_clean.lower() in ("karnataka", "kerala", "tamil nadu", "andhra pradesh", "telangana"):
-                        spot = max(spot, 3450.0)
-                    elif state_clean.lower() in ("maharashtra", "madhya pradesh", "gujarat"):
-                        spot = min(max(spot, 2750.0), 3050.0)
-                    elif state_clean.lower() in ("punjab", "haryana", "uttar pradesh"):
-                        spot = min(max(spot, 2450.0), 2850.0)
-                last_hist_price = spot
+                last_rec = state_recs[-1]
+                last_hist_price = round(float(last_rec["y"]), 2)
+                rec_date = last_rec.get("ds") or hist_end_date
+                rec_date_str = rec_date.strftime("%Y-%m-%d") if hasattr(rec_date, "strftime") else str(rec_date)[:10]
+                try:
+                    dt_rec = datetime.strptime(rec_date_str, "%Y-%m-%d").date()
+                    data_age_days = (date.today() - dt_rec).days
+                except Exception:
+                    data_age_days = 1
+                current_price        = last_hist_price
+                state_label          = state_clean
+                current_price_source = f"Historical State APMC Baseline ({state_label})"
+                current_price_date   = rec_date_str
+                price_timestamp      = rec_date_str
+                period_start         = rec_date_str
+                period_end           = rec_date_str
+                market_data_status   = "HISTORICAL_FALLBACK"
             else:
-                all_y = [r["y"] for records in data_tail_df.values() for r in (records if isinstance(records, list) else [])]
-                last_hist_price = float(all_y[-1]) if all_y else mean_hist_price
+                current_price        = round(mean_hist_price, 2)
+                current_price_source = "National APMC Historical Baseline (Fallback)"
+                current_price_date   = hist_end_date
+                data_age_days        = (date.today() - _parse_date(hist_end_date)).days if _parse_date(hist_end_date) else 7
+                price_timestamp      = hist_end_date
+                period_start         = hist_end_date
+                period_end           = hist_end_date
+                market_data_status   = "STALE_NATIONAL_FALLBACK"
         else:
-            last_hist_price = float(data_tail_df["y"].iloc[-1])
-        current_price        = last_hist_price
-        state_label          = state.strip().title() if state else "National"
-        current_price_source = f"Live Mandi Benchmark ({state_label} APMC)"
-        current_price_date   = date.today().strftime("%Y-%m-%d")
-        data_age_days        = 0
-        price_timestamp      = datetime.now().strftime("%Y-%m-%d %H:%M")
-        market_data_status   = "LIVE"
+            last_hist_price      = round(float(data_tail_df["y"].iloc[-1]), 2)
+            current_price        = last_hist_price
+            current_price_source = "National APMC Historical Baseline"
+            current_price_date   = hist_end_date
+            data_age_days        = (date.today() - _parse_date(hist_end_date)).days if _parse_date(hist_end_date) else 7
+            price_timestamp      = hist_end_date
+            period_start         = hist_end_date
+            period_end           = hist_end_date
+            market_data_status   = "HISTORICAL_FALLBACK"
+
         logger.info(
             f"[PRICE_SOURCE] {crop_lower}: ₹{current_price}/q "
-            f"from {current_price_source} | record_date={current_price_date} | status=LIVE"
+            f"from {current_price_source} | record_date={current_price_date} | status={market_data_status}"
         )
 
     # 4. Retrieve Current Weather
@@ -640,4 +660,14 @@ def predict_crop_price(
             "model_mae": model_mae,
             "model_rmse": model_rmse,
         },
+        "price_type": price_type,
+        "period_start": period_start,
+        "period_end": period_end,
+        "unit": price_unit,
+        "min_price": min_price,
+        "max_price": max_price,
+        "reference_benchmark": crop_meta.get("reference_benchmark"),
+        "benchmark_outperformed": crop_meta.get("benchmark_outperformed", True),
+        "uncertainty_basis": "Estimated Error Range (Holdout RMSE Basis)",
+        "interval_calibrated": False,
     }

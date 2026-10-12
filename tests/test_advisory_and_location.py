@@ -14,8 +14,8 @@ def test_ahilya_nagar_canonicalization():
         assert data["location"]["canonical_id"] == "Maharashtra::Ahilya Nagar"
 
 def test_advisory_same_crop_consistency():
-    # When advisory recommends Sugarcane for Ahilya Nagar, target_price_crop must be Sugarcane
-    resp = client.post("/api/advisory", json={"state": "Maharashtra", "district": "Ahilya Nagar", "season": "Kharif"})
+    # When advisory recommends Sugarcane for Ahilya Nagar (Whole Year crop), target_price_crop must be Sugarcane
+    resp = client.post("/api/advisory", json={"state": "Maharashtra", "district": "Ahilya Nagar", "season": "Whole Year"})
     assert resp.status_code == 200
     data = resp.json()
     assert data["target_price_crop"] == "Sugarcane"

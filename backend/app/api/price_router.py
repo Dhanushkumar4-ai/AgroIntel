@@ -103,6 +103,10 @@ def get_latest_mandi_price(
         "source": res.source,
         "freshness_label": res.freshness_label,
         "data_age_days": res.data_age_days,
+        "price_type": getattr(res, "price_type", "Modal Price"),
+        "period_start": getattr(res, "period_start", res.arrival_date),
+        "period_end": getattr(res, "period_end", res.arrival_date),
+        "unit": getattr(res, "unit", "₹/quintal"),
     }
 
 

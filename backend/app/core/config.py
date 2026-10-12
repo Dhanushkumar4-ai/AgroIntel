@@ -39,8 +39,8 @@ class Settings:
     MODELS_DIR: Path = BASE_DIR / "models"
 
     # ── Cache Settings ─────────────────────────────────────────────────────
-    # Mandi price cache TTL in seconds (3 days = 259200s)
-    MANDI_CACHE_TTL_SECONDS: int = 259_200
+    # Mandi price cache TTL in seconds (1 hour = 3600s, auto-refreshes daily updates)
+    MANDI_CACHE_TTL_SECONDS: int = int(os.getenv("MANDI_CACHE_TTL_SECONDS", "3600"))
     # Weather cache TTL in seconds (6 hours)
     WEATHER_CACHE_TTL_SECONDS: int = 21_600
 

@@ -38,6 +38,12 @@ backend/app/data/recommendation_history.json
 # EDA plots (generated output, not needed for clone)
 backend/app/data/eda_plots/
 
+# Logs
+*.log
+
+# Models archive backups (training backups, production models are in backend/models/)
+backend/models/archive/
+
 # NOTE: real_historical_prices.csv IS tracked (required for fallback pricing)
 # NOTE: frontend/indian_districts.json IS tracked (required for State/District dropdowns)
 # NOTE: All *.pkl model files ARE tracked (required for inference)

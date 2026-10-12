@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-08-21T18:06:01.693315+00:00",
-  "execution_time_seconds": 1.38,
-  "total_records": 178522,
+  "timestamp": "2026-10-12T15:51:46.189123+00:00",
+  "execution_time_seconds": 0.67,
+  "total_records": 258988,
   "total_crops": 5,
-  "date_span": "2019-01-01 to 2024-12-31",
+  "date_span": "2019-01-01 to 2026-10-12",
   "duplicate_records": 0,
   "negative_or_zero_prices": 0,
   "data_quality_status": "PASS"

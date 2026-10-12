@@ -41,6 +41,9 @@
                 <button class="nav-btn" id="navAdvisory" onclick="showPage('advisory')">
                     <span class="material-symbols-rounded nav-sym">lightbulb</span> Farmer Advisory
                 </button>
+                <button class="nav-btn" id="navNews" onclick="showPage('news')">
+                    <span class="material-symbols-rounded nav-sym">newspaper</span> Daily Agri News
+                </button>
             </nav>
 
             <div class="nav-actions">
@@ -107,6 +110,15 @@
                         <h3>Farmer Advisory</h3>
                         <p>Get a combined crop and market advisory — what to grow and when to sell, in one unified view.</p>
                         <button class="feat-btn" onclick="event.stopPropagation(); showPage('advisory')">Get Advisory</button>
+                    </div>
+
+                    <div class="feat-card glass-card" onclick="showPage('news')">
+                        <div class="feat-icon-wrap" style="background:rgba(59,130,246,0.15);color:#60a5fa">
+                            <span class="material-symbols-rounded feat-sym">newspaper</span>
+                        </div>
+                        <h3>Daily Agri News</h3>
+                        <p>Verified agricultural news, mandi arrivals, monsoon, policies, and commodity impact intelligence.</p>
+                        <button class="feat-btn" onclick="event.stopPropagation(); showPage('news')">Read News</button>
                     </div>
                 </div>
 
@@ -193,6 +205,20 @@
                                     <label for="recPh">Soil pH</label>
                                     <input type="number" step="0.1" id="recPh" class="form-input" min="1" max="14" placeholder="e.g. 7.2">
                                 </div>
+                                <div class="npk-grid" style="margin-top:10px">
+                                    <div class="form-group">
+                                        <label for="recTemp">Temp (°C)</label>
+                                        <input type="number" step="0.1" id="recTemp" class="form-input" placeholder="Auto / e.g. 26">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recHumidity">Humidity (%)</label>
+                                        <input type="number" step="1" id="recHumidity" class="form-input" min="0" max="100" placeholder="Auto / e.g. 65">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="recRainfall">Rainfall (mm)</label>
+                                        <input type="number" step="1" id="recRainfall" class="form-input" min="0" placeholder="Auto / e.g. 800">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="recPrevCrop">Previous Crop <span class="optional-tag">Optional</span></label>
                                     <input type="text" id="recPrevCrop" class="form-input" placeholder="e.g. Rice, Wheat...">
@@ -243,14 +269,21 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="predState">State (for Mandi Price) <span class="req">*</span></label>
+                                <label for="predState">State (State-Specific Mandi & Model) <span class="req">*</span></label>
                                 <select id="predState" class="form-select" required>
                                     <option value="">Loading states...</option>
                                 </select>
                             </div>
-                            <div class="form-group" style="font-size:0.78rem;opacity:0.7;padding:6px 10px;background:rgba(255,255,255,0.04);border-radius:6px;border:1px solid rgba(255,255,255,0.08)">
-                                <span class="material-symbols-rounded" style="font-size:0.9rem;vertical-align:middle;margin-right:4px">info</span>
-                                Price prediction uses a crop-level ML model. State determines the current Mandi price lookup.
+                            <div class="form-group" style="font-size:0.78rem;opacity:0.9;padding:8px 12px;background:rgba(34,197,94,0.08);border-radius:8px;border:1px solid rgba(34,197,94,0.2)">
+                                <div style="display:flex;align-items:flex-start;gap:8px">
+                                    <span class="material-symbols-rounded" style="font-size:1.1rem;color:#4ade80;flex-shrink:0">verified</span>
+                                    <div>
+                                        <strong style="color:#4ade80">State-Specific APMC Mandi Rates</strong>
+                                        <div style="font-size:0.74rem;color:#cbd5e1;margin-top:2px;line-height:1.4">
+                                            Retrieves official live wholesale Mandi prices from Agmarknet 2.0 with state-aware ML forecasts. Wholesale rates reflect farmer farm-gate prices per quintal (100 kg), distinct from retail supermarket prices.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -347,6 +380,105 @@
                             <h3>Ready for Advisory</h3>
                             <p>Select your location and season to receive your integrated farm advisory.</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ═══════════════ DAILY AGRI NEWS PAGE ═══════════════ -->
+        <section class="page" id="page-news">
+            <div class="page-wrap news-page-wrap">
+                <div class="page-header news-header">
+                    <div>
+                        <h2>Daily Agricultural News & Market Intelligence</h2>
+                        <p>Verified agricultural news from national and official sources, analyzed for commodity impact, market sentiment, and farmer advisory.</p>
+                    </div>
+                    <div class="news-header-actions">
+                        <button class="btn-refresh-news" id="btnNewsRefresh" onclick="refreshNewsFeeds()">
+                            <span class="material-symbols-rounded spin-ico" id="newsRefreshIcon">sync</span>
+                            <span>Refresh Feeds</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feed Health & Freshness Banner -->
+                <div class="glass-card news-status-banner" id="newsStatusBanner">
+                    <div class="status-banner-left">
+                        <span class="pulse-dot status-pulse" id="newsFreshnessPulse"></span>
+                        <div>
+                            <strong id="newsFreshnessLabel">Feed Pipeline: Initializing...</strong>
+                            <div class="status-banner-sub" id="newsLastUpdated">Checking latest fetch time...</div>
+                        </div>
+                    </div>
+                    <div class="status-banner-metrics">
+                        <div class="banner-metric">
+                            <span class="bm-val" id="newsCountVal">—</span>
+                            <span class="bm-lbl">Verified Events</span>
+                        </div>
+                        <div class="banner-metric">
+                            <span class="bm-val" id="newsSourcesVal">—</span>
+                            <span class="bm-lbl">Active Feeds</span>
+                        </div>
+                        <div class="banner-metric">
+                            <span class="bm-val" id="newsFreshnessStatusVal">FRESH</span>
+                            <span class="bm-lbl">Freshness</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters & Controls Bar -->
+                <div class="glass-card news-filter-card">
+                    <div class="news-filter-grid">
+                        <div class="form-group">
+                            <label for="newsFilterCrop">Commodity</label>
+                            <select id="newsFilterCrop" class="form-select" onchange="filterNews()">
+                                <option value="">All Commodities</option>
+                                <option value="wheat">Wheat</option>
+                                <option value="rice">Rice</option>
+                                <option value="maize">Maize</option>
+                                <option value="potato">Potato</option>
+                                <option value="onion">Onion</option>
+                                <option value="cotton">Cotton</option>
+                                <option value="pulses">Pulses / Dal</option>
+                                <option value="mustard">Mustard / Oilseeds</option>
+                                <option value="soybean">Soybean</option>
+                                <option value="sugarcane">Sugarcane</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="newsFilterState">State</label>
+                            <select id="newsFilterState" class="form-select" onchange="filterNews()">
+                                <option value="">All States / National</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="newsFilterImpact">Market Impact</label>
+                            <select id="newsFilterImpact" class="form-select" onchange="filterNews()">
+                                <option value="">All Impacts</option>
+                                <option value="BULLISH">🟢 Bullish (Upward Pressure)</option>
+                                <option value="BEARISH">🔴 Bearish (Downward Pressure)</option>
+                                <option value="MIXED">🟣 Mixed Impact</option>
+                                <option value="UNCERTAIN">⚪ Uncertain Effect</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="newsFilterVerif">Source Verification</label>
+                            <select id="newsFilterVerif" class="form-select" onchange="filterNews()">
+                                <option value="">All Verification Levels</option>
+                                <option value="VERIFIED">🛡️ Verified (Official Source)</option>
+                                <option value="CORROBORATED">👥 Corroborated (Multi-Source)</option>
+                                <option value="SINGLE_SOURCE">📝 Single Source</option>
+                                <option value="CONFLICTING">⚠️ Conflicting Reports</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Articles Grid Container -->
+                <div class="news-grid" id="newsGridContainer">
+                    <div class="placeholder-card glass-card" style="grid-column: 1 / -1;">
+                        <span class="material-symbols-rounded ph-icon-sym">newspaper</span>
+                        <h3>Daily Agricultural Intelligence</h3>
+                        <p>Loading recent verified articles and commodity market impact assessments...</p>
                     </div>
                 </div>
             </div>

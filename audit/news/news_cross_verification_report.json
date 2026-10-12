@@ -1,9 +1,13 @@
 {
-  "timestamp": "2026-08-21T18:05:37.715032+00:00",
-  "total_articles_processed": 2775,
-  "total_event_clusters": 94,
-  "verified_events_count": 2713,
-  "single_source_events_count": 62,
-  "verified_clusters_count": 43,
-  "single_source_clusters_count": 51
+  "timestamp": "2026-10-12T17:58:38.948254+00:00",
+  "total_agricultural_events": 870,
+  "total_event_clusters": 432,
+  "verified_events_count": 165,
+  "corroborated_events_count": 445,
+  "single_source_events_count": 260,
+  "conflicting_events_count": 0,
+  "verified_clusters_count": 14,
+  "single_source_clusters_count": 173,
+  "raw_articles_evaluated": 5000,
+  "non_agricultural_noise_excluded": 4130
 }

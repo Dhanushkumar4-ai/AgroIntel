@@ -1,10 +1,11 @@
 """
-train.py — Multi-model Price Prediction Training
-Trains Prophet, XGBoost, ARIMA, and MLP (Deep Learning proxy) on 5 years
-of realistic synthetic historical data that includes key Black Swan events:
-  - COVID-19 Pandemic shock: March 2020 – December 2020
-  - Russia-Ukraine War supply disruption: February 2022 – December 2022
-  - Post-war inflation tail: 2023
+train.py -- Multi-model Price Prediction Training
+Trains Prophet, XGBoost, ARIMA, and MLP (Deep Learning proxy) on
+real historical price data that includes key Black Swan events.
+
+FEATURE ALIGNMENT: Uses build_training_features() from feature_engineering.py
+to guarantee that the EXACT same PRICE_FEATURE_COLS used at inference are used
+during training. This eliminates the training-inference feature mismatch.
 """
 
 import os
@@ -20,48 +21,16 @@ from pathlib import Path
 warnings.filterwarnings("ignore")
 logger = logging.getLogger(__name__)
 
-# ── Paths ────────────────────────────────────────────────────────────────────
+# ── Paths ──────────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MODELS_DIR = BASE_DIR / "models"
 MODELS_DIR.mkdir(exist_ok=True)
 
-# ── Crop configuration ────────────────────────────────────────────────────────
-CROPS = {
-    "wheat": {
-        "base_price": 2200,       # ₹ per quintal
-        "seasonal_amplitude": 180,
-        "trend_per_year": 120,
-        "noise_std": 60,
-    },
-    "rice": {
-        "base_price": 2300,
-        "seasonal_amplitude": 150,
-        "trend_per_year": 100,
-        "noise_std": 50,
-    },
-    "maize": {
-        "base_price": 1600,
-        "seasonal_amplitude": 130,
-        "trend_per_year": 90,
-        "noise_std": 50,
-    },
-    "potato": {
-        "base_price": 1300,
-        "seasonal_amplitude": 200,
-        "trend_per_year": 80,
-        "noise_std": 60,
-    },
-    "onion": {
-        "base_price": 1800,
-        "seasonal_amplitude": 400,
-        "trend_per_year": 100,
-        "noise_std": 120,
-    },
-}
-
-
-# ── Black Swan events (used for feature engineering flags, not data synthesis) ──
-from app.ml.feature_engineering import BLACK_SWAN_EVENTS
+# ── Import canonical feature pipeline ─────────────────────────────────────────
+# IMPORTANT: build_training_features() produces PRICE_FEATURE_COLS which is the
+# EXACT same set used in inference. Do NOT define local FEATURE_COLS here.
+from app.core.constants import PRICE_FEATURE_COLS
+from app.ml.feature_engineering import build_training_features
 
 
 def _generate_historical_data(crop: str, cfg: dict) -> pd.DataFrame:
@@ -88,33 +57,14 @@ def _generate_historical_data(crop: str, cfg: dict) -> pd.DataFrame:
     return crop_df.reset_index(drop=True)
 
 
-def _add_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Add time-series features for XGBoost and MLP."""
-    df = df.copy().sort_values("ds").reset_index(drop=True)
-    df["lag_1"] = df["y"].shift(1)
-    df["lag_7"] = df["y"].shift(7)
-    df["lag_14"] = df["y"].shift(14)
-    df["lag_30"] = df["y"].shift(30)
-    df["rolling_7"] = df["y"].shift(1).rolling(7).mean()
-    df["rolling_30"] = df["y"].shift(1).rolling(30).mean()
-    df["day_of_year"] = df["ds"].dt.dayofyear
-    df["month"] = df["ds"].dt.month
-    df["day_of_week"] = df["ds"].dt.dayofweek
-    df["year"] = df["ds"].dt.year
-    # Black swan flag: 1 if any major event active
-    df["black_swan"] = 0
-    for event in BLACK_SWAN_EVENTS:
-        mask = (df["ds"] >= event["start"]) & (df["ds"] <= event["end"])
-        df.loc[mask, "black_swan"] = 1
-    df = df.dropna().reset_index(drop=True)
-    return df
-
-
-FEATURE_COLS = [
-    "lag_1", "lag_7", "lag_14", "lag_30",
-    "rolling_7", "rolling_30",
-    "day_of_year", "month", "day_of_week", "year", "black_swan",
-]
+# ── Crop configuration ─────────────────────────────────────────────────────────
+CROPS = {
+    "wheat":  {"base_price": 2200, "seasonal_amplitude": 180, "trend_per_year": 120, "noise_std": 60},
+    "rice":   {"base_price": 2300, "seasonal_amplitude": 150, "trend_per_year": 100, "noise_std": 50},
+    "maize":  {"base_price": 1600, "seasonal_amplitude": 130, "trend_per_year": 90,  "noise_std": 50},
+    "potato": {"base_price": 1300, "seasonal_amplitude": 200, "trend_per_year": 80,  "noise_std": 60},
+    "onion":  {"base_price": 1800, "seasonal_amplitude": 400, "trend_per_year": 100, "noise_std": 120},
+}
 
 
 def _train_prophet(df_raw: pd.DataFrame, crop: str):
@@ -143,7 +93,7 @@ def _train_prophet(df_raw: pd.DataFrame, crop: str):
 def _train_xgboost(df_feat: pd.DataFrame, crop: str):
     try:
         import xgboost as xgb
-        X = df_feat[FEATURE_COLS].values
+        X = df_feat[PRICE_FEATURE_COLS].values
         y = df_feat["y"].values
         model = xgb.XGBRegressor(
             n_estimators=150,
@@ -154,7 +104,7 @@ def _train_xgboost(df_feat: pd.DataFrame, crop: str):
             reg_alpha=0.1,
             reg_lambda=1.0,
             random_state=42,
-            n_jobs=2,  # limit CPU cores to prevent overheating
+            n_jobs=2,
         )
         model.fit(X, y)
         model_path = MODELS_DIR / f"xgboost_{crop}.pkl"
@@ -191,8 +141,33 @@ def _train_mlp(df_feat: pd.DataFrame, crop: str):
         from sklearn.neural_network import MLPRegressor
         from sklearn.preprocessing import StandardScaler
 
-        X = df_feat[FEATURE_COLS].values
+        X = df_feat[PRICE_FEATURE_COLS].values
         y = df_feat["y"].values
+
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+
+        model = MLPRegressor(
+            hidden_layer_sizes=(64, 32),
+            activation="relu",
+            solver="adam",
+            max_iter=200,
+            learning_rate_init=0.002,
+            early_stopping=True,
+            validation_fraction=0.1,
+            random_state=42,
+        )
+        model.fit(X_scaled, y)
+
+        bundle = {"scaler": scaler, "model": model}
+        model_path = MODELS_DIR / f"mlp_{crop}.pkl"
+        with open(model_path, "wb") as f:
+            pickle.dump(bundle, f)
+        logger.info(f"[{crop}] MLP (Deep Learning) trained and saved.")
+        return bundle
+    except Exception as e:
+        logger.error(f"[{crop}] MLP training failed: {e}")
+        return None
 
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
@@ -232,42 +207,40 @@ def _evaluate_models(df_raw: pd.DataFrame, df_feat: pd.DataFrame, crop: str, mod
 
     metrics = {}
 
-    # ── Prophet evaluation ──
+    # Prophet evaluation
     try:
         if models.get("prophet"):
             future = val_df_raw[["ds"]].copy()
             forecast = models["prophet"].predict(future)
             preds = forecast["yhat"].values
             actual = val_df_raw["y"].values
-            mae = float(np.mean(np.abs(preds - actual)))
+            mae  = float(np.mean(np.abs(preds - actual)))
             rmse = float(np.sqrt(np.mean((preds - actual) ** 2)))
             metrics["prophet"] = {"mae": round(mae, 2), "rmse": round(rmse, 2)}
     except Exception as e:
         logger.warning(f"Prophet eval error: {e}")
         metrics["prophet"] = {"mae": 9999, "rmse": 9999}
 
-    # ── XGBoost evaluation ──
+    # XGBoost evaluation
     try:
         if models.get("xgboost") and len(val_df_feat) > 0:
-            import xgboost as xgb
-            X_val = val_df_feat[FEATURE_COLS].values
-            preds = models["xgboost"].predict(X_val)
+            X_val  = val_df_feat[PRICE_FEATURE_COLS].values
+            preds  = models["xgboost"].predict(X_val)
             actual = val_df_feat["y"].values
-            mae = float(np.mean(np.abs(preds - actual)))
+            mae  = float(np.mean(np.abs(preds - actual)))
             rmse = float(np.sqrt(np.mean((preds - actual) ** 2)))
             metrics["xgboost"] = {"mae": round(mae, 2), "rmse": round(rmse, 2)}
     except Exception as e:
         logger.warning(f"XGBoost eval error: {e}")
         metrics["xgboost"] = {"mae": 9999, "rmse": 9999}
 
-    # ── ARIMA evaluation ──
+    # ARIMA evaluation
     try:
         if models.get("arima"):
-            # ARIMA predicts in-sample; use last 4 weekly points (~30 days)
             weekly_actual = val_df_raw.set_index("ds")["y"].resample("W").mean().dropna()
             if len(weekly_actual) >= 2:
                 forecast = models["arima"].forecast(steps=len(weekly_actual))
-                mae = float(np.mean(np.abs(forecast.values - weekly_actual.values)))
+                mae  = float(np.mean(np.abs(forecast.values - weekly_actual.values)))
                 rmse = float(np.sqrt(np.mean((forecast.values - weekly_actual.values) ** 2)))
                 metrics["arima"] = {"mae": round(mae, 2), "rmse": round(rmse, 2)}
             else:
@@ -276,16 +249,16 @@ def _evaluate_models(df_raw: pd.DataFrame, df_feat: pd.DataFrame, crop: str, mod
         logger.warning(f"ARIMA eval error: {e}")
         metrics["arima"] = {"mae": 9999, "rmse": 9999}
 
-    # ── MLP evaluation ──
+    # MLP evaluation
     try:
         if models.get("mlp") and len(val_df_feat) > 0:
             scaler = models["mlp"]["scaler"]
-            mlp = models["mlp"]["model"]
-            X_val = val_df_feat[FEATURE_COLS].values
-            X_scaled = scaler.transform(X_val)
-            preds = mlp.predict(X_scaled)
+            mlp    = models["mlp"]["model"]
+            X_val  = val_df_feat[PRICE_FEATURE_COLS].values
+            X_sc   = scaler.transform(X_val)
+            preds  = mlp.predict(X_sc)
             actual = val_df_feat["y"].values
-            mae = float(np.mean(np.abs(preds - actual)))
+            mae  = float(np.mean(np.abs(preds - actual)))
             rmse = float(np.sqrt(np.mean((preds - actual) ** 2)))
             metrics["mlp"] = {"mae": round(mae, 2), "rmse": round(rmse, 2)}
     except Exception as e:

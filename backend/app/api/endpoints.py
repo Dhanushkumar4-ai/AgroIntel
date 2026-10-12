@@ -2,12 +2,20 @@
 endpoints.py — API routes for AgroIntel AI
 """
 
+import json
 import logging
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Optional, List, Dict, Any
+
 from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from pydantic import BaseModel
 
 from app.ml.inference import predict_price, predict_crop, get_crop_info, clear_model_cache
 from app.ml.train import train_all_crops, train_price_prediction_model, CROPS
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+EXP_DIR = BASE_DIR / "app" / "data" / "experimental"
 
 class CropRequest(BaseModel):
     location: str
@@ -134,36 +142,78 @@ def predict(
             "predictions":           result.get("predictions", []),
             "date_labels":           result.get("date_labels", []),
             "horizon_days":          result.get("horizon_days", horizon_days),
+            "percent_change":        result.get("percent_change"),
 
-            # Observation metadata
+            # Observation metadata & State-Aware Intelligence
             "observation_date":      result.get("observation_date"),
             "market_name":           result.get("market_name"),
             "data_age_days":         result.get("data_age_days"),
+            "price_data_source":     result.get("price_data_source", "Agmarknet 2.0 (Official Live Mandi)"),
+            "price_type":            result.get("price_type"),
+            "period_start":          result.get("period_start"),
+            "period_end":            result.get("period_end"),
+            "unit":                  result.get("unit", "₹/quintal"),
+            "min_price":             result.get("min_price"),
+            "max_price":             result.get("max_price"),
+            "interval_type":         result.get("interval_type", "Estimated Error Range (Holdout RMSE Basis)"),
+            "interval_calibrated":   result.get("interval_calibrated", False),
+            "forecast_scope":        result.get("forecast_scope") or (f"State-Specific Forecast ({state})" if state and state.lower() != "all" else "National APMC Mandi Benchmark"),
+            "model_level":           result.get("model_level", "STATE_AWARE"),
+            "best_model":            result.get("best_model"),
+            "best_model_label":      "State-Aware XGBoost Model" if "state" in str(result.get("best_model", "")).lower() else "Agricultural Time-Series Model",
+            "reference_benchmark":   result.get("reference_benchmark"),
 
             # Advisory
             "recommendation":        result.get("recommendation", "WAIT"),
             "recommendation_reason": result.get("recommendation_reason", ""),
             "black_swan_warning":    result.get("black_swan_warning"),
+            "storage_cost_pct":      result.get("storage_cost_pct"),
+            "net_expected_change":   result.get("net_expected_change"),
+            "decision_score":        result.get("decision_score"),
+            "historical_series":     result.get("historical_series", []),
+            "forecast_series":       result.get("forecast_series", []),
+            "model_comparison":      result.get("model_comparison", {}),
 
             # Nested objects for frontend compatibility
             "market": {
-                "current_price":    result.get("current_price"),
-                "observation_date": result.get("observation_date"),
-                "market_name":      result.get("market_name"),
-                "data_age_days":    result.get("data_age_days"),
-                "price_label":      "Latest Available Mandi Price",
+                "current_price":     result.get("current_price"),
+                "observation_date":  result.get("observation_date"),
+                "period_start":      result.get("period_start"),
+                "period_end":        result.get("period_end"),
+                "price_type":        result.get("price_type"),
+                "unit":              result.get("unit", "₹/quintal"),
+                "min_price":         result.get("min_price"),
+                "max_price":         result.get("max_price"),
+                "market_name":       result.get("market_name"),
+                "data_age_days":     result.get("data_age_days"),
+                "price_data_source": result.get("price_data_source", "Agmarknet 2.0 (Official Live Mandi)"),
+                "price_label":       "Latest Available Mandi Price",
             },
             "forecast": {
-                "available":        result.get("available", False),
-                "predicted_price":  result.get("predicted_price"),
-                "prediction_start": result.get("prediction_start"),
-                "forecast_series":  result.get("predictions", []),
-                "date_labels":      result.get("date_labels", []),
+                "available":           result.get("available", False),
+                "predicted_price":     result.get("predicted_price"),
+                "prediction_start":    result.get("prediction_start"),
+                "forecast_series":     result.get("forecast_series", []),
+                "historical_series":   result.get("historical_series", []),
+                "raw_predictions":     result.get("predictions", []),
+                "date_labels":         result.get("date_labels", []),
+                "forecast_scope":      result.get("forecast_scope") or (f"State-Specific Forecast ({state})" if state and state.lower() != "all" else "National APMC Mandi Benchmark"),
+                "model_comparison":    result.get("model_comparison", {}),
+                "reference_benchmark": result.get("reference_benchmark"),
+                "interval_type":       result.get("interval_type", "Estimated Error Range (Holdout RMSE Basis)"),
+                "interval_calibrated": result.get("interval_calibrated", False),
             },
             "advisory": {
-                "decision": result.get("recommendation", "WAIT"),
-                "reason":   result.get("recommendation_reason", ""),
+                "decision":            result.get("recommendation", "WAIT"),
+                "reason":              result.get("recommendation_reason", ""),
+                "storage_cost_pct":    result.get("storage_cost_pct"),
+                "net_expected_change": result.get("net_expected_change"),
+                "decision_score":      result.get("decision_score"),
+                "news_alignment":      result.get("news_intelligence", {}).get("forecast_alignment", "NEUTRAL"),
+                "market_signal":       result.get("news_intelligence", {}).get("market_signal", "NEUTRAL"),
+                "news_explanation":    result.get("news_intelligence", {}).get("advisory_explanation", ""),
             },
+            "news_intelligence":       result.get("news_intelligence", {}),
         }
         return farmer_response
 
@@ -210,3 +260,155 @@ def crop_info(crop: str):
         return get_crop_info(crop)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Agricultural News Intelligence Endpoints ─────────────────────────────────
+
+@router.get("/news", summary="Agricultural News & Intelligence Feed")
+def get_agricultural_news(
+    crop: Optional[str] = Query(None, description="Filter by crop name (e.g. wheat, rice, onion)"),
+    state: Optional[str] = Query(None, description="Filter by state name (e.g. Maharashtra, Punjab)"),
+    market_effect: Optional[str] = Query(None, description="Filter by market effect: BULLISH, BEARISH, MIXED, UNCERTAIN"),
+    verification_status: Optional[str] = Query(None, description="Filter by verification: VERIFIED, CORROBORATED, SINGLE_SOURCE, UNVERIFIED"),
+    limit: int = Query(default=20, ge=1, le=100, description="Max articles to return"),
+):
+    """
+    Returns verified, scored agricultural news articles.
+    Supports filtering by crop, state, market effect, and verification status.
+    """
+    events_path = EXP_DIR / "news_events.json"
+    if not events_path.exists():
+        events_path = EXP_DIR / "current_intelligence.json"
+    if not events_path.exists():
+        return {
+            "total_articles": 0,
+            "filtered_articles": 0,
+            "articles": [],
+            "message": "No news articles found. Run POST /api/news/refresh to ingest.",
+        }
+
+    with open(events_path, "r", encoding="utf-8") as f:
+        articles = json.load(f)
+
+    if not isinstance(articles, list):
+        articles = []
+
+    from app.services.news_intelligence_service import calculate_article_relevance_score
+
+    filtered = []
+    for art in articles:
+        # Filter by market effect
+        if market_effect and art.get("market_effect", "").upper() != market_effect.upper():
+            continue
+        # Filter by verification status
+        if verification_status and art.get("verification_status", "").upper() != verification_status.upper():
+            continue
+
+        # If crop or state specified, re-score article relevance for that context
+        if crop or state:
+            art_copy = dict(art)
+            rel_score = calculate_article_relevance_score(art, target_crop=crop, target_state=state)
+            art_copy["relevance_score"] = rel_score
+            # Include if relevant
+            if rel_score["composite_score"] >= 25.0:
+                filtered.append(art_copy)
+        else:
+            filtered.append(art)
+
+    # Sort by composite relevance score descending, then recency
+    filtered.sort(
+        key=lambda x: (
+            x.get("relevance_score", {}).get("composite_score", 50.0),
+            -float(x.get("age_days", 999))
+        ),
+        reverse=True
+    )
+
+    return {
+        "total_articles": len(articles),
+        "filtered_count": len(filtered),
+        "crop_filter": crop or "All",
+        "state_filter": state or "All",
+        "market_effect_filter": market_effect or "All",
+        "verification_filter": verification_status or "All",
+        "articles": filtered[:limit],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@router.post("/news/refresh", summary="Manual Trigger for RSS News Ingestion")
+def refresh_agricultural_news():
+    """
+    Manually triggers daily RSS news ingestion, duplicate pruning,
+    market impact classification, and cross-source verification.
+    """
+    from app.jobs.fetch_news import NewsIngestionJob
+    from app.jobs.process_news import NewsProcessingJob
+
+    t_start = datetime.now(timezone.utc)
+    ingestion_job = NewsIngestionJob()
+    ingest_res = ingestion_job.run()
+
+    proc_job = NewsProcessingJob()
+    proc_res = proc_job.run()
+
+    return {
+        "status": "SUCCESS",
+        "message": "Daily agricultural news feeds refreshed and verified successfully.",
+        "ingestion_summary": ingest_res,
+        "processing_summary": proc_res,
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "elapsed_seconds": round((datetime.now(timezone.utc) - t_start).total_seconds(), 2),
+    }
+
+
+@router.get("/news/status", summary="News Feed Health & Freshness Status")
+def news_pipeline_status():
+    """
+    Returns news pipeline health, feed statuses, total articles, and data freshness.
+    """
+    ingest_audit_path = EXP_DIR / "news_ingestion_audit.json"
+    verif_audit_path = EXP_DIR / "news_cross_verification_report.json"
+    source_audit_path = EXP_DIR / "news_source_runtime_audit.json"
+
+    ingest_info = {}
+    verif_info = {}
+    sources_info = []
+
+    if ingest_audit_path.exists():
+        with open(ingest_audit_path, "r", encoding="utf-8") as f:
+            ingest_info = json.load(f)
+    if verif_audit_path.exists():
+        with open(verif_audit_path, "r", encoding="utf-8") as f:
+            verif_info = json.load(f)
+    if source_audit_path.exists():
+        with open(source_audit_path, "r", encoding="utf-8") as f:
+            sources_info = json.load(f)
+
+    # Compute overall freshness status
+    last_fetch = ingest_info.get("last_successful_fetch_time")
+    freshness = "FRESH"
+    if last_fetch:
+        try:
+            lf_dt = datetime.fromisoformat(last_fetch)
+            hrs = (datetime.now(timezone.utc) - lf_dt).total_seconds() / 3600.0
+            if hrs > 36.0:
+                freshness = "STALE"
+            elif hrs > 24.0:
+                freshness = "DUE_FOR_REFRESH"
+        except Exception:
+            pass
+
+    return {
+        "freshness_status": freshness,
+        "last_successful_fetch_time": last_fetch,
+        "total_articles_stored": ingest_info.get("total_stored_articles", 0),
+        "total_sources_audited": ingest_info.get("total_sources_audited", len(sources_info)),
+        "sources_active": ingest_info.get("sources_active", sum(1 for s in sources_info if s.get("status") == "SUCCESS")),
+        "sources_failed": ingest_info.get("sources_failed", sum(1 for s in sources_info if s.get("status") != "SUCCESS")),
+        "verified_events_count": verif_info.get("verified_events_count", 0),
+        "verified_clusters_count": verif_info.get("verified_clusters_count", 0),
+        "source_breakdown": sources_info[:15],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+

@@ -27,12 +27,23 @@ MODELS_DIR = BASE_DIR / "models"
 MODELS_DIR.mkdir(exist_ok=True)
 DATA_DIR = BASE_DIR / "app" / "data"
 
-# Black Swan Event definition for feature engineering
-BLACK_SWAN_EVENTS = [
-    {"name": "COVID-19 Pandemic", "start": "2020-03-01", "end": "2020-12-31"},
-    {"name": "Russia-Ukraine War", "start": "2022-02-24", "end": "2022-12-31"},
-    {"name": "Post-War Inflation Tail", "start": "2023-01-01", "end": "2023-06-30"},
-]
+# Load black swan events from config (same source as inference) for feature consistency
+from app.ml.feature_engineering import _load_black_swan_config as _bsc_loader, is_black_swan_period
+def _get_bs_events():
+    """Return events as dicts with datetime 'start'/'end' keys."""
+    raw = _bsc_loader()
+    events = []
+    for e in raw:
+        try:
+            events.append({
+                "name":  e.get("label", "event"),
+                "start": e["start_date"],
+                "end":   e["end_date"],
+            })
+        except KeyError:
+            pass
+    return events
+BLACK_SWAN_EVENTS = _get_bs_events()
 
 CROPS = ["rice", "wheat", "maize", "onion", "potato"]
 

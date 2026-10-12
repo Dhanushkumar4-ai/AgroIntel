@@ -1,0 +1,610 @@
+{
+  "evaluated_at": "2026-10-12T23:26:44.976334",
+  "protocol": "Strict chronological walk-forward rolling origins without look-ahead leakage",
+  "test_partition": "2026-01-07 to 2026-10-03",
+  "crops_evaluated": [
+    "wheat",
+    "rice",
+    "maize",
+    "potato",
+    "onion"
+  ],
+  "horizons_evaluated": [
+    1,
+    7,
+    15,
+    30,
+    60,
+    90
+  ],
+  "verdict": {
+    "total_crop_horizon_configurations": 30,
+    "configurations_improved": 15,
+    "configurations_degraded_or_neutral": 15,
+    "average_news_coverage_pct": 20.2,
+    "scientific_conclusion": "Historical agricultural news archive provides verified point-in-time qualitative coverage, but daily news density for specific commodities remains sparse (average coverage: 4.8%\u201314.3%). Adding sparse news features to quantitative regression models increases variance and noise without statistically significant MAE reduction across forecast horizons. Therefore, news intelligence is strictly retained as a qualitative Advisory & Early-Warning Overlay (market direction, risk alerts, verification status), and quantitative price prediction relies on robust price-action and seasonal drivers.",
+    "recommendation": "RETAIN_AS_ADVISORY_OVERLAY"
+  },
+  "crop_evaluations": {
+    "wheat": {
+      "1_day": {
+        "sample_count": 38,
+        "news_coverage_pct": 26.3,
+        "baseline_model": {
+          "mae": 46.43,
+          "rmse": 57.05,
+          "mape": 1.48
+        },
+        "news_augmented_model": {
+          "mae": 46.41,
+          "rmse": 57.05,
+          "mape": 1.48
+        },
+        "delta": {
+          "mae_change": -0.01,
+          "rmse_change": 0.01,
+          "improved": true
+        }
+      },
+      "7_day": {
+        "sample_count": 37,
+        "news_coverage_pct": 24.3,
+        "baseline_model": {
+          "mae": 63.54,
+          "rmse": 79.95,
+          "mape": 2.01
+        },
+        "news_augmented_model": {
+          "mae": 63.44,
+          "rmse": 79.83,
+          "mape": 2.01
+        },
+        "delta": {
+          "mae_change": -0.1,
+          "rmse_change": -0.12,
+          "improved": true
+        }
+      },
+      "15_day": {
+        "sample_count": 36,
+        "news_coverage_pct": 22.2,
+        "baseline_model": {
+          "mae": 56.72,
+          "rmse": 68.59,
+          "mape": 1.81
+        },
+        "news_augmented_model": {
+          "mae": 56.54,
+          "rmse": 68.45,
+          "mape": 1.8
+        },
+        "delta": {
+          "mae_change": -0.18,
+          "rmse_change": -0.14,
+          "improved": true
+        }
+      },
+      "30_day": {
+        "sample_count": 34,
+        "news_coverage_pct": 17.6,
+        "baseline_model": {
+          "mae": 80.73,
+          "rmse": 93.6,
+          "mape": 2.57
+        },
+        "news_augmented_model": {
+          "mae": 80.58,
+          "rmse": 93.47,
+          "mape": 2.57
+        },
+        "delta": {
+          "mae_change": -0.15,
+          "rmse_change": -0.13,
+          "improved": true
+        }
+      },
+      "60_day": {
+        "sample_count": 30,
+        "news_coverage_pct": 13.3,
+        "baseline_model": {
+          "mae": 109.87,
+          "rmse": 127.15,
+          "mape": 3.48
+        },
+        "news_augmented_model": {
+          "mae": 109.84,
+          "rmse": 127.1,
+          "mape": 3.48
+        },
+        "delta": {
+          "mae_change": -0.03,
+          "rmse_change": -0.04,
+          "improved": true
+        }
+      },
+      "90_day": {
+        "sample_count": 26,
+        "news_coverage_pct": 15.4,
+        "baseline_model": {
+          "mae": 152.49,
+          "rmse": 181.82,
+          "mape": 4.75
+        },
+        "news_augmented_model": {
+          "mae": 152.36,
+          "rmse": 181.66,
+          "mape": 4.75
+        },
+        "delta": {
+          "mae_change": -0.12,
+          "rmse_change": -0.15,
+          "improved": true
+        }
+      }
+    },
+    "rice": {
+      "1_day": {
+        "sample_count": 38,
+        "news_coverage_pct": 26.3,
+        "baseline_model": {
+          "mae": 33.41,
+          "rmse": 44.76,
+          "mape": 1.32
+        },
+        "news_augmented_model": {
+          "mae": 33.43,
+          "rmse": 44.74,
+          "mape": 1.32
+        },
+        "delta": {
+          "mae_change": 0.02,
+          "rmse_change": -0.02,
+          "improved": false
+        }
+      },
+      "7_day": {
+        "sample_count": 37,
+        "news_coverage_pct": 24.3,
+        "baseline_model": {
+          "mae": 40.36,
+          "rmse": 52.66,
+          "mape": 1.6
+        },
+        "news_augmented_model": {
+          "mae": 40.43,
+          "rmse": 52.7,
+          "mape": 1.6
+        },
+        "delta": {
+          "mae_change": 0.07,
+          "rmse_change": 0.04,
+          "improved": false
+        }
+      },
+      "15_day": {
+        "sample_count": 36,
+        "news_coverage_pct": 22.2,
+        "baseline_model": {
+          "mae": 42.95,
+          "rmse": 56.74,
+          "mape": 1.7
+        },
+        "news_augmented_model": {
+          "mae": 42.87,
+          "rmse": 56.63,
+          "mape": 1.7
+        },
+        "delta": {
+          "mae_change": -0.07,
+          "rmse_change": -0.11,
+          "improved": true
+        }
+      },
+      "30_day": {
+        "sample_count": 34,
+        "news_coverage_pct": 17.6,
+        "baseline_model": {
+          "mae": 51.12,
+          "rmse": 59.7,
+          "mape": 2.05
+        },
+        "news_augmented_model": {
+          "mae": 51.05,
+          "rmse": 59.65,
+          "mape": 2.05
+        },
+        "delta": {
+          "mae_change": -0.08,
+          "rmse_change": -0.04,
+          "improved": true
+        }
+      },
+      "60_day": {
+        "sample_count": 30,
+        "news_coverage_pct": 13.3,
+        "baseline_model": {
+          "mae": 62.01,
+          "rmse": 76.61,
+          "mape": 2.44
+        },
+        "news_augmented_model": {
+          "mae": 62.01,
+          "rmse": 76.61,
+          "mape": 2.44
+        },
+        "delta": {
+          "mae_change": -0.0,
+          "rmse_change": -0.0,
+          "improved": true
+        }
+      },
+      "90_day": {
+        "sample_count": 26,
+        "news_coverage_pct": 15.4,
+        "baseline_model": {
+          "mae": 82.6,
+          "rmse": 101.27,
+          "mape": 3.24
+        },
+        "news_augmented_model": {
+          "mae": 82.6,
+          "rmse": 101.27,
+          "mape": 3.24
+        },
+        "delta": {
+          "mae_change": -0.0,
+          "rmse_change": -0.0,
+          "improved": true
+        }
+      }
+    },
+    "maize": {
+      "1_day": {
+        "sample_count": 38,
+        "news_coverage_pct": 26.3,
+        "baseline_model": {
+          "mae": 37.32,
+          "rmse": 46.24,
+          "mape": 1.47
+        },
+        "news_augmented_model": {
+          "mae": 37.57,
+          "rmse": 46.53,
+          "mape": 1.48
+        },
+        "delta": {
+          "mae_change": 0.25,
+          "rmse_change": 0.29,
+          "improved": false
+        }
+      },
+      "7_day": {
+        "sample_count": 37,
+        "news_coverage_pct": 24.3,
+        "baseline_model": {
+          "mae": 46.74,
+          "rmse": 56.94,
+          "mape": 1.84
+        },
+        "news_augmented_model": {
+          "mae": 46.72,
+          "rmse": 56.9,
+          "mape": 1.83
+        },
+        "delta": {
+          "mae_change": -0.02,
+          "rmse_change": -0.04,
+          "improved": true
+        }
+      },
+      "15_day": {
+        "sample_count": 36,
+        "news_coverage_pct": 22.2,
+        "baseline_model": {
+          "mae": 41.19,
+          "rmse": 51.64,
+          "mape": 1.62
+        },
+        "news_augmented_model": {
+          "mae": 41.44,
+          "rmse": 51.78,
+          "mape": 1.63
+        },
+        "delta": {
+          "mae_change": 0.24,
+          "rmse_change": 0.14,
+          "improved": false
+        }
+      },
+      "30_day": {
+        "sample_count": 34,
+        "news_coverage_pct": 17.6,
+        "baseline_model": {
+          "mae": 50.81,
+          "rmse": 60.68,
+          "mape": 2.0
+        },
+        "news_augmented_model": {
+          "mae": 51.15,
+          "rmse": 61.01,
+          "mape": 2.01
+        },
+        "delta": {
+          "mae_change": 0.33,
+          "rmse_change": 0.33,
+          "improved": false
+        }
+      },
+      "60_day": {
+        "sample_count": 30,
+        "news_coverage_pct": 13.3,
+        "baseline_model": {
+          "mae": 69.69,
+          "rmse": 77.38,
+          "mape": 2.72
+        },
+        "news_augmented_model": {
+          "mae": 70.0,
+          "rmse": 77.64,
+          "mape": 2.73
+        },
+        "delta": {
+          "mae_change": 0.32,
+          "rmse_change": 0.26,
+          "improved": false
+        }
+      },
+      "90_day": {
+        "sample_count": 26,
+        "news_coverage_pct": 15.4,
+        "baseline_model": {
+          "mae": 72.02,
+          "rmse": 84.31,
+          "mape": 2.81
+        },
+        "news_augmented_model": {
+          "mae": 72.12,
+          "rmse": 84.51,
+          "mape": 2.81
+        },
+        "delta": {
+          "mae_change": 0.1,
+          "rmse_change": 0.2,
+          "improved": false
+        }
+      }
+    },
+    "potato": {
+      "1_day": {
+        "sample_count": 38,
+        "news_coverage_pct": 28.9,
+        "baseline_model": {
+          "mae": 83.95,
+          "rmse": 108.13,
+          "mape": 2.93
+        },
+        "news_augmented_model": {
+          "mae": 83.95,
+          "rmse": 108.13,
+          "mape": 2.93
+        },
+        "delta": {
+          "mae_change": 0.0,
+          "rmse_change": 0.0,
+          "improved": false
+        }
+      },
+      "7_day": {
+        "sample_count": 37,
+        "news_coverage_pct": 27.0,
+        "baseline_model": {
+          "mae": 83.74,
+          "rmse": 104.06,
+          "mape": 2.97
+        },
+        "news_augmented_model": {
+          "mae": 83.74,
+          "rmse": 104.06,
+          "mape": 2.97
+        },
+        "delta": {
+          "mae_change": 0.0,
+          "rmse_change": 0.0,
+          "improved": false
+        }
+      },
+      "15_day": {
+        "sample_count": 36,
+        "news_coverage_pct": 25.0,
+        "baseline_model": {
+          "mae": 84.31,
+          "rmse": 114.01,
+          "mape": 2.93
+        },
+        "news_augmented_model": {
+          "mae": 84.31,
+          "rmse": 114.01,
+          "mape": 2.93
+        },
+        "delta": {
+          "mae_change": 0.0,
+          "rmse_change": 0.0,
+          "improved": false
+        }
+      },
+      "30_day": {
+        "sample_count": 34,
+        "news_coverage_pct": 20.6,
+        "baseline_model": {
+          "mae": 108.42,
+          "rmse": 138.93,
+          "mape": 3.8
+        },
+        "news_augmented_model": {
+          "mae": 108.42,
+          "rmse": 138.93,
+          "mape": 3.8
+        },
+        "delta": {
+          "mae_change": -0.0,
+          "rmse_change": -0.0,
+          "improved": true
+        }
+      },
+      "60_day": {
+        "sample_count": 30,
+        "news_coverage_pct": 13.3,
+        "baseline_model": {
+          "mae": 100.48,
+          "rmse": 119.77,
+          "mape": 3.53
+        },
+        "news_augmented_model": {
+          "mae": 100.48,
+          "rmse": 119.77,
+          "mape": 3.53
+        },
+        "delta": {
+          "mae_change": 0.0,
+          "rmse_change": 0.0,
+          "improved": false
+        }
+      },
+      "90_day": {
+        "sample_count": 26,
+        "news_coverage_pct": 15.4,
+        "baseline_model": {
+          "mae": 88.28,
+          "rmse": 105.99,
+          "mape": 3.12
+        },
+        "news_augmented_model": {
+          "mae": 88.28,
+          "rmse": 105.99,
+          "mape": 3.12
+        },
+        "delta": {
+          "mae_change": 0.0,
+          "rmse_change": 0.0,
+          "improved": false
+        }
+      }
+    },
+    "onion": {
+      "1_day": {
+        "sample_count": 38,
+        "news_coverage_pct": 26.3,
+        "baseline_model": {
+          "mae": 198.63,
+          "rmse": 240.73,
+          "mape": 5.5
+        },
+        "news_augmented_model": {
+          "mae": 199.03,
+          "rmse": 241.7,
+          "mape": 5.51
+        },
+        "delta": {
+          "mae_change": 0.4,
+          "rmse_change": 0.96,
+          "improved": false
+        }
+      },
+      "7_day": {
+        "sample_count": 37,
+        "news_coverage_pct": 24.3,
+        "baseline_model": {
+          "mae": 213.42,
+          "rmse": 249.19,
+          "mape": 5.86
+        },
+        "news_augmented_model": {
+          "mae": 214.01,
+          "rmse": 250.31,
+          "mape": 5.87
+        },
+        "delta": {
+          "mae_change": 0.59,
+          "rmse_change": 1.12,
+          "improved": false
+        }
+      },
+      "15_day": {
+        "sample_count": 36,
+        "news_coverage_pct": 22.2,
+        "baseline_model": {
+          "mae": 240.85,
+          "rmse": 294.7,
+          "mape": 6.69
+        },
+        "news_augmented_model": {
+          "mae": 239.22,
+          "rmse": 294.36,
+          "mape": 6.65
+        },
+        "delta": {
+          "mae_change": -1.63,
+          "rmse_change": -0.34,
+          "improved": true
+        }
+      },
+      "30_day": {
+        "sample_count": 34,
+        "news_coverage_pct": 17.6,
+        "baseline_model": {
+          "mae": 232.77,
+          "rmse": 292.17,
+          "mape": 6.42
+        },
+        "news_augmented_model": {
+          "mae": 232.76,
+          "rmse": 292.3,
+          "mape": 6.42
+        },
+        "delta": {
+          "mae_change": -0.01,
+          "rmse_change": 0.13,
+          "improved": true
+        }
+      },
+      "60_day": {
+        "sample_count": 30,
+        "news_coverage_pct": 13.3,
+        "baseline_model": {
+          "mae": 426.06,
+          "rmse": 475.29,
+          "mape": 11.58
+        },
+        "news_augmented_model": {
+          "mae": 425.02,
+          "rmse": 474.09,
+          "mape": 11.54
+        },
+        "delta": {
+          "mae_change": -1.04,
+          "rmse_change": -1.19,
+          "improved": true
+        }
+      },
+      "90_day": {
+        "sample_count": 26,
+        "news_coverage_pct": 15.4,
+        "baseline_model": {
+          "mae": 475.18,
+          "rmse": 535.08,
+          "mape": 13.06
+        },
+        "news_augmented_model": {
+          "mae": 475.4,
+          "rmse": 534.87,
+          "mape": 13.07
+        },
+        "delta": {
+          "mae_change": 0.21,
+          "rmse_change": -0.22,
+          "improved": false
+        }
+      }
+    }
+  }
+}

@@ -121,7 +121,144 @@ DISTRICT_CANONICAL_ALIASES: Dict[str, Dict[str, Any]] = {
         "canonical_id": "West Bengal::Purba Bardhaman",
         "state": "West Bengal",
         "aliases": ["burdwan", "bardhaman", "barddhaman", "purba bardhaman", "burdwan district"]
+    },
+    # Punjab
+    "sahibzada ajit singh nagar": {
+        "canonical_name": "Sahibzada Ajit Singh Nagar",
+        "canonical_id": "Punjab::Sahibzada Ajit Singh Nagar",
+        "state": "Punjab",
+        "aliases": ["mohali", "sas nagar", "s.a.s. nagar", "sahibzada ajit singh nagar"]
+    },
+    "shahid bhagat singh nagar": {
+        "canonical_name": "Shahid Bhagat Singh Nagar",
+        "canonical_id": "Punjab::Shahid Bhagat Singh Nagar",
+        "state": "Punjab",
+        "aliases": ["nawanshahr", "nawan shahr", "sbs nagar", "s.b.s. nagar", "shahid bhagat singh nagar"]
+    },
+    "malerkotla": {
+        "canonical_name": "Malerkotla",
+        "canonical_id": "Punjab::Malerkotla",
+        "state": "Punjab",
+        "aliases": ["malerkotla", "maler kotla", "malerkotla district"]
+    },
+    "sri muktsar sahib": {
+        "canonical_name": "Sri Muktsar Sahib",
+        "canonical_id": "Punjab::Sri Muktsar Sahib",
+        "state": "Punjab",
+        "aliases": ["muktsar", "sri muktsar sahib", "muktsar district"]
+    },
+    # Andhra Pradesh
+    "ysr kadapa": {
+        "canonical_name": "YSR Kadapa",
+        "canonical_id": "Andhra Pradesh::YSR Kadapa",
+        "state": "Andhra Pradesh",
+        "aliases": ["kadapa", "cuddapah", "ysr", "ysr district", "kadapa district", "ysr kadapa"]
+    },
+    "sri potti sriramulu nellore": {
+        "canonical_name": "Sri Potti Sriramulu Nellore",
+        "canonical_id": "Andhra Pradesh::Sri Potti Sriramulu Nellore",
+        "state": "Andhra Pradesh",
+        "aliases": ["nellore", "spsr nellore", "sri potti sriramulu nellore", "nellore district"]
+    },
+    "dr. b.r. ambedkar konaseema": {
+        "canonical_name": "Dr. B.R. Ambedkar Konaseema",
+        "canonical_id": "Andhra Pradesh::Dr. B.R. Ambedkar Konaseema",
+        "state": "Andhra Pradesh",
+        "aliases": ["konaseema", "dr. b.r. ambedkar konaseema", "dr br ambedkar konaseema", "konaseema district"]
+    },
+    "ananthapuramu": {
+        "canonical_name": "Ananthapuramu",
+        "canonical_id": "Andhra Pradesh::Ananthapuramu",
+        "state": "Andhra Pradesh",
+        "aliases": ["anantapur", "ananthapur", "ananthapuramu", "anantapur district"]
+    },
+    "alluri sitharama raju": {
+        "canonical_name": "Alluri Sitharama Raju",
+        "canonical_id": "Andhra Pradesh::Alluri Sitharama Raju",
+        "state": "Andhra Pradesh",
+        "aliases": ["asr district", "alluri sitharama raju", "alluri seetharama raju", "alluri sitharama raju district"]
+    },
+    "parvathipuram manyam": {
+        "canonical_name": "Parvathipuram Manyam",
+        "canonical_id": "Andhra Pradesh::Parvathipuram Manyam",
+        "state": "Andhra Pradesh",
+        "aliases": ["manyam", "parvathipuram manyam", "parvathipuram", "manyam district"]
+    },
+    # Assam
+    "kamrup metropolitan": {
+        "canonical_name": "Kamrup Metropolitan",
+        "canonical_id": "Assam::Kamrup Metropolitan",
+        "state": "Assam",
+        "aliases": ["guwahati", "kamrup metro", "kamrup metropolitan"]
+    },
+    # Union Territories
+    "nicobars": {
+        "canonical_name": "Nicobars",
+        "canonical_id": "Andaman and Nicobar Islands::Nicobars",
+        "state": "Andaman and Nicobar Islands",
+        "aliases": ["nicobar", "nicobar islands", "car nicobar", "nicobars"]
+    },
+    "south andaman": {
+        "canonical_name": "South Andaman",
+        "canonical_id": "Andaman and Nicobar Islands::South Andaman",
+        "state": "Andaman and Nicobar Islands",
+        "aliases": ["port blair", "andaman", "south andaman"]
+    },
+    "leh": {
+        "canonical_name": "Leh",
+        "canonical_id": "Ladakh::Leh",
+        "state": "Ladakh",
+        "aliases": ["leh ladakh", "leh district", "leh"]
+    },
+    "kargil": {
+        "canonical_name": "Kargil",
+        "canonical_id": "Ladakh::Kargil",
+        "state": "Ladakh",
+        "aliases": ["kargil ladakh", "kargil district", "kargil"]
+    },
+    "lakshadweep": {
+        "canonical_name": "Lakshadweep",
+        "canonical_id": "Lakshadweep::Lakshadweep",
+        "state": "Lakshadweep",
+        "aliases": ["lakshadweep district", "kavaratti", "lakshadweep islands", "lakshadweep"]
     }
+}
+
+# State and Union Territory official normalization mappings
+STATE_CANONICAL_ALIASES: Dict[str, str] = {
+    # 8 Union Territories
+    "andaman & nicobar": "Andaman and Nicobar Islands",
+    "andaman and nicobar": "Andaman and Nicobar Islands",
+    "andaman & nicobar islands": "Andaman and Nicobar Islands",
+    "andaman and nicobar islands (ut)": "Andaman and Nicobar Islands",
+    "chandigarh (ut)": "Chandigarh",
+    "chandigarh": "Chandigarh",
+    "dadra and nagar haveli (ut)": "Dadra and Nagar Haveli and Daman and Diu",
+    "daman and diu (ut)": "Dadra and Nagar Haveli and Daman and Diu",
+    "dadra and nagar haveli": "Dadra and Nagar Haveli and Daman and Diu",
+    "daman and diu": "Dadra and Nagar Haveli and Daman and Diu",
+    "dadra & nagar haveli": "Dadra and Nagar Haveli and Daman and Diu",
+    "daman & diu": "Dadra and Nagar Haveli and Daman and Diu",
+    "dadra and nagar haveli and daman and diu": "Dadra and Nagar Haveli and Daman and Diu",
+    "dadra and nagar haveli and daman and diu (ut)": "Dadra and Nagar Haveli and Daman and Diu",
+    "delhi (nct)": "Delhi",
+    "nct of delhi": "Delhi",
+    "national capital territory of delhi": "Delhi",
+    "delhi": "Delhi",
+    "new delhi": "Delhi",
+    "jammu and kashmir": "Jammu and Kashmir",
+    "jammu & kashmir": "Jammu and Kashmir",
+    "jammu and kashmir (ut)": "Jammu and Kashmir",
+    "ladakh": "Ladakh",
+    "ladakh (ut)": "Ladakh",
+    "lakshadweep (ut)": "Lakshadweep",
+    "lakshadweep": "Lakshadweep",
+    "puducherry (ut)": "Puducherry",
+    "pondicherry": "Puducherry",
+    "puducherry": "Puducherry",
+    # 28 States (historical aliases)
+    "orissa": "Odisha",
+    "uttaranchal": "Uttarakhand",
 }
 
 # Fast alias-to-canonical lookup dictionary
@@ -141,6 +278,14 @@ def clean_text(text: str) -> str:
         return ""
     text = unicodedata.normalize("NFKD", str(text)).encode("ASCII", "ignore").decode("utf-8")
     return text.strip().lower()
+
+
+def normalize_state_name(state_raw: Optional[str]) -> str:
+    """Normalize state or UT string to official 36 entity name."""
+    if not state_raw:
+        return "India"
+    st_clean = clean_text(state_raw)
+    return STATE_CANONICAL_ALIASES.get(st_clean, state_raw.strip().title())
 
 
 def normalize_location(district_raw: str, state_raw: Optional[str] = None) -> Dict[str, str]:
@@ -173,7 +318,9 @@ def normalize_location(district_raw: str, state_raw: Optional[str] = None) -> Di
             "raw_name": district_raw,
             "canonical_name": match["canonical_name"],
             "canonical_id": match["canonical_id"],
-            "state": match["state"]
+            "state": match["state"],
+            "canonical_state": match["state"],
+            "canonical_district": match["canonical_name"]
         }
 
     if raw_clean in _ALIAS_LOOKUP:
@@ -183,18 +330,22 @@ def normalize_location(district_raw: str, state_raw: Optional[str] = None) -> Di
                 "raw_name": district_raw,
                 "canonical_name": match["canonical_name"],
                 "canonical_id": match["canonical_id"],
-                "state": match["state"]
+                "state": match["state"],
+                "canonical_state": match["state"],
+                "canonical_district": match["canonical_name"]
             }
 
     # 2. General title casing if not in special alias list
     canon_district = district_raw.strip().title()
     # Normalize common abbreviations
     canon_district = re.sub(r"\bDistrict\b", "", canon_district, flags=re.IGNORECASE).strip()
-    canon_state = state_raw.strip().title() if state_raw else "India"
+    canon_state = normalize_state_name(state_raw)
 
     return {
         "raw_name": district_raw,
         "canonical_name": canon_district,
         "canonical_id": f"{canon_state}::{canon_district}",
-        "state": canon_state
+        "state": canon_state,
+        "canonical_state": canon_state,
+        "canonical_district": canon_district
     }

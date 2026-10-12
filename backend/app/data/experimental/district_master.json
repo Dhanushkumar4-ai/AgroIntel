@@ -1972,7 +1972,6 @@
       "MANGALORE DISTRICT"
     ]
   },
-
   {
     "canonical_id": "Karnataka::Davangere",
     "state": "Karnataka",
@@ -5219,6 +5218,1667 @@
     "district": "Purulia",
     "source_names": [
       "PURULIA"
+    ]
+  },
+  {
+    "canonical_id": "Andaman and Nicobar Islands::South Andaman",
+    "state": "Andaman and Nicobar Islands",
+    "district": "South Andaman",
+    "source_names": [
+      "South Andaman",
+      "south andaman"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Nellore",
+    "state": "Andhra Pradesh",
+    "district": "Nellore",
+    "source_names": [
+      "Nellore",
+      "nellore"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Visakhapatnam",
+    "state": "Andhra Pradesh",
+    "district": "Visakhapatnam",
+    "source_names": [
+      "Visakhapatnam",
+      "visakhapatnam"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::YSR Kadapa",
+    "state": "Andhra Pradesh",
+    "district": "YSR Kadapa",
+    "source_names": [
+      "YSR Kadapa",
+      "ysr kadapa"
+    ]
+  },
+  {
+    "canonical_id": "Arunachal Pradesh::Kra Daadi",
+    "state": "Arunachal Pradesh",
+    "district": "Kra Daadi",
+    "source_names": [
+      "Kra Daadi",
+      "kra daadi"
+    ]
+  },
+  {
+    "canonical_id": "Arunachal Pradesh::Lower Siang",
+    "state": "Arunachal Pradesh",
+    "district": "Lower Siang",
+    "source_names": [
+      "Lower Siang",
+      "lower siang"
+    ]
+  },
+  {
+    "canonical_id": "Arunachal Pradesh::Siang",
+    "state": "Arunachal Pradesh",
+    "district": "Siang",
+    "source_names": [
+      "Siang",
+      "siang"
+    ]
+  },
+  {
+    "canonical_id": "Assam::Biswanath",
+    "state": "Assam",
+    "district": "Biswanath",
+    "source_names": [
+      "Biswanath",
+      "biswanath"
+    ]
+  },
+  {
+    "canonical_id": "Assam::Charaideo",
+    "state": "Assam",
+    "district": "Charaideo",
+    "source_names": [
+      "Charaideo",
+      "charaideo"
+    ]
+  },
+  {
+    "canonical_id": "Assam::Hojai",
+    "state": "Assam",
+    "district": "Hojai",
+    "source_names": [
+      "Hojai",
+      "hojai"
+    ]
+  },
+  {
+    "canonical_id": "Assam::Kamrup Metropolitan",
+    "state": "Assam",
+    "district": "Kamrup Metropolitan",
+    "source_names": [
+      "Kamrup Metropolitan",
+      "kamrup metropolitan"
+    ]
+  },
+  {
+    "canonical_id": "Assam::Majuli",
+    "state": "Assam",
+    "district": "Majuli",
+    "source_names": [
+      "Majuli",
+      "majuli"
+    ]
+  },
+  {
+    "canonical_id": "Assam::Morigaon",
+    "state": "Assam",
+    "district": "Morigaon",
+    "source_names": [
+      "Morigaon",
+      "morigaon"
+    ]
+  },
+  {
+    "canonical_id": "Assam::South Salmara-Mankachar",
+    "state": "Assam",
+    "district": "South Salmara-Mankachar",
+    "source_names": [
+      "South Salmara-Mankachar",
+      "south salmara-mankachar"
+    ]
+  },
+  {
+    "canonical_id": "Assam::West Karbi Anglong",
+    "state": "Assam",
+    "district": "West Karbi Anglong",
+    "source_names": [
+      "West Karbi Anglong",
+      "west karbi anglong"
+    ]
+  },
+  {
+    "canonical_id": "Bihar::East Champaran (Motihari)",
+    "state": "Bihar",
+    "district": "East Champaran (Motihari)",
+    "source_names": [
+      "East Champaran (Motihari)",
+      "east champaran (motihari)"
+    ]
+  },
+  {
+    "canonical_id": "Bihar::Munger (Monghyr)",
+    "state": "Bihar",
+    "district": "Munger (Monghyr)",
+    "source_names": [
+      "Munger (Monghyr)",
+      "munger (monghyr)"
+    ]
+  },
+  {
+    "canonical_id": "Bihar::Purnia (Purnea)",
+    "state": "Bihar",
+    "district": "Purnia (Purnea)",
+    "source_names": [
+      "Purnia (Purnea)",
+      "purnia (purnea)"
+    ]
+  },
+  {
+    "canonical_id": "Bihar::West Champaran",
+    "state": "Bihar",
+    "district": "West Champaran",
+    "source_names": [
+      "West Champaran",
+      "west champaran"
+    ]
+  },
+  {
+    "canonical_id": "Chhattisgarh::Dantewada (South Bastar)",
+    "state": "Chhattisgarh",
+    "district": "Dantewada (South Bastar)",
+    "source_names": [
+      "Dantewada (South Bastar)",
+      "dantewada (south bastar)"
+    ]
+  },
+  {
+    "canonical_id": "Chhattisgarh::Kabirdham (Kawardha)",
+    "state": "Chhattisgarh",
+    "district": "Kabirdham (Kawardha)",
+    "source_names": [
+      "Kabirdham (Kawardha)",
+      "kabirdham (kawardha)"
+    ]
+  },
+  {
+    "canonical_id": "Chhattisgarh::Kanker (North Bastar)",
+    "state": "Chhattisgarh",
+    "district": "Kanker (North Bastar)",
+    "source_names": [
+      "Kanker (North Bastar)",
+      "kanker (north bastar)"
+    ]
+  },
+  {
+    "canonical_id": "Chhattisgarh::Korea (Koriya)",
+    "state": "Chhattisgarh",
+    "district": "Korea (Koriya)",
+    "source_names": [
+      "Korea (Koriya)",
+      "korea (koriya)"
+    ]
+  },
+  {
+    "canonical_id": "Chhattisgarh::Surajpur  ",
+    "state": "Chhattisgarh",
+    "district": "Surajpur  ",
+    "source_names": [
+      "Surajpur  ",
+      "surajpur  "
+    ]
+  },
+  {
+    "canonical_id": "Dadra and Nagar Haveli and Daman and Diu::Dadra and Nagar Haveli",
+    "state": "Dadra and Nagar Haveli and Daman and Diu",
+    "district": "Dadra and Nagar Haveli",
+    "source_names": [
+      "Dadra and Nagar Haveli",
+      "dadra and nagar haveli"
+    ]
+  },
+  {
+    "canonical_id": "Dadra and Nagar Haveli and Daman and Diu::Daman",
+    "state": "Dadra and Nagar Haveli and Daman and Diu",
+    "district": "Daman",
+    "source_names": [
+      "Daman",
+      "daman"
+    ]
+  },
+  {
+    "canonical_id": "Dadra and Nagar Haveli and Daman and Diu::Diu",
+    "state": "Dadra and Nagar Haveli and Daman and Diu",
+    "district": "Diu",
+    "source_names": [
+      "Diu",
+      "diu"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::Central Delhi",
+    "state": "Delhi",
+    "district": "Central Delhi",
+    "source_names": [
+      "Central Delhi",
+      "central delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::East Delhi",
+    "state": "Delhi",
+    "district": "East Delhi",
+    "source_names": [
+      "East Delhi",
+      "east delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::New Delhi",
+    "state": "Delhi",
+    "district": "New Delhi",
+    "source_names": [
+      "New Delhi",
+      "new delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::North Delhi",
+    "state": "Delhi",
+    "district": "North Delhi",
+    "source_names": [
+      "North Delhi",
+      "north delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::North East  Delhi",
+    "state": "Delhi",
+    "district": "North East  Delhi",
+    "source_names": [
+      "North East  Delhi",
+      "north east  delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::North West  Delhi",
+    "state": "Delhi",
+    "district": "North West  Delhi",
+    "source_names": [
+      "North West  Delhi",
+      "north west  delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::Shahdara",
+    "state": "Delhi",
+    "district": "Shahdara",
+    "source_names": [
+      "Shahdara",
+      "shahdara"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::South Delhi",
+    "state": "Delhi",
+    "district": "South Delhi",
+    "source_names": [
+      "South Delhi",
+      "south delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::South East Delhi",
+    "state": "Delhi",
+    "district": "South East Delhi",
+    "source_names": [
+      "South East Delhi",
+      "south east delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::South West  Delhi",
+    "state": "Delhi",
+    "district": "South West  Delhi",
+    "source_names": [
+      "South West  Delhi",
+      "south west  delhi"
+    ]
+  },
+  {
+    "canonical_id": "Delhi::West Delhi",
+    "state": "Delhi",
+    "district": "West Delhi",
+    "source_names": [
+      "West Delhi",
+      "west delhi"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Ahmedabad",
+    "state": "Gujarat",
+    "district": "Ahmedabad",
+    "source_names": [
+      "Ahmedabad",
+      "ahmedabad"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Aravalli",
+    "state": "Gujarat",
+    "district": "Aravalli",
+    "source_names": [
+      "Aravalli",
+      "aravalli"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Banaskantha (Palanpur)",
+    "state": "Gujarat",
+    "district": "Banaskantha (Palanpur)",
+    "source_names": [
+      "Banaskantha (Palanpur)",
+      "banaskantha (palanpur)"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Botad",
+    "state": "Gujarat",
+    "district": "Botad",
+    "source_names": [
+      "Botad",
+      "botad"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Chhota Udepur",
+    "state": "Gujarat",
+    "district": "Chhota Udepur",
+    "source_names": [
+      "Chhota Udepur",
+      "chhota udepur"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Dahod",
+    "state": "Gujarat",
+    "district": "Dahod",
+    "source_names": [
+      "Dahod",
+      "dahod"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Dangs (Ahwa)",
+    "state": "Gujarat",
+    "district": "Dangs (Ahwa)",
+    "source_names": [
+      "Dangs (Ahwa)",
+      "dangs (ahwa)"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Devbhoomi Dwarka",
+    "state": "Gujarat",
+    "district": "Devbhoomi Dwarka",
+    "source_names": [
+      "Devbhoomi Dwarka",
+      "devbhoomi dwarka"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Gir Somnath",
+    "state": "Gujarat",
+    "district": "Gir Somnath",
+    "source_names": [
+      "Gir Somnath",
+      "gir somnath"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Kheda (Nadiad)",
+    "state": "Gujarat",
+    "district": "Kheda (Nadiad)",
+    "source_names": [
+      "Kheda (Nadiad)",
+      "kheda (nadiad)"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Mahisagar",
+    "state": "Gujarat",
+    "district": "Mahisagar",
+    "source_names": [
+      "Mahisagar",
+      "mahisagar"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Mehsana",
+    "state": "Gujarat",
+    "district": "Mehsana",
+    "source_names": [
+      "Mehsana",
+      "mehsana"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Morbi",
+    "state": "Gujarat",
+    "district": "Morbi",
+    "source_names": [
+      "Morbi",
+      "morbi"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Narmada (Rajpipla)",
+    "state": "Gujarat",
+    "district": "Narmada (Rajpipla)",
+    "source_names": [
+      "Narmada (Rajpipla)",
+      "narmada (rajpipla)"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Panchmahal (Godhra)",
+    "state": "Gujarat",
+    "district": "Panchmahal (Godhra)",
+    "source_names": [
+      "Panchmahal (Godhra)",
+      "panchmahal (godhra)"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Sabarkantha (Himmatnagar)",
+    "state": "Gujarat",
+    "district": "Sabarkantha (Himmatnagar)",
+    "source_names": [
+      "Sabarkantha (Himmatnagar)",
+      "sabarkantha (himmatnagar)"
+    ]
+  },
+  {
+    "canonical_id": "Gujarat::Tapi (Vyara)",
+    "state": "Gujarat",
+    "district": "Tapi (Vyara)",
+    "source_names": [
+      "Tapi (Vyara)",
+      "tapi (vyara)"
+    ]
+  },
+  {
+    "canonical_id": "Haryana::Charkhi Dadri",
+    "state": "Haryana",
+    "district": "Charkhi Dadri",
+    "source_names": [
+      "Charkhi Dadri",
+      "charkhi dadri"
+    ]
+  },
+  {
+    "canonical_id": "Himachal Pradesh::Lahaul &amp; Spiti",
+    "state": "Himachal Pradesh",
+    "district": "Lahaul &amp; Spiti",
+    "source_names": [
+      "Lahaul &amp; Spiti",
+      "lahaul &amp; spiti"
+    ]
+  },
+  {
+    "canonical_id": "Himachal Pradesh::Sirmaur (Sirmour)",
+    "state": "Himachal Pradesh",
+    "district": "Sirmaur (Sirmour)",
+    "source_names": [
+      "Sirmaur (Sirmour)",
+      "sirmaur (sirmour)"
+    ]
+  },
+  {
+    "canonical_id": "Jammu and Kashmir::Bandipore",
+    "state": "Jammu and Kashmir",
+    "district": "Bandipore",
+    "source_names": [
+      "Bandipore",
+      "bandipore"
+    ]
+  },
+  {
+    "canonical_id": "Jammu and Kashmir::Budgam",
+    "state": "Jammu and Kashmir",
+    "district": "Budgam",
+    "source_names": [
+      "Budgam",
+      "budgam"
+    ]
+  },
+  {
+    "canonical_id": "Jammu and Kashmir::Leh",
+    "state": "Jammu and Kashmir",
+    "district": "Leh",
+    "source_names": [
+      "Leh",
+      "leh"
+    ]
+  },
+  {
+    "canonical_id": "Jammu and Kashmir::Rajouri",
+    "state": "Jammu and Kashmir",
+    "district": "Rajouri",
+    "source_names": [
+      "Rajouri",
+      "rajouri"
+    ]
+  },
+  {
+    "canonical_id": "Jharkhand::East Singhbhum",
+    "state": "Jharkhand",
+    "district": "East Singhbhum",
+    "source_names": [
+      "East Singhbhum",
+      "east singhbhum"
+    ]
+  },
+  {
+    "canonical_id": "Jharkhand::Hazaribag",
+    "state": "Jharkhand",
+    "district": "Hazaribag",
+    "source_names": [
+      "Hazaribag",
+      "hazaribag"
+    ]
+  },
+  {
+    "canonical_id": "Jharkhand::Sahibganj",
+    "state": "Jharkhand",
+    "district": "Sahibganj",
+    "source_names": [
+      "Sahibganj",
+      "sahibganj"
+    ]
+  },
+  {
+    "canonical_id": "Jharkhand::Seraikela-Kharsawan",
+    "state": "Jharkhand",
+    "district": "Seraikela-Kharsawan",
+    "source_names": [
+      "Seraikela-Kharsawan",
+      "seraikela-kharsawan"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Ballari (Bellary)",
+    "state": "Karnataka",
+    "district": "Ballari (Bellary)",
+    "source_names": [
+      "Ballari (Bellary)",
+      "ballari (bellary)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Belagavi (Belgaum)",
+    "state": "Karnataka",
+    "district": "Belagavi (Belgaum)",
+    "source_names": [
+      "Belagavi (Belgaum)",
+      "belagavi (belgaum)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Bengaluru (Bangalore) Rural",
+    "state": "Karnataka",
+    "district": "Bengaluru (Bangalore) Rural",
+    "source_names": [
+      "Bengaluru (Bangalore) Rural",
+      "bengaluru (bangalore) rural"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Bengaluru (Bangalore) Urban",
+    "state": "Karnataka",
+    "district": "Bengaluru (Bangalore) Urban",
+    "source_names": [
+      "Bengaluru (Bangalore) Urban",
+      "bengaluru (bangalore) urban"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Chikkamagaluru (Chikmagalur)",
+    "state": "Karnataka",
+    "district": "Chikkamagaluru (Chikmagalur)",
+    "source_names": [
+      "Chikkamagaluru (Chikmagalur)",
+      "chikkamagaluru (chikmagalur)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Dakshina Kannada",
+    "state": "Karnataka",
+    "district": "Dakshina Kannada",
+    "source_names": [
+      "Dakshina Kannada",
+      "dakshina kannada"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Kalaburagi (Gulbarga)",
+    "state": "Karnataka",
+    "district": "Kalaburagi (Gulbarga)",
+    "source_names": [
+      "Kalaburagi (Gulbarga)",
+      "kalaburagi (gulbarga)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Mysuru (Mysore)",
+    "state": "Karnataka",
+    "district": "Mysuru (Mysore)",
+    "source_names": [
+      "Mysuru (Mysore)",
+      "mysuru (mysore)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Shivamogga (Shimoga)",
+    "state": "Karnataka",
+    "district": "Shivamogga (Shimoga)",
+    "source_names": [
+      "Shivamogga (Shimoga)",
+      "shivamogga (shimoga)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Tumakuru (Tumkur)",
+    "state": "Karnataka",
+    "district": "Tumakuru (Tumkur)",
+    "source_names": [
+      "Tumakuru (Tumkur)",
+      "tumakuru (tumkur)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Uttara Kannada",
+    "state": "Karnataka",
+    "district": "Uttara Kannada",
+    "source_names": [
+      "Uttara Kannada",
+      "uttara kannada"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Uttara Kannada (Karwar)",
+    "state": "Karnataka",
+    "district": "Uttara Kannada (Karwar)",
+    "source_names": [
+      "Uttara Kannada (Karwar)",
+      "uttara kannada (karwar)"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Vijayanagara",
+    "state": "Karnataka",
+    "district": "Vijayanagara",
+    "source_names": [
+      "Vijayanagara",
+      "vijayanagara"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Vijayapura (Bijapur)",
+    "state": "Karnataka",
+    "district": "Vijayapura (Bijapur)",
+    "source_names": [
+      "Vijayapura (Bijapur)",
+      "vijayapura (bijapur)"
+    ]
+  },
+  {
+    "canonical_id": "Ladakh::Kargil",
+    "state": "Ladakh",
+    "district": "Kargil",
+    "source_names": [
+      "Kargil",
+      "kargil"
+    ]
+  },
+  {
+    "canonical_id": "Ladakh::Leh",
+    "state": "Ladakh",
+    "district": "Leh",
+    "source_names": [
+      "Leh",
+      "leh"
+    ]
+  },
+  {
+    "canonical_id": "Lakshadweep::Lakshadweep",
+    "state": "Lakshadweep",
+    "district": "Lakshadweep",
+    "source_names": [
+      "Lakshadweep",
+      "lakshadweep"
+    ]
+  },
+  {
+    "canonical_id": "Maharashtra::Chhatrapati Sambhajinagar",
+    "state": "Maharashtra",
+    "district": "Chhatrapati Sambhajinagar",
+    "source_names": [
+      "Chhatrapati Sambhajinagar",
+      "chhatrapati sambhajinagar"
+    ]
+  },
+  {
+    "canonical_id": "Maharashtra::Mumbai City",
+    "state": "Maharashtra",
+    "district": "Mumbai City",
+    "source_names": [
+      "Mumbai City",
+      "mumbai city"
+    ]
+  },
+  {
+    "canonical_id": "Maharashtra::Mumbai Suburban",
+    "state": "Maharashtra",
+    "district": "Mumbai Suburban",
+    "source_names": [
+      "Mumbai Suburban",
+      "mumbai suburban"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Jiribam",
+    "state": "Manipur",
+    "district": "Jiribam",
+    "source_names": [
+      "Jiribam",
+      "jiribam"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Kakching",
+    "state": "Manipur",
+    "district": "Kakching",
+    "source_names": [
+      "Kakching",
+      "kakching"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Kamjong",
+    "state": "Manipur",
+    "district": "Kamjong",
+    "source_names": [
+      "Kamjong",
+      "kamjong"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Kangpokpi",
+    "state": "Manipur",
+    "district": "Kangpokpi",
+    "source_names": [
+      "Kangpokpi",
+      "kangpokpi"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Noney",
+    "state": "Manipur",
+    "district": "Noney",
+    "source_names": [
+      "Noney",
+      "noney"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Pherzawl",
+    "state": "Manipur",
+    "district": "Pherzawl",
+    "source_names": [
+      "Pherzawl",
+      "pherzawl"
+    ]
+  },
+  {
+    "canonical_id": "Manipur::Tengnoupal",
+    "state": "Manipur",
+    "district": "Tengnoupal",
+    "source_names": [
+      "Tengnoupal",
+      "tengnoupal"
+    ]
+  },
+  {
+    "canonical_id": "Meghalaya::South West Garo Hills ",
+    "state": "Meghalaya",
+    "district": "South West Garo Hills ",
+    "source_names": [
+      "South West Garo Hills ",
+      "south west garo hills "
+    ]
+  },
+  {
+    "canonical_id": "Odisha::Angul",
+    "state": "Odisha",
+    "district": "Angul",
+    "source_names": [
+      "Angul",
+      "angul"
+    ]
+  },
+  {
+    "canonical_id": "Odisha::Balasore",
+    "state": "Odisha",
+    "district": "Balasore",
+    "source_names": [
+      "Balasore",
+      "balasore"
+    ]
+  },
+  {
+    "canonical_id": "Odisha::Jajpur",
+    "state": "Odisha",
+    "district": "Jajpur",
+    "source_names": [
+      "Jajpur",
+      "jajpur"
+    ]
+  },
+  {
+    "canonical_id": "Odisha::Kendujhar (Keonjhar)",
+    "state": "Odisha",
+    "district": "Kendujhar (Keonjhar)",
+    "source_names": [
+      "Kendujhar (Keonjhar)",
+      "kendujhar (keonjhar)"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Ferozepur",
+    "state": "Punjab",
+    "district": "Ferozepur",
+    "source_names": [
+      "Ferozepur",
+      "ferozepur"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Nawanshahr (Shahid Bhagat Singh Nagar)",
+    "state": "Punjab",
+    "district": "Nawanshahr (Shahid Bhagat Singh Nagar)",
+    "source_names": [
+      "Nawanshahr (Shahid Bhagat Singh Nagar)",
+      "nawanshahr (shahid bhagat singh nagar)"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Sahibzada Ajit Singh Nagar (Mohali)",
+    "state": "Punjab",
+    "district": "Sahibzada Ajit Singh Nagar (Mohali)",
+    "source_names": [
+      "Sahibzada Ajit Singh Nagar (Mohali)",
+      "sahibzada ajit singh nagar (mohali)"
+    ]
+  },
+  {
+    "canonical_id": "Rajasthan::Sri Ganganagar",
+    "state": "Rajasthan",
+    "district": "Sri Ganganagar",
+    "source_names": [
+      "Sri Ganganagar",
+      "sri ganganagar"
+    ]
+  },
+  {
+    "canonical_id": "Sikkim::East Sikkim",
+    "state": "Sikkim",
+    "district": "East Sikkim",
+    "source_names": [
+      "East Sikkim",
+      "east sikkim"
+    ]
+  },
+  {
+    "canonical_id": "Sikkim::North Sikkim",
+    "state": "Sikkim",
+    "district": "North Sikkim",
+    "source_names": [
+      "North Sikkim",
+      "north sikkim"
+    ]
+  },
+  {
+    "canonical_id": "Sikkim::South Sikkim",
+    "state": "Sikkim",
+    "district": "South Sikkim",
+    "source_names": [
+      "South Sikkim",
+      "south sikkim"
+    ]
+  },
+  {
+    "canonical_id": "Sikkim::West Sikkim",
+    "state": "Sikkim",
+    "district": "West Sikkim",
+    "source_names": [
+      "West Sikkim",
+      "west sikkim"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Chennai",
+    "state": "Tamil Nadu",
+    "district": "Chennai",
+    "source_names": [
+      "Chennai",
+      "chennai"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Kanyakumari",
+    "state": "Tamil Nadu",
+    "district": "Kanyakumari",
+    "source_names": [
+      "Kanyakumari",
+      "kanyakumari"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Nilgiris",
+    "state": "Tamil Nadu",
+    "district": "Nilgiris",
+    "source_names": [
+      "Nilgiris",
+      "nilgiris"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Thoothukudi (Tuticorin)",
+    "state": "Tamil Nadu",
+    "district": "Thoothukudi (Tuticorin)",
+    "source_names": [
+      "Thoothukudi (Tuticorin)",
+      "thoothukudi (tuticorin)"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Tiruvallur",
+    "state": "Tamil Nadu",
+    "district": "Tiruvallur",
+    "source_names": [
+      "Tiruvallur",
+      "tiruvallur"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Tiruvarur",
+    "state": "Tamil Nadu",
+    "district": "Tiruvarur",
+    "source_names": [
+      "Tiruvarur",
+      "tiruvarur"
+    ]
+  },
+  {
+    "canonical_id": "Tamil Nadu::Viluppuram",
+    "state": "Tamil Nadu",
+    "district": "Viluppuram",
+    "source_names": [
+      "Viluppuram",
+      "viluppuram"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Bhadradri Kothagudem",
+    "state": "Telangana",
+    "district": "Bhadradri Kothagudem",
+    "source_names": [
+      "Bhadradri Kothagudem",
+      "bhadradri kothagudem"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Jagtial",
+    "state": "Telangana",
+    "district": "Jagtial",
+    "source_names": [
+      "Jagtial",
+      "jagtial"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Jangaon",
+    "state": "Telangana",
+    "district": "Jangaon",
+    "source_names": [
+      "Jangaon",
+      "jangaon"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Jayashankar Bhoopalpally",
+    "state": "Telangana",
+    "district": "Jayashankar Bhoopalpally",
+    "source_names": [
+      "Jayashankar Bhoopalpally",
+      "jayashankar bhoopalpally"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Jogulamba Gadwal",
+    "state": "Telangana",
+    "district": "Jogulamba Gadwal",
+    "source_names": [
+      "Jogulamba Gadwal",
+      "jogulamba gadwal"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Kamareddy",
+    "state": "Telangana",
+    "district": "Kamareddy",
+    "source_names": [
+      "Kamareddy",
+      "kamareddy"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Komaram Bheem Asifabad",
+    "state": "Telangana",
+    "district": "Komaram Bheem Asifabad",
+    "source_names": [
+      "Komaram Bheem Asifabad",
+      "komaram bheem asifabad"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Mahabubabad",
+    "state": "Telangana",
+    "district": "Mahabubabad",
+    "source_names": [
+      "Mahabubabad",
+      "mahabubabad"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Mahabubnagar",
+    "state": "Telangana",
+    "district": "Mahabubnagar",
+    "source_names": [
+      "Mahabubnagar",
+      "mahabubnagar"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Mancherial",
+    "state": "Telangana",
+    "district": "Mancherial",
+    "source_names": [
+      "Mancherial",
+      "mancherial"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Medchal",
+    "state": "Telangana",
+    "district": "Medchal",
+    "source_names": [
+      "Medchal",
+      "medchal"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Nagarkurnool",
+    "state": "Telangana",
+    "district": "Nagarkurnool",
+    "source_names": [
+      "Nagarkurnool",
+      "nagarkurnool"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Nirmal",
+    "state": "Telangana",
+    "district": "Nirmal",
+    "source_names": [
+      "Nirmal",
+      "nirmal"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Peddapalli",
+    "state": "Telangana",
+    "district": "Peddapalli",
+    "source_names": [
+      "Peddapalli",
+      "peddapalli"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Rajanna Sircilla",
+    "state": "Telangana",
+    "district": "Rajanna Sircilla",
+    "source_names": [
+      "Rajanna Sircilla",
+      "rajanna sircilla"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Rangareddy",
+    "state": "Telangana",
+    "district": "Rangareddy",
+    "source_names": [
+      "Rangareddy",
+      "rangareddy"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Sangareddy",
+    "state": "Telangana",
+    "district": "Sangareddy",
+    "source_names": [
+      "Sangareddy",
+      "sangareddy"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Siddipet",
+    "state": "Telangana",
+    "district": "Siddipet",
+    "source_names": [
+      "Siddipet",
+      "siddipet"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Suryapet",
+    "state": "Telangana",
+    "district": "Suryapet",
+    "source_names": [
+      "Suryapet",
+      "suryapet"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Vikarabad",
+    "state": "Telangana",
+    "district": "Vikarabad",
+    "source_names": [
+      "Vikarabad",
+      "vikarabad"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Wanaparthy",
+    "state": "Telangana",
+    "district": "Wanaparthy",
+    "source_names": [
+      "Wanaparthy",
+      "wanaparthy"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Warangal (Rural)",
+    "state": "Telangana",
+    "district": "Warangal (Rural)",
+    "source_names": [
+      "Warangal (Rural)",
+      "warangal (rural)"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Warangal (Urban)",
+    "state": "Telangana",
+    "district": "Warangal (Urban)",
+    "source_names": [
+      "Warangal (Urban)",
+      "warangal (urban)"
+    ]
+  },
+  {
+    "canonical_id": "Telangana::Yadadri Bhuvanagiri",
+    "state": "Telangana",
+    "district": "Yadadri Bhuvanagiri",
+    "source_names": [
+      "Yadadri Bhuvanagiri",
+      "yadadri bhuvanagiri"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Allahabad",
+    "state": "Uttar Pradesh",
+    "district": "Allahabad",
+    "source_names": [
+      "Allahabad",
+      "allahabad"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Amethi (Chatrapati Sahuji Mahraj Nagar)",
+    "state": "Uttar Pradesh",
+    "district": "Amethi (Chatrapati Sahuji Mahraj Nagar)",
+    "source_names": [
+      "Amethi (Chatrapati Sahuji Mahraj Nagar)",
+      "amethi (chatrapati sahuji mahraj nagar)"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Amroha (J.P. Nagar)",
+    "state": "Uttar Pradesh",
+    "district": "Amroha (J.P. Nagar)",
+    "source_names": [
+      "Amroha (J.P. Nagar)",
+      "amroha (j.p. nagar)"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Bhadohi",
+    "state": "Uttar Pradesh",
+    "district": "Bhadohi",
+    "source_names": [
+      "Bhadohi",
+      "bhadohi"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Faizabad",
+    "state": "Uttar Pradesh",
+    "district": "Faizabad",
+    "source_names": [
+      "Faizabad",
+      "faizabad"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Hapur (Panchsheel Nagar)",
+    "state": "Uttar Pradesh",
+    "district": "Hapur (Panchsheel Nagar)",
+    "source_names": [
+      "Hapur (Panchsheel Nagar)",
+      "hapur (panchsheel nagar)"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Kanshiram Nagar (Kasganj)",
+    "state": "Uttar Pradesh",
+    "district": "Kanshiram Nagar (Kasganj)",
+    "source_names": [
+      "Kanshiram Nagar (Kasganj)",
+      "kanshiram nagar (kasganj)"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Kushinagar (Padrauna)",
+    "state": "Uttar Pradesh",
+    "district": "Kushinagar (Padrauna)",
+    "source_names": [
+      "Kushinagar (Padrauna)",
+      "kushinagar (padrauna)"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Lakhimpur - Kheri",
+    "state": "Uttar Pradesh",
+    "district": "Lakhimpur - Kheri",
+    "source_names": [
+      "Lakhimpur - Kheri",
+      "lakhimpur - kheri"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::RaeBareli",
+    "state": "Uttar Pradesh",
+    "district": "RaeBareli",
+    "source_names": [
+      "RaeBareli",
+      "raebareli"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Sambhal (Bhim Nagar)",
+    "state": "Uttar Pradesh",
+    "district": "Sambhal (Bhim Nagar)",
+    "source_names": [
+      "Sambhal (Bhim Nagar)",
+      "sambhal (bhim nagar)"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Sant Kabir Nagar",
+    "state": "Uttar Pradesh",
+    "district": "Sant Kabir Nagar",
+    "source_names": [
+      "Sant Kabir Nagar",
+      "sant kabir nagar"
+    ]
+  },
+  {
+    "canonical_id": "Uttar Pradesh::Shamali (Prabuddh Nagar)",
+    "state": "Uttar Pradesh",
+    "district": "Shamali (Prabuddh Nagar)",
+    "source_names": [
+      "Shamali (Prabuddh Nagar)",
+      "shamali (prabuddh nagar)"
+    ]
+  },
+  {
+    "canonical_id": "Uttarakhand::Rudraprayag",
+    "state": "Uttarakhand",
+    "district": "Rudraprayag",
+    "source_names": [
+      "Rudraprayag",
+      "rudraprayag"
+    ]
+  },
+  {
+    "canonical_id": "Uttarakhand::Udham Singh Nagar",
+    "state": "Uttarakhand",
+    "district": "Udham Singh Nagar",
+    "source_names": [
+      "Udham Singh Nagar",
+      "udham singh nagar"
+    ]
+  },
+  {
+    "canonical_id": "Uttarakhand::Uttarkashi",
+    "state": "Uttarakhand",
+    "district": "Uttarkashi",
+    "source_names": [
+      "Uttarkashi",
+      "uttarkashi"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Alipurduar",
+    "state": "West Bengal",
+    "district": "Alipurduar",
+    "source_names": [
+      "Alipurduar",
+      "alipurduar"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Burdwan (Bardhaman)",
+    "state": "West Bengal",
+    "district": "Burdwan (Bardhaman)",
+    "source_names": [
+      "Burdwan (Bardhaman)",
+      "burdwan (bardhaman)"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Cooch Behar",
+    "state": "West Bengal",
+    "district": "Cooch Behar",
+    "source_names": [
+      "Cooch Behar",
+      "cooch behar"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Dakshin Dinajpur (South Dinajpur)",
+    "state": "West Bengal",
+    "district": "Dakshin Dinajpur (South Dinajpur)",
+    "source_names": [
+      "Dakshin Dinajpur (South Dinajpur)",
+      "dakshin dinajpur (south dinajpur)"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Kalimpong",
+    "state": "West Bengal",
+    "district": "Kalimpong",
+    "source_names": [
+      "Kalimpong",
+      "kalimpong"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Kolkata",
+    "state": "West Bengal",
+    "district": "Kolkata",
+    "source_names": [
+      "Kolkata",
+      "kolkata"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Malda",
+    "state": "West Bengal",
+    "district": "Malda",
+    "source_names": [
+      "Malda",
+      "malda"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::North 24 Parganas",
+    "state": "West Bengal",
+    "district": "North 24 Parganas",
+    "source_names": [
+      "North 24 Parganas",
+      "north 24 parganas"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Paschim Medinipur (West Medinipur)",
+    "state": "West Bengal",
+    "district": "Paschim Medinipur (West Medinipur)",
+    "source_names": [
+      "Paschim Medinipur (West Medinipur)",
+      "paschim medinipur (west medinipur)"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Purba Medinipur (East Medinipur)",
+    "state": "West Bengal",
+    "district": "Purba Medinipur (East Medinipur)",
+    "source_names": [
+      "Purba Medinipur (East Medinipur)",
+      "purba medinipur (east medinipur)"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::South 24 Parganas",
+    "state": "West Bengal",
+    "district": "South 24 Parganas",
+    "source_names": [
+      "South 24 Parganas",
+      "south 24 parganas"
+    ]
+  },
+  {
+    "canonical_id": "West Bengal::Uttar Dinajpur (North Dinajpur)",
+    "state": "West Bengal",
+    "district": "Uttar Dinajpur (North Dinajpur)",
+    "source_names": [
+      "Uttar Dinajpur (North Dinajpur)",
+      "uttar dinajpur (north dinajpur)"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Alluri Sitharama Raju",
+    "state": "Andhra Pradesh",
+    "district": "Alluri Sitharama Raju",
+    "source_names": [
+      "ASR",
+      "Alluri Seetharama Raju"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Anakapalli",
+    "state": "Andhra Pradesh",
+    "district": "Anakapalli",
+    "source_names": [
+      "Anakapalle"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Ananthapuramu",
+    "state": "Andhra Pradesh",
+    "district": "Ananthapuramu",
+    "source_names": [
+      "Anantapur",
+      "Ananthapur"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Annamayya",
+    "state": "Andhra Pradesh",
+    "district": "Annamayya",
+    "source_names": [
+      "Rayachoti"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Bapatla",
+    "state": "Andhra Pradesh",
+    "district": "Bapatla",
+    "source_names": [
+      "Bapatla District"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Dr. B.R. Ambedkar Konaseema",
+    "state": "Andhra Pradesh",
+    "district": "Dr. B.R. Ambedkar Konaseema",
+    "source_names": [
+      "Konaseema",
+      "Dr BR Ambedkar Konaseema"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Eluru",
+    "state": "Andhra Pradesh",
+    "district": "Eluru",
+    "source_names": [
+      "Eluru District"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Kakinada",
+    "state": "Andhra Pradesh",
+    "district": "Kakinada",
+    "source_names": [
+      "Kakinada District"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Nandyal",
+    "state": "Andhra Pradesh",
+    "district": "Nandyal",
+    "source_names": [
+      "Nandyala"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::NTR",
+    "state": "Andhra Pradesh",
+    "district": "NTR",
+    "source_names": [
+      "Vijayawada",
+      "NTR District"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Palnadu",
+    "state": "Andhra Pradesh",
+    "district": "Palnadu",
+    "source_names": [
+      "Narasaraopet"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Parvathipuram Manyam",
+    "state": "Andhra Pradesh",
+    "district": "Parvathipuram Manyam",
+    "source_names": [
+      "Manyam",
+      "Parvathipuram"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Sri Potti Sriramulu Nellore",
+    "state": "Andhra Pradesh",
+    "district": "Sri Potti Sriramulu Nellore",
+    "source_names": [
+      "Nellore",
+      "SPSR Nellore",
+      "Spsr Nellore"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Sri Sathya Sai",
+    "state": "Andhra Pradesh",
+    "district": "Sri Sathya Sai",
+    "source_names": [
+      "Puttaparthi",
+      "Sri Satya Sai"
+    ]
+  },
+  {
+    "canonical_id": "Andhra Pradesh::Tirupati",
+    "state": "Andhra Pradesh",
+    "district": "Tirupati",
+    "source_names": [
+      "Tirupati District",
+      "Sri Balaji"
+    ]
+  },
+  {
+    "canonical_id": "Karnataka::Chikkamagaluru",
+    "state": "Karnataka",
+    "district": "Chikkamagaluru",
+    "source_names": [
+      "Chikmagalur",
+      "Chikkamagalur"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Malerkotla",
+    "state": "Punjab",
+    "district": "Malerkotla",
+    "source_names": [
+      "Maler Kotla"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Sahibzada Ajit Singh Nagar",
+    "state": "Punjab",
+    "district": "Sahibzada Ajit Singh Nagar",
+    "source_names": [
+      "Mohali",
+      "SAS Nagar",
+      "S.A.S. Nagar"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Shahid Bhagat Singh Nagar",
+    "state": "Punjab",
+    "district": "Shahid Bhagat Singh Nagar",
+    "source_names": [
+      "Nawanshahr",
+      "Nawan Shahr",
+      "SBS Nagar",
+      "S.B.S. Nagar"
+    ]
+  },
+  {
+    "canonical_id": "Punjab::Sri Muktsar Sahib",
+    "state": "Punjab",
+    "district": "Sri Muktsar Sahib",
+    "source_names": [
+      "Muktsar",
+      "Sri Muktsar Sahib"
     ]
   }
 ]

@@ -1,14 +1,14 @@
 {
   "job_name": "fetch_mandi",
-  "timestamp": "2026-08-17T09:52:37.439571",
-  "execution_time_seconds": 12.5,
+  "timestamp": "2026-10-12T15:50:49.143000+00:00",
+  "execution_time_seconds": 13.52,
   "api_status": "NO_API_DATA_OR_OFFLINE",
   "raw_records_fetched": 0,
   "valid_records_extracted": 0,
   "rejected_records": 0,
   "duplicates_ignored": 0,
   "new_records_added": 0,
-  "total_dataset_rows": 178522,
+  "total_dataset_rows": 258988,
   "supported_crops": [
     "rice",
     "wheat",

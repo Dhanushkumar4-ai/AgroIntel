@@ -1,40 +1,40 @@
 {
   "crop": "maize",
   "best_algorithm": "state_aware_xgboost",
-  "trained_at": "2026-08-21T18:06:04.056757+00:00",
-  "training_time_seconds": 0.6,
+  "trained_at": "2026-10-12T15:51:48.233415+00:00",
+  "training_time_seconds": 0.61,
   "train_samples": 21325,
-  "test_samples": 4267,
-  "holdout_mae": 83.0,
-  "holdout_rmse": 146.84,
-  "holdout_mape": 3.48,
-  "holdout_r2": 0.8426,
+  "test_samples": 18386,
+  "holdout_mae": 133.72,
+  "holdout_rmse": 350.8,
+  "holdout_mape": 3.81,
+  "holdout_r2": 0.89,
   "multi_horizon_metrics": {
-    "1_day_mae": 83.0,
-    "7_day_mae": 87.15,
-    "15_day_mae": 92.96,
-    "30_day_mae": 103.75
+    "1_day_mae": 133.72,
+    "7_day_mae": 140.41,
+    "15_day_mae": 149.77,
+    "30_day_mae": 167.15
   },
   "all_candidates": {
     "state_aware_xgboost": {
-      "mae": 83.0,
-      "rmse": 146.84,
-      "mape": 3.48,
-      "r2": 0.8426
+      "mae": 133.72,
+      "rmse": 350.8,
+      "mape": 3.81,
+      "r2": 0.89
     },
     "crop_only_xgboost": {
-      "mae": 81.16,
-      "rmse": 143.32,
-      "mape": 3.42,
-      "r2": 0.85
+      "mae": 130.81,
+      "rmse": 367.46,
+      "mape": 3.62,
+      "r2": 0.8793
     },
     "naive_lag1": {
-      "mae": 81.32,
-      "rmse": 166.45,
-      "mape": 3.56,
-      "r2": 0.7977
+      "mae": 62.06,
+      "rmse": 105.61,
+      "mape": 2.44,
+      "r2": 0.99
     }
   },
-  "state_count": 20,
+  "state_count": 22,
   "candidate_model_file": "xgboost_state_maize.pkl"
 }

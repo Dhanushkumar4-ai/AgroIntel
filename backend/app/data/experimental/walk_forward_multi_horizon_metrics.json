@@ -1,0 +1,3147 @@
+{
+  "generated_at": "2026-10-12T21:12:02.993616",
+  "evaluation_protocol": "Chronological Walk-Forward Rolling Origins (Origins spaced weekly across 2026)",
+  "untouched_test_partition": "2026-01-07 to 2026-10-04",
+  "horizons_evaluated": [
+    1,
+    7,
+    15,
+    30,
+    60,
+    90
+  ],
+  "national_evaluation": {
+    "wheat": {
+      "1_day": {
+        "xgboost": {
+          "sample_count": 38,
+          "mae": 32.45,
+          "rmse": 40.1,
+          "mape": 1.04,
+          "medae": 27.03
+        },
+        "prophet": {
+          "sample_count": 38,
+          "mae": 50.57,
+          "rmse": 61.59,
+          "mape": 1.64,
+          "medae": 40.38
+        },
+        "arima": {
+          "sample_count": 38,
+          "mae": 93.44,
+          "rmse": 124.59,
+          "mape": 3.09,
+          "medae": 61.55
+        },
+        "lstm": {
+          "sample_count": 38,
+          "mae": 39.72,
+          "rmse": 49.54,
+          "mape": 1.28,
+          "medae": 36.92
+        },
+        "reference_benchmark": {
+          "sample_count": 38,
+          "mae": 43.78,
+          "rmse": 54.99,
+          "mape": 1.4,
+          "medae": 34.09
+        }
+      },
+      "7_day": {
+        "xgboost": {
+          "sample_count": 37,
+          "mae": 44.37,
+          "rmse": 54.13,
+          "mape": 1.42,
+          "medae": 36.59
+        },
+        "prophet": {
+          "sample_count": 37,
+          "mae": 53.68,
+          "rmse": 65.77,
+          "mape": 1.72,
+          "medae": 54.71
+        },
+        "arima": {
+          "sample_count": 37,
+          "mae": 84.78,
+          "rmse": 112.7,
+          "mape": 2.78,
+          "medae": 57.59
+        },
+        "lstm": {
+          "sample_count": 37,
+          "mae": 42.52,
+          "rmse": 52.91,
+          "mape": 1.36,
+          "medae": 36.92
+        },
+        "reference_benchmark": {
+          "sample_count": 37,
+          "mae": 47.62,
+          "rmse": 60.37,
+          "mape": 1.52,
+          "medae": 41.11
+        }
+      },
+      "15_day": {
+        "xgboost": {
+          "sample_count": 36,
+          "mae": 38.0,
+          "rmse": 45.65,
+          "mape": 1.21,
+          "medae": 36.5
+        },
+        "prophet": {
+          "sample_count": 36,
+          "mae": 46.79,
+          "rmse": 56.41,
+          "mape": 1.5,
+          "medae": 39.19
+        },
+        "arima": {
+          "sample_count": 36,
+          "mae": 83.46,
+          "rmse": 110.51,
+          "mape": 2.74,
+          "medae": 54.18
+        },
+        "lstm": {
+          "sample_count": 36,
+          "mae": 39.95,
+          "rmse": 50.01,
+          "mape": 1.28,
+          "medae": 39.56
+        },
+        "reference_benchmark": {
+          "sample_count": 36,
+          "mae": 45.5,
+          "rmse": 55.82,
+          "mape": 1.46,
+          "medae": 40.99
+        }
+      },
+      "30_day": {
+        "xgboost": {
+          "sample_count": 34,
+          "mae": 41.14,
+          "rmse": 51.6,
+          "mape": 1.32,
+          "medae": 32.27
+        },
+        "prophet": {
+          "sample_count": 34,
+          "mae": 36.01,
+          "rmse": 46.44,
+          "mape": 1.14,
+          "medae": 29.8
+        },
+        "arima": {
+          "sample_count": 34,
+          "mae": 60.92,
+          "rmse": 81.0,
+          "mape": 1.97,
+          "medae": 42.43
+        },
+        "lstm": {
+          "sample_count": 34,
+          "mae": 33.42,
+          "rmse": 41.99,
+          "mape": 1.07,
+          "medae": 27.86
+        },
+        "reference_benchmark": {
+          "sample_count": 34,
+          "mae": 61.4,
+          "rmse": 73.58,
+          "mape": 1.96,
+          "medae": 45.35
+        }
+      },
+      "60_day": {
+        "xgboost": {
+          "sample_count": 30,
+          "mae": 55.29,
+          "rmse": 71.13,
+          "mape": 1.75,
+          "medae": 40.54
+        },
+        "prophet": {
+          "sample_count": 30,
+          "mae": 44.26,
+          "rmse": 57.09,
+          "mape": 1.4,
+          "medae": 33.8
+        },
+        "arima": {
+          "sample_count": 30,
+          "mae": 59.75,
+          "rmse": 74.52,
+          "mape": 1.91,
+          "medae": 52.03
+        },
+        "lstm": {
+          "sample_count": 30,
+          "mae": 44.44,
+          "rmse": 57.6,
+          "mape": 1.41,
+          "medae": 37.69
+        },
+        "reference_benchmark": {
+          "sample_count": 30,
+          "mae": 89.6,
+          "rmse": 108.27,
+          "mape": 2.85,
+          "medae": 81.83
+        }
+      },
+      "90_day": {
+        "xgboost": {
+          "sample_count": 26,
+          "mae": 80.76,
+          "rmse": 99.91,
+          "mape": 2.52,
+          "medae": 70.6
+        },
+        "prophet": {
+          "sample_count": 26,
+          "mae": 71.5,
+          "rmse": 85.44,
+          "mape": 2.22,
+          "medae": 66.99
+        },
+        "arima": {
+          "sample_count": 26,
+          "mae": 48.85,
+          "rmse": 61.11,
+          "mape": 1.53,
+          "medae": 38.43
+        },
+        "lstm": {
+          "sample_count": 26,
+          "mae": 46.95,
+          "rmse": 58.7,
+          "mape": 1.47,
+          "medae": 34.06
+        },
+        "reference_benchmark": {
+          "sample_count": 26,
+          "mae": 137.96,
+          "rmse": 161.4,
+          "mape": 4.31,
+          "medae": 132.19
+        }
+      }
+    },
+    "rice": {
+      "1_day": {
+        "xgboost": {
+          "sample_count": 38,
+          "mae": 33.82,
+          "rmse": 41.79,
+          "mape": 1.34,
+          "medae": 22.7
+        },
+        "prophet": {
+          "sample_count": 38,
+          "mae": 35.18,
+          "rmse": 43.69,
+          "mape": 1.4,
+          "medae": 32.38
+        },
+        "arima": {
+          "sample_count": 38,
+          "mae": 71.61,
+          "rmse": 79.57,
+          "mape": 2.9,
+          "medae": 80.26
+        },
+        "lstm": {
+          "sample_count": 38,
+          "mae": 36.52,
+          "rmse": 50.51,
+          "mape": 1.44,
+          "medae": 23.94
+        },
+        "reference_benchmark": {
+          "sample_count": 38,
+          "mae": 28.24,
+          "rmse": 36.62,
+          "mape": 1.13,
+          "medae": 22.36
+        }
+      },
+      "7_day": {
+        "xgboost": {
+          "sample_count": 37,
+          "mae": 36.17,
+          "rmse": 48.03,
+          "mape": 1.43,
+          "medae": 27.3
+        },
+        "prophet": {
+          "sample_count": 37,
+          "mae": 34.41,
+          "rmse": 44.57,
+          "mape": 1.37,
+          "medae": 29.35
+        },
+        "arima": {
+          "sample_count": 37,
+          "mae": 60.64,
+          "rmse": 73.51,
+          "mape": 2.45,
+          "medae": 48.01
+        },
+        "lstm": {
+          "sample_count": 37,
+          "mae": 39.47,
+          "rmse": 53.06,
+          "mape": 1.56,
+          "medae": 24.85
+        },
+        "reference_benchmark": {
+          "sample_count": 37,
+          "mae": 36.01,
+          "rmse": 46.49,
+          "mape": 1.43,
+          "medae": 35.71
+        }
+      },
+      "15_day": {
+        "xgboost": {
+          "sample_count": 36,
+          "mae": 39.35,
+          "rmse": 51.08,
+          "mape": 1.56,
+          "medae": 28.19
+        },
+        "prophet": {
+          "sample_count": 36,
+          "mae": 36.91,
+          "rmse": 44.87,
+          "mape": 1.47,
+          "medae": 32.59
+        },
+        "arima": {
+          "sample_count": 36,
+          "mae": 73.57,
+          "rmse": 80.27,
+          "mape": 2.97,
+          "medae": 79.23
+        },
+        "lstm": {
+          "sample_count": 36,
+          "mae": 40.45,
+          "rmse": 54.61,
+          "mape": 1.6,
+          "medae": 31.46
+        },
+        "reference_benchmark": {
+          "sample_count": 36,
+          "mae": 36.49,
+          "rmse": 48.98,
+          "mape": 1.46,
+          "medae": 29.88
+        }
+      },
+      "30_day": {
+        "xgboost": {
+          "sample_count": 34,
+          "mae": 40.19,
+          "rmse": 47.61,
+          "mape": 1.62,
+          "medae": 38.07
+        },
+        "prophet": {
+          "sample_count": 34,
+          "mae": 32.33,
+          "rmse": 41.33,
+          "mape": 1.31,
+          "medae": 23.62
+        },
+        "arima": {
+          "sample_count": 34,
+          "mae": 60.98,
+          "rmse": 77.74,
+          "mape": 2.49,
+          "medae": 55.13
+        },
+        "lstm": {
+          "sample_count": 34,
+          "mae": 41.37,
+          "rmse": 48.3,
+          "mape": 1.66,
+          "medae": 36.2
+        },
+        "reference_benchmark": {
+          "sample_count": 34,
+          "mae": 45.67,
+          "rmse": 54.7,
+          "mape": 1.84,
+          "medae": 35.35
+        }
+      },
+      "60_day": {
+        "xgboost": {
+          "sample_count": 30,
+          "mae": 46.63,
+          "rmse": 57.41,
+          "mape": 1.84,
+          "medae": 38.39
+        },
+        "prophet": {
+          "sample_count": 30,
+          "mae": 33.6,
+          "rmse": 41.25,
+          "mape": 1.34,
+          "medae": 26.76
+        },
+        "arima": {
+          "sample_count": 30,
+          "mae": 64.77,
+          "rmse": 74.16,
+          "mape": 2.61,
+          "medae": 61.75
+        },
+        "lstm": {
+          "sample_count": 30,
+          "mae": 45.9,
+          "rmse": 56.66,
+          "mape": 1.81,
+          "medae": 38.68
+        },
+        "reference_benchmark": {
+          "sample_count": 30,
+          "mae": 58.51,
+          "rmse": 70.68,
+          "mape": 2.31,
+          "medae": 52.27
+        }
+      },
+      "90_day": {
+        "xgboost": {
+          "sample_count": 26,
+          "mae": 64.72,
+          "rmse": 83.9,
+          "mape": 2.53,
+          "medae": 55.31
+        },
+        "prophet": {
+          "sample_count": 26,
+          "mae": 34.34,
+          "rmse": 46.32,
+          "mape": 1.35,
+          "medae": 26.45
+        },
+        "arima": {
+          "sample_count": 26,
+          "mae": 61.9,
+          "rmse": 75.47,
+          "mape": 2.47,
+          "medae": 62.94
+        },
+        "lstm": {
+          "sample_count": 26,
+          "mae": 48.37,
+          "rmse": 67.2,
+          "mape": 1.88,
+          "medae": 36.75
+        },
+        "reference_benchmark": {
+          "sample_count": 26,
+          "mae": 82.09,
+          "rmse": 98.2,
+          "mape": 3.22,
+          "medae": 71.77
+        }
+      }
+    },
+    "maize": {
+      "1_day": {
+        "xgboost": {
+          "sample_count": 38,
+          "mae": 31.93,
+          "rmse": 39.66,
+          "mape": 1.27,
+          "medae": 31.27
+        },
+        "prophet": {
+          "sample_count": 38,
+          "mae": 41.7,
+          "rmse": 51.86,
+          "mape": 1.66,
+          "medae": 39.61
+        },
+        "arima": {
+          "sample_count": 38,
+          "mae": 39.72,
+          "rmse": 49.23,
+          "mape": 1.59,
+          "medae": 38.54
+        },
+        "lstm": {
+          "sample_count": 38,
+          "mae": 33.77,
+          "rmse": 40.62,
+          "mape": 1.34,
+          "medae": 26.32
+        },
+        "reference_benchmark": {
+          "sample_count": 38,
+          "mae": 36.35,
+          "rmse": 43.75,
+          "mape": 1.45,
+          "medae": 32.21
+        }
+      },
+      "7_day": {
+        "xgboost": {
+          "sample_count": 37,
+          "mae": 33.21,
+          "rmse": 40.7,
+          "mape": 1.31,
+          "medae": 29.8
+        },
+        "prophet": {
+          "sample_count": 37,
+          "mae": 39.52,
+          "rmse": 50.8,
+          "mape": 1.57,
+          "medae": 30.62
+        },
+        "arima": {
+          "sample_count": 37,
+          "mae": 38.82,
+          "rmse": 46.2,
+          "mape": 1.54,
+          "medae": 32.8
+        },
+        "lstm": {
+          "sample_count": 37,
+          "mae": 38.85,
+          "rmse": 46.75,
+          "mape": 1.53,
+          "medae": 34.03
+        },
+        "reference_benchmark": {
+          "sample_count": 37,
+          "mae": 35.52,
+          "rmse": 44.6,
+          "mape": 1.4,
+          "medae": 30.09
+        }
+      },
+      "15_day": {
+        "xgboost": {
+          "sample_count": 36,
+          "mae": 35.85,
+          "rmse": 44.05,
+          "mape": 1.43,
+          "medae": 38.79
+        },
+        "prophet": {
+          "sample_count": 36,
+          "mae": 42.85,
+          "rmse": 53.05,
+          "mape": 1.71,
+          "medae": 41.04
+        },
+        "arima": {
+          "sample_count": 36,
+          "mae": 40.65,
+          "rmse": 51.01,
+          "mape": 1.63,
+          "medae": 40.88
+        },
+        "lstm": {
+          "sample_count": 36,
+          "mae": 35.22,
+          "rmse": 42.88,
+          "mape": 1.4,
+          "medae": 26.07
+        },
+        "reference_benchmark": {
+          "sample_count": 36,
+          "mae": 35.36,
+          "rmse": 43.87,
+          "mape": 1.41,
+          "medae": 29.07
+        }
+      },
+      "30_day": {
+        "xgboost": {
+          "sample_count": 34,
+          "mae": 33.46,
+          "rmse": 43.07,
+          "mape": 1.33,
+          "medae": 29.92
+        },
+        "prophet": {
+          "sample_count": 34,
+          "mae": 45.46,
+          "rmse": 57.29,
+          "mape": 1.81,
+          "medae": 32.68
+        },
+        "arima": {
+          "sample_count": 34,
+          "mae": 39.19,
+          "rmse": 48.21,
+          "mape": 1.56,
+          "medae": 33.39
+        },
+        "lstm": {
+          "sample_count": 34,
+          "mae": 38.0,
+          "rmse": 49.41,
+          "mape": 1.5,
+          "medae": 26.53
+        },
+        "reference_benchmark": {
+          "sample_count": 34,
+          "mae": 41.35,
+          "rmse": 49.4,
+          "mape": 1.63,
+          "medae": 39.61
+        }
+      },
+      "60_day": {
+        "xgboost": {
+          "sample_count": 30,
+          "mae": 36.21,
+          "rmse": 46.4,
+          "mape": 1.42,
+          "medae": 32.06
+        },
+        "prophet": {
+          "sample_count": 30,
+          "mae": 32.21,
+          "rmse": 38.79,
+          "mape": 1.27,
+          "medae": 27.35
+        },
+        "arima": {
+          "sample_count": 30,
+          "mae": 35.86,
+          "rmse": 47.04,
+          "mape": 1.41,
+          "medae": 28.06
+        },
+        "lstm": {
+          "sample_count": 30,
+          "mae": 52.21,
+          "rmse": 66.19,
+          "mape": 2.04,
+          "medae": 40.15
+        },
+        "reference_benchmark": {
+          "sample_count": 30,
+          "mae": 46.58,
+          "rmse": 58.57,
+          "mape": 1.82,
+          "medae": 37.0
+        }
+      },
+      "90_day": {
+        "xgboost": {
+          "sample_count": 26,
+          "mae": 39.66,
+          "rmse": 54.63,
+          "mape": 1.56,
+          "medae": 30.12
+        },
+        "prophet": {
+          "sample_count": 26,
+          "mae": 49.13,
+          "rmse": 60.0,
+          "mape": 1.94,
+          "medae": 42.73
+        },
+        "arima": {
+          "sample_count": 26,
+          "mae": 42.9,
+          "rmse": 57.81,
+          "mape": 1.69,
+          "medae": 30.27
+        },
+        "lstm": {
+          "sample_count": 26,
+          "mae": 60.18,
+          "rmse": 79.7,
+          "mape": 2.35,
+          "medae": 56.33
+        },
+        "reference_benchmark": {
+          "sample_count": 26,
+          "mae": 53.09,
+          "rmse": 68.57,
+          "mape": 2.08,
+          "medae": 40.19
+        }
+      }
+    },
+    "potato": {
+      "1_day": {
+        "xgboost": {
+          "sample_count": 38,
+          "mae": 26.22,
+          "rmse": 36.67,
+          "mape": 0.93,
+          "medae": 15.17
+        },
+        "prophet": {
+          "sample_count": 38,
+          "mae": 137.41,
+          "rmse": 161.15,
+          "mape": 4.89,
+          "medae": 119.7
+        },
+        "arima": {
+          "sample_count": 38,
+          "mae": 124.29,
+          "rmse": 139.65,
+          "mape": 4.48,
+          "medae": 131.28
+        },
+        "lstm": {
+          "sample_count": 38,
+          "mae": 65.95,
+          "rmse": 88.84,
+          "mape": 2.31,
+          "medae": 60.61
+        },
+        "reference_benchmark": {
+          "sample_count": 38,
+          "mae": 69.08,
+          "rmse": 90.88,
+          "mape": 2.44,
+          "medae": 56.41
+        }
+      },
+      "7_day": {
+        "xgboost": {
+          "sample_count": 37,
+          "mae": 43.31,
+          "rmse": 56.42,
+          "mape": 1.56,
+          "medae": 35.02
+        },
+        "prophet": {
+          "sample_count": 37,
+          "mae": 140.07,
+          "rmse": 166.69,
+          "mape": 4.98,
+          "medae": 149.14
+        },
+        "arima": {
+          "sample_count": 37,
+          "mae": 126.76,
+          "rmse": 153.14,
+          "mape": 4.65,
+          "medae": 145.93
+        },
+        "lstm": {
+          "sample_count": 37,
+          "mae": 80.39,
+          "rmse": 93.55,
+          "mape": 2.88,
+          "medae": 71.76
+        },
+        "reference_benchmark": {
+          "sample_count": 37,
+          "mae": 82.15,
+          "rmse": 95.39,
+          "mape": 2.96,
+          "medae": 79.49
+        }
+      },
+      "15_day": {
+        "xgboost": {
+          "sample_count": 36,
+          "mae": 65.26,
+          "rmse": 86.86,
+          "mape": 2.28,
+          "medae": 52.85
+        },
+        "prophet": {
+          "sample_count": 36,
+          "mae": 139.46,
+          "rmse": 163.85,
+          "mape": 4.96,
+          "medae": 124.68
+        },
+        "arima": {
+          "sample_count": 36,
+          "mae": 122.15,
+          "rmse": 138.18,
+          "mape": 4.4,
+          "medae": 127.93
+        },
+        "lstm": {
+          "sample_count": 36,
+          "mae": 69.15,
+          "rmse": 94.49,
+          "mape": 2.42,
+          "medae": 56.75
+        },
+        "reference_benchmark": {
+          "sample_count": 36,
+          "mae": 78.24,
+          "rmse": 100.93,
+          "mape": 2.76,
+          "medae": 67.92
+        }
+      },
+      "30_day": {
+        "xgboost": {
+          "sample_count": 34,
+          "mae": 96.05,
+          "rmse": 123.99,
+          "mape": 3.4,
+          "medae": 75.96
+        },
+        "prophet": {
+          "sample_count": 34,
+          "mae": 110.44,
+          "rmse": 134.97,
+          "mape": 3.94,
+          "medae": 91.41
+        },
+        "arima": {
+          "sample_count": 34,
+          "mae": 144.09,
+          "rmse": 170.92,
+          "mape": 5.28,
+          "medae": 124.42
+        },
+        "lstm": {
+          "sample_count": 34,
+          "mae": 97.12,
+          "rmse": 121.5,
+          "mape": 3.44,
+          "medae": 84.13
+        },
+        "reference_benchmark": {
+          "sample_count": 34,
+          "mae": 109.35,
+          "rmse": 133.86,
+          "mape": 3.91,
+          "medae": 102.5
+        }
+      },
+      "60_day": {
+        "xgboost": {
+          "sample_count": 30,
+          "mae": 92.73,
+          "rmse": 113.86,
+          "mape": 3.28,
+          "medae": 74.12
+        },
+        "prophet": {
+          "sample_count": 30,
+          "mae": 113.2,
+          "rmse": 138.53,
+          "mape": 4.02,
+          "medae": 97.98
+        },
+        "arima": {
+          "sample_count": 30,
+          "mae": 124.96,
+          "rmse": 150.81,
+          "mape": 4.56,
+          "medae": 106.31
+        },
+        "lstm": {
+          "sample_count": 30,
+          "mae": 84.3,
+          "rmse": 108.24,
+          "mape": 2.99,
+          "medae": 67.98
+        },
+        "reference_benchmark": {
+          "sample_count": 30,
+          "mae": 80.57,
+          "rmse": 101.76,
+          "mape": 2.87,
+          "medae": 74.23
+        }
+      },
+      "90_day": {
+        "xgboost": {
+          "sample_count": 26,
+          "mae": 73.85,
+          "rmse": 86.43,
+          "mape": 2.63,
+          "medae": 69.13
+        },
+        "prophet": {
+          "sample_count": 26,
+          "mae": 86.84,
+          "rmse": 115.98,
+          "mape": 3.09,
+          "medae": 75.1
+        },
+        "arima": {
+          "sample_count": 26,
+          "mae": 120.36,
+          "rmse": 142.23,
+          "mape": 4.39,
+          "medae": 121.09
+        },
+        "lstm": {
+          "sample_count": 26,
+          "mae": 67.03,
+          "rmse": 80.69,
+          "mape": 2.39,
+          "medae": 68.26
+        },
+        "reference_benchmark": {
+          "sample_count": 26,
+          "mae": 74.37,
+          "rmse": 88.22,
+          "mape": 2.66,
+          "medae": 71.32
+        }
+      }
+    },
+    "onion": {
+      "1_day": {
+        "xgboost": {
+          "sample_count": 38,
+          "mae": 183.38,
+          "rmse": 240.54,
+          "mape": 5.21,
+          "medae": 150.93
+        },
+        "prophet": {
+          "sample_count": 38,
+          "mae": 504.13,
+          "rmse": 593.7,
+          "mape": 13.88,
+          "medae": 488.76
+        },
+        "arima": {
+          "sample_count": 38,
+          "mae": 358.6,
+          "rmse": 427.0,
+          "mape": 9.63,
+          "medae": 295.36
+        },
+        "lstm": {
+          "sample_count": 38,
+          "mae": 176.1,
+          "rmse": 225.76,
+          "mape": 5.02,
+          "medae": 157.25
+        },
+        "reference_benchmark": {
+          "sample_count": 38,
+          "mae": 198.81,
+          "rmse": 251.21,
+          "mape": 5.6,
+          "medae": 164.02
+        }
+      },
+      "7_day": {
+        "xgboost": {
+          "sample_count": 37,
+          "mae": 192.35,
+          "rmse": 235.8,
+          "mape": 5.35,
+          "medae": 144.53
+        },
+        "prophet": {
+          "sample_count": 37,
+          "mae": 445.25,
+          "rmse": 527.28,
+          "mape": 11.7,
+          "medae": 477.18
+        },
+        "arima": {
+          "sample_count": 37,
+          "mae": 317.73,
+          "rmse": 408.48,
+          "mape": 8.16,
+          "medae": 234.55
+        },
+        "lstm": {
+          "sample_count": 37,
+          "mae": 189.39,
+          "rmse": 242.69,
+          "mape": 5.26,
+          "medae": 146.46
+        },
+        "reference_benchmark": {
+          "sample_count": 37,
+          "mae": 197.15,
+          "rmse": 239.35,
+          "mape": 5.42,
+          "medae": 184.14
+        }
+      },
+      "15_day": {
+        "xgboost": {
+          "sample_count": 36,
+          "mae": 246.97,
+          "rmse": 300.41,
+          "mape": 6.99,
+          "medae": 243.7
+        },
+        "prophet": {
+          "sample_count": 36,
+          "mae": 493.36,
+          "rmse": 585.72,
+          "mape": 13.4,
+          "medae": 459.14
+        },
+        "arima": {
+          "sample_count": 36,
+          "mae": 369.28,
+          "rmse": 438.3,
+          "mape": 9.8,
+          "medae": 295.36
+        },
+        "lstm": {
+          "sample_count": 36,
+          "mae": 225.63,
+          "rmse": 288.13,
+          "mape": 6.42,
+          "medae": 175.29
+        },
+        "reference_benchmark": {
+          "sample_count": 36,
+          "mae": 263.0,
+          "rmse": 305.35,
+          "mape": 7.34,
+          "medae": 250.97
+        }
+      },
+      "30_day": {
+        "xgboost": {
+          "sample_count": 34,
+          "mae": 255.37,
+          "rmse": 301.96,
+          "mape": 7.17,
+          "medae": 239.28
+        },
+        "prophet": {
+          "sample_count": 34,
+          "mae": 469.53,
+          "rmse": 555.77,
+          "mape": 12.5,
+          "medae": 444.04
+        },
+        "arima": {
+          "sample_count": 34,
+          "mae": 351.44,
+          "rmse": 419.26,
+          "mape": 9.14,
+          "medae": 331.89
+        },
+        "lstm": {
+          "sample_count": 34,
+          "mae": 289.25,
+          "rmse": 394.64,
+          "mape": 8.13,
+          "medae": 192.26
+        },
+        "reference_benchmark": {
+          "sample_count": 34,
+          "mae": 263.48,
+          "rmse": 315.47,
+          "mape": 7.27,
+          "medae": 250.43
+        }
+      },
+      "60_day": {
+        "xgboost": {
+          "sample_count": 30,
+          "mae": 409.04,
+          "rmse": 465.83,
+          "mape": 11.31,
+          "medae": 406.05
+        },
+        "prophet": {
+          "sample_count": 30,
+          "mae": 554.0,
+          "rmse": 620.58,
+          "mape": 14.62,
+          "medae": 584.9
+        },
+        "arima": {
+          "sample_count": 30,
+          "mae": 402.33,
+          "rmse": 474.2,
+          "mape": 10.33,
+          "medae": 392.34
+        },
+        "lstm": {
+          "sample_count": 30,
+          "mae": 557.36,
+          "rmse": 765.05,
+          "mape": 16.0,
+          "medae": 333.56
+        },
+        "reference_benchmark": {
+          "sample_count": 30,
+          "mae": 465.2,
+          "rmse": 516.09,
+          "mape": 12.67,
+          "medae": 462.88
+        }
+      },
+      "90_day": {
+        "xgboost": {
+          "sample_count": 26,
+          "mae": 440.44,
+          "rmse": 499.84,
+          "mape": 12.24,
+          "medae": 471.36
+        },
+        "prophet": {
+          "sample_count": 26,
+          "mae": 538.02,
+          "rmse": 633.36,
+          "mape": 14.27,
+          "medae": 606.67
+        },
+        "arima": {
+          "sample_count": 26,
+          "mae": 354.84,
+          "rmse": 443.46,
+          "mape": 9.16,
+          "medae": 379.45
+        },
+        "lstm": {
+          "sample_count": 26,
+          "mae": 701.59,
+          "rmse": 919.75,
+          "mape": 20.54,
+          "medae": 432.34
+        },
+        "reference_benchmark": {
+          "sample_count": 26,
+          "mae": 519.98,
+          "rmse": 583.37,
+          "mape": 14.37,
+          "medae": 564.12
+        }
+      }
+    }
+  },
+  "state_aware_evaluation": {
+    "wheat": {
+      "Maharashtra": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 140.88,
+            "rmse": 154.7,
+            "mape": 4.62
+          },
+          "reference_benchmark": {
+            "mae": 45.08,
+            "rmse": 54.69,
+            "mape": 1.46
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 100.06,
+            "rmse": 118.55,
+            "mape": 3.27
+          },
+          "reference_benchmark": {
+            "mae": 56.93,
+            "rmse": 80.04,
+            "mape": 1.83
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 120.47,
+            "rmse": 136.78,
+            "mape": 3.93
+          },
+          "reference_benchmark": {
+            "mae": 51.83,
+            "rmse": 79.46,
+            "mape": 1.64
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 108.98,
+            "rmse": 125.74,
+            "mape": 3.57
+          },
+          "reference_benchmark": {
+            "mae": 45.78,
+            "rmse": 56.77,
+            "mape": 1.49
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 91.57,
+            "rmse": 105.82,
+            "mape": 2.99
+          },
+          "reference_benchmark": {
+            "mae": 49.8,
+            "rmse": 62.46,
+            "mape": 1.6
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 70.37,
+            "rmse": 82.7,
+            "mape": 2.29
+          },
+          "reference_benchmark": {
+            "mae": 49.54,
+            "rmse": 55.09,
+            "mape": 1.6
+          }
+        }
+      },
+      "Punjab": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 138.73,
+            "rmse": 161.32,
+            "mape": 4.43
+          },
+          "reference_benchmark": {
+            "mae": 37.33,
+            "rmse": 50.89,
+            "mape": 1.2
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 81.22,
+            "rmse": 101.3,
+            "mape": 2.62
+          },
+          "reference_benchmark": {
+            "mae": 50.3,
+            "rmse": 74.27,
+            "mape": 1.66
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 80.33,
+            "rmse": 123.22,
+            "mape": 2.65
+          },
+          "reference_benchmark": {
+            "mae": 56.39,
+            "rmse": 95.52,
+            "mape": 1.88
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 203.76,
+            "rmse": 219.98,
+            "mape": 6.54
+          },
+          "reference_benchmark": {
+            "mae": 38.73,
+            "rmse": 49.28,
+            "mape": 1.23
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 330.93,
+            "rmse": 354.84,
+            "mape": 10.58
+          },
+          "reference_benchmark": {
+            "mae": 40.7,
+            "rmse": 53.76,
+            "mape": 1.29
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 529.9,
+            "rmse": 563.89,
+            "mape": 16.95
+          },
+          "reference_benchmark": {
+            "mae": 57.09,
+            "rmse": 70.42,
+            "mape": 1.81
+          }
+        }
+      },
+      "Uttar Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 70.01,
+            "rmse": 84.49,
+            "mape": 2.39
+          },
+          "reference_benchmark": {
+            "mae": 44.75,
+            "rmse": 52.97,
+            "mape": 1.52
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 75.57,
+            "rmse": 123.19,
+            "mape": 2.63
+          },
+          "reference_benchmark": {
+            "mae": 50.57,
+            "rmse": 94.0,
+            "mape": 1.78
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 68.35,
+            "rmse": 90.28,
+            "mape": 2.35
+          },
+          "reference_benchmark": {
+            "mae": 47.55,
+            "rmse": 93.74,
+            "mape": 1.68
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 140.4,
+            "rmse": 152.26,
+            "mape": 4.69
+          },
+          "reference_benchmark": {
+            "mae": 39.13,
+            "rmse": 48.6,
+            "mape": 1.3
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 207.65,
+            "rmse": 224.67,
+            "mape": 6.93
+          },
+          "reference_benchmark": {
+            "mae": 50.03,
+            "rmse": 63.19,
+            "mape": 1.66
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 416.98,
+            "rmse": 455.63,
+            "mape": 13.96
+          },
+          "reference_benchmark": {
+            "mae": 46.67,
+            "rmse": 59.84,
+            "mape": 1.55
+          }
+        }
+      },
+      "Karnataka": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 119.28,
+            "rmse": 132.3,
+            "mape": 3.44
+          },
+          "reference_benchmark": {
+            "mae": 36.85,
+            "rmse": 46.98,
+            "mape": 1.07
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 158.17,
+            "rmse": 201.84,
+            "mape": 4.47
+          },
+          "reference_benchmark": {
+            "mae": 59.19,
+            "rmse": 102.68,
+            "mape": 1.65
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 194.83,
+            "rmse": 226.07,
+            "mape": 5.57
+          },
+          "reference_benchmark": {
+            "mae": 45.12,
+            "rmse": 75.03,
+            "mape": 1.27
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 235.63,
+            "rmse": 254.16,
+            "mape": 6.79
+          },
+          "reference_benchmark": {
+            "mae": 34.34,
+            "rmse": 44.95,
+            "mape": 0.99
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 299.0,
+            "rmse": 306.84,
+            "mape": 8.6
+          },
+          "reference_benchmark": {
+            "mae": 53.5,
+            "rmse": 62.93,
+            "mape": 1.54
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 363.65,
+            "rmse": 370.75,
+            "mape": 10.47
+          },
+          "reference_benchmark": {
+            "mae": 60.11,
+            "rmse": 71.12,
+            "mape": 1.73
+          }
+        }
+      },
+      "Madhya Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 59.17,
+            "rmse": 75.6,
+            "mape": 1.88
+          },
+          "reference_benchmark": {
+            "mae": 43.74,
+            "rmse": 53.17,
+            "mape": 1.39
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 73.35,
+            "rmse": 119.4,
+            "mape": 2.45
+          },
+          "reference_benchmark": {
+            "mae": 61.53,
+            "rmse": 108.33,
+            "mape": 2.06
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 78.54,
+            "rmse": 118.33,
+            "mape": 2.6
+          },
+          "reference_benchmark": {
+            "mae": 56.27,
+            "rmse": 107.09,
+            "mape": 1.89
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 107.65,
+            "rmse": 123.65,
+            "mape": 3.47
+          },
+          "reference_benchmark": {
+            "mae": 48.62,
+            "rmse": 57.82,
+            "mape": 1.56
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 76.4,
+            "rmse": 95.75,
+            "mape": 2.42
+          },
+          "reference_benchmark": {
+            "mae": 47.92,
+            "rmse": 60.3,
+            "mape": 1.51
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 110.74,
+            "rmse": 131.35,
+            "mape": 3.54
+          },
+          "reference_benchmark": {
+            "mae": 38.15,
+            "rmse": 45.86,
+            "mape": 1.21
+          }
+        }
+      }
+    },
+    "rice": {
+      "Maharashtra": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 100.66,
+            "rmse": 113.37,
+            "mape": 3.7
+          },
+          "reference_benchmark": {
+            "mae": 34.92,
+            "rmse": 44.29,
+            "mape": 1.3
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 240.01,
+            "rmse": 280.9,
+            "mape": 8.59
+          },
+          "reference_benchmark": {
+            "mae": 59.98,
+            "rmse": 138.7,
+            "mape": 2.02
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 300.34,
+            "rmse": 332.93,
+            "mape": 10.82
+          },
+          "reference_benchmark": {
+            "mae": 56.72,
+            "rmse": 141.05,
+            "mape": 1.91
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 341.57,
+            "rmse": 349.85,
+            "mape": 12.55
+          },
+          "reference_benchmark": {
+            "mae": 34.61,
+            "rmse": 44.47,
+            "mape": 1.27
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 380.05,
+            "rmse": 390.8,
+            "mape": 13.94
+          },
+          "reference_benchmark": {
+            "mae": 33.31,
+            "rmse": 40.34,
+            "mape": 1.21
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 386.88,
+            "rmse": 399.24,
+            "mape": 14.25
+          },
+          "reference_benchmark": {
+            "mae": 36.1,
+            "rmse": 43.64,
+            "mape": 1.32
+          }
+        }
+      },
+      "Punjab": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 62.94,
+            "rmse": 73.64,
+            "mape": 2.51
+          },
+          "reference_benchmark": {
+            "mae": 35.15,
+            "rmse": 42.07,
+            "mape": 1.41
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 116.06,
+            "rmse": 156.48,
+            "mape": 4.69
+          },
+          "reference_benchmark": {
+            "mae": 34.04,
+            "rmse": 40.74,
+            "mape": 1.37
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 170.88,
+            "rmse": 200.52,
+            "mape": 6.86
+          },
+          "reference_benchmark": {
+            "mae": 36.77,
+            "rmse": 44.28,
+            "mape": 1.47
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 193.04,
+            "rmse": 230.19,
+            "mape": 7.74
+          },
+          "reference_benchmark": {
+            "mae": 32.45,
+            "rmse": 40.66,
+            "mape": 1.29
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 204.05,
+            "rmse": 241.98,
+            "mape": 8.2
+          },
+          "reference_benchmark": {
+            "mae": 28.93,
+            "rmse": 36.1,
+            "mape": 1.15
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 230.45,
+            "rmse": 264.08,
+            "mape": 9.25
+          },
+          "reference_benchmark": {
+            "mae": 33.43,
+            "rmse": 43.0,
+            "mape": 1.33
+          }
+        }
+      },
+      "Uttar Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 66.55,
+            "rmse": 85.61,
+            "mape": 2.73
+          },
+          "reference_benchmark": {
+            "mae": 28.03,
+            "rmse": 35.15,
+            "mape": 1.15
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 169.26,
+            "rmse": 209.72,
+            "mape": 6.67
+          },
+          "reference_benchmark": {
+            "mae": 50.87,
+            "rmse": 123.62,
+            "mape": 1.89
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 200.01,
+            "rmse": 212.67,
+            "mape": 8.1
+          },
+          "reference_benchmark": {
+            "mae": 39.01,
+            "rmse": 65.66,
+            "mape": 1.54
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 230.89,
+            "rmse": 238.14,
+            "mape": 9.39
+          },
+          "reference_benchmark": {
+            "mae": 27.95,
+            "rmse": 35.04,
+            "mape": 1.13
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 254.88,
+            "rmse": 258.33,
+            "mape": 10.39
+          },
+          "reference_benchmark": {
+            "mae": 30.55,
+            "rmse": 38.78,
+            "mape": 1.24
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 295.63,
+            "rmse": 297.98,
+            "mape": 11.92
+          },
+          "reference_benchmark": {
+            "mae": 43.69,
+            "rmse": 51.67,
+            "mape": 1.75
+          }
+        }
+      },
+      "Karnataka": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 38.12,
+            "rmse": 52.89,
+            "mape": 1.56
+          },
+          "reference_benchmark": {
+            "mae": 32.64,
+            "rmse": 40.96,
+            "mape": 1.32
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 56.74,
+            "rmse": 163.83,
+            "mape": 1.99
+          },
+          "reference_benchmark": {
+            "mae": 52.75,
+            "rmse": 161.22,
+            "mape": 1.83
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 62.18,
+            "rmse": 144.68,
+            "mape": 2.27
+          },
+          "reference_benchmark": {
+            "mae": 50.41,
+            "rmse": 141.3,
+            "mape": 1.8
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 39.86,
+            "rmse": 51.84,
+            "mape": 1.58
+          },
+          "reference_benchmark": {
+            "mae": 34.18,
+            "rmse": 45.0,
+            "mape": 1.36
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 54.66,
+            "rmse": 62.11,
+            "mape": 2.18
+          },
+          "reference_benchmark": {
+            "mae": 33.95,
+            "rmse": 40.5,
+            "mape": 1.36
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 61.18,
+            "rmse": 69.72,
+            "mape": 2.44
+          },
+          "reference_benchmark": {
+            "mae": 34.32,
+            "rmse": 41.84,
+            "mape": 1.37
+          }
+        }
+      },
+      "Madhya Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 43.11,
+            "rmse": 53.73,
+            "mape": 1.54
+          },
+          "reference_benchmark": {
+            "mae": 29.91,
+            "rmse": 36.65,
+            "mape": 1.07
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 99.9,
+            "rmse": 139.06,
+            "mape": 3.48
+          },
+          "reference_benchmark": {
+            "mae": 43.12,
+            "rmse": 80.59,
+            "mape": 1.49
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 144.42,
+            "rmse": 182.97,
+            "mape": 5.02
+          },
+          "reference_benchmark": {
+            "mae": 47.78,
+            "rmse": 105.13,
+            "mape": 1.6
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 135.9,
+            "rmse": 145.04,
+            "mape": 4.86
+          },
+          "reference_benchmark": {
+            "mae": 28.68,
+            "rmse": 38.33,
+            "mape": 1.02
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 155.48,
+            "rmse": 163.29,
+            "mape": 5.54
+          },
+          "reference_benchmark": {
+            "mae": 38.9,
+            "rmse": 48.0,
+            "mape": 1.38
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 225.19,
+            "rmse": 229.21,
+            "mape": 8.08
+          },
+          "reference_benchmark": {
+            "mae": 43.16,
+            "rmse": 53.39,
+            "mape": 1.55
+          }
+        }
+      }
+    },
+    "maize": {
+      "Maharashtra": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 42.23,
+            "rmse": 53.18,
+            "mape": 1.77
+          },
+          "reference_benchmark": {
+            "mae": 36.76,
+            "rmse": 45.81,
+            "mape": 1.55
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 78.95,
+            "rmse": 89.17,
+            "mape": 3.33
+          },
+          "reference_benchmark": {
+            "mae": 47.47,
+            "rmse": 67.38,
+            "mape": 2.04
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 112.45,
+            "rmse": 120.78,
+            "mape": 4.69
+          },
+          "reference_benchmark": {
+            "mae": 40.56,
+            "rmse": 54.48,
+            "mape": 1.72
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 126.99,
+            "rmse": 137.86,
+            "mape": 5.29
+          },
+          "reference_benchmark": {
+            "mae": 37.04,
+            "rmse": 46.72,
+            "mape": 1.55
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 146.6,
+            "rmse": 155.93,
+            "mape": 6.09
+          },
+          "reference_benchmark": {
+            "mae": 45.58,
+            "rmse": 54.1,
+            "mape": 1.89
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 165.32,
+            "rmse": 174.69,
+            "mape": 6.81
+          },
+          "reference_benchmark": {
+            "mae": 62.63,
+            "rmse": 70.03,
+            "mape": 2.59
+          }
+        }
+      },
+      "Punjab": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 142.02,
+            "rmse": 166.8,
+            "mape": 5.01
+          },
+          "reference_benchmark": {
+            "mae": 33.94,
+            "rmse": 44.54,
+            "mape": 1.2
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 158.79,
+            "rmse": 197.18,
+            "mape": 5.67
+          },
+          "reference_benchmark": {
+            "mae": 52.62,
+            "rmse": 93.26,
+            "mape": 1.92
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 182.05,
+            "rmse": 211.79,
+            "mape": 6.49
+          },
+          "reference_benchmark": {
+            "mae": 51.86,
+            "rmse": 90.31,
+            "mape": 1.89
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 178.17,
+            "rmse": 198.5,
+            "mape": 6.22
+          },
+          "reference_benchmark": {
+            "mae": 47.45,
+            "rmse": 59.19,
+            "mape": 1.64
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 354.73,
+            "rmse": 415.15,
+            "mape": 12.4
+          },
+          "reference_benchmark": {
+            "mae": 45.75,
+            "rmse": 55.73,
+            "mape": 1.58
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 450.61,
+            "rmse": 493.19,
+            "mape": 15.6
+          },
+          "reference_benchmark": {
+            "mae": 68.08,
+            "rmse": 74.4,
+            "mape": 2.34
+          }
+        }
+      },
+      "Uttar Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 54.49,
+            "rmse": 66.34,
+            "mape": 2.1
+          },
+          "reference_benchmark": {
+            "mae": 40.13,
+            "rmse": 47.82,
+            "mape": 1.56
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 172.76,
+            "rmse": 183.92,
+            "mape": 6.71
+          },
+          "reference_benchmark": {
+            "mae": 51.39,
+            "rmse": 84.11,
+            "mape": 2.07
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 206.51,
+            "rmse": 212.74,
+            "mape": 8.01
+          },
+          "reference_benchmark": {
+            "mae": 40.28,
+            "rmse": 78.45,
+            "mape": 1.63
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 279.78,
+            "rmse": 284.26,
+            "mape": 10.79
+          },
+          "reference_benchmark": {
+            "mae": 35.67,
+            "rmse": 46.37,
+            "mape": 1.37
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 298.38,
+            "rmse": 304.56,
+            "mape": 11.56
+          },
+          "reference_benchmark": {
+            "mae": 46.04,
+            "rmse": 57.87,
+            "mape": 1.79
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 329.1,
+            "rmse": 334.21,
+            "mape": 12.66
+          },
+          "reference_benchmark": {
+            "mae": 50.77,
+            "rmse": 62.04,
+            "mape": 1.94
+          }
+        }
+      },
+      "Karnataka": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 73.63,
+            "rmse": 90.89,
+            "mape": 2.96
+          },
+          "reference_benchmark": {
+            "mae": 43.32,
+            "rmse": 48.73,
+            "mape": 1.77
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 87.38,
+            "rmse": 100.91,
+            "mape": 3.55
+          },
+          "reference_benchmark": {
+            "mae": 36.73,
+            "rmse": 48.89,
+            "mape": 1.51
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 174.88,
+            "rmse": 184.6,
+            "mape": 7.1
+          },
+          "reference_benchmark": {
+            "mae": 38.67,
+            "rmse": 44.37,
+            "mape": 1.58
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 206.14,
+            "rmse": 210.02,
+            "mape": 8.37
+          },
+          "reference_benchmark": {
+            "mae": 30.88,
+            "rmse": 38.65,
+            "mape": 1.25
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 221.21,
+            "rmse": 226.08,
+            "mape": 8.94
+          },
+          "reference_benchmark": {
+            "mae": 42.85,
+            "rmse": 52.64,
+            "mape": 1.72
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 227.66,
+            "rmse": 234.26,
+            "mape": 9.19
+          },
+          "reference_benchmark": {
+            "mae": 49.62,
+            "rmse": 61.35,
+            "mape": 1.99
+          }
+        }
+      },
+      "Madhya Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 90.26,
+            "rmse": 104.47,
+            "mape": 3.71
+          },
+          "reference_benchmark": {
+            "mae": 45.46,
+            "rmse": 53.97,
+            "mape": 1.89
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 154.68,
+            "rmse": 172.61,
+            "mape": 6.56
+          },
+          "reference_benchmark": {
+            "mae": 53.24,
+            "rmse": 123.74,
+            "mape": 2.49
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 153.88,
+            "rmse": 173.0,
+            "mape": 6.53
+          },
+          "reference_benchmark": {
+            "mae": 63.87,
+            "rmse": 129.4,
+            "mape": 2.93
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 193.97,
+            "rmse": 200.78,
+            "mape": 7.91
+          },
+          "reference_benchmark": {
+            "mae": 41.07,
+            "rmse": 52.32,
+            "mape": 1.67
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 178.7,
+            "rmse": 184.14,
+            "mape": 7.34
+          },
+          "reference_benchmark": {
+            "mae": 37.64,
+            "rmse": 44.93,
+            "mape": 1.55
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 193.78,
+            "rmse": 199.56,
+            "mape": 7.92
+          },
+          "reference_benchmark": {
+            "mae": 45.95,
+            "rmse": 56.66,
+            "mape": 1.87
+          }
+        }
+      }
+    },
+    "potato": {
+      "Maharashtra": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 85.86,
+            "rmse": 106.09,
+            "mape": 4.22
+          },
+          "reference_benchmark": {
+            "mae": 68.27,
+            "rmse": 84.69,
+            "mape": 3.3
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 122.5,
+            "rmse": 211.06,
+            "mape": 7.26
+          },
+          "reference_benchmark": {
+            "mae": 84.6,
+            "rmse": 181.32,
+            "mape": 5.32
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 175.88,
+            "rmse": 255.55,
+            "mape": 10.14
+          },
+          "reference_benchmark": {
+            "mae": 98.94,
+            "rmse": 192.84,
+            "mape": 6.15
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 249.27,
+            "rmse": 266.72,
+            "mape": 12.19
+          },
+          "reference_benchmark": {
+            "mae": 54.96,
+            "rmse": 71.54,
+            "mape": 2.67
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 480.91,
+            "rmse": 511.42,
+            "mape": 23.07
+          },
+          "reference_benchmark": {
+            "mae": 51.33,
+            "rmse": 68.97,
+            "mape": 2.41
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 1411.93,
+            "rmse": 1488.57,
+            "mape": 67.45
+          },
+          "reference_benchmark": {
+            "mae": 65.58,
+            "rmse": 87.83,
+            "mape": 3.05
+          }
+        }
+      },
+      "Punjab": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 143.84,
+            "rmse": 160.02,
+            "mape": 8.45
+          },
+          "reference_benchmark": {
+            "mae": 49.79,
+            "rmse": 64.2,
+            "mape": 2.92
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 253.27,
+            "rmse": 279.9,
+            "mape": 17.98
+          },
+          "reference_benchmark": {
+            "mae": 84.06,
+            "rmse": 189.18,
+            "mape": 8.67
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 258.13,
+            "rmse": 289.36,
+            "mape": 18.46
+          },
+          "reference_benchmark": {
+            "mae": 77.68,
+            "rmse": 199.83,
+            "mape": 8.56
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 236.47,
+            "rmse": 250.61,
+            "mape": 14.07
+          },
+          "reference_benchmark": {
+            "mae": 55.21,
+            "rmse": 68.62,
+            "mape": 3.27
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 233.11,
+            "rmse": 246.56,
+            "mape": 13.93
+          },
+          "reference_benchmark": {
+            "mae": 45.02,
+            "rmse": 57.19,
+            "mape": 2.7
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 227.2,
+            "rmse": 241.93,
+            "mape": 13.64
+          },
+          "reference_benchmark": {
+            "mae": 40.99,
+            "rmse": 57.44,
+            "mape": 2.52
+          }
+        }
+      },
+      "Uttar Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 206.58,
+            "rmse": 213.8,
+            "mape": 12.51
+          },
+          "reference_benchmark": {
+            "mae": 45.67,
+            "rmse": 54.37,
+            "mape": 2.76
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 347.06,
+            "rmse": 358.57,
+            "mape": 23.76
+          },
+          "reference_benchmark": {
+            "mae": 75.9,
+            "rmse": 188.26,
+            "mape": 8.34
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 344.02,
+            "rmse": 358.27,
+            "mape": 23.59
+          },
+          "reference_benchmark": {
+            "mae": 75.71,
+            "rmse": 194.78,
+            "mape": 8.44
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 308.79,
+            "rmse": 321.27,
+            "mape": 19.01
+          },
+          "reference_benchmark": {
+            "mae": 46.29,
+            "rmse": 61.53,
+            "mape": 2.87
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 326.89,
+            "rmse": 336.69,
+            "mape": 19.98
+          },
+          "reference_benchmark": {
+            "mae": 50.3,
+            "rmse": 60.76,
+            "mape": 3.08
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 340.94,
+            "rmse": 350.01,
+            "mape": 20.71
+          },
+          "reference_benchmark": {
+            "mae": 44.09,
+            "rmse": 55.83,
+            "mape": 2.68
+          }
+        }
+      },
+      "Karnataka": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 101.72,
+            "rmse": 135.41,
+            "mape": 3.91
+          },
+          "reference_benchmark": {
+            "mae": 75.42,
+            "rmse": 92.62,
+            "mape": 2.88
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 180.16,
+            "rmse": 253.54,
+            "mape": 7.57
+          },
+          "reference_benchmark": {
+            "mae": 104.16,
+            "rmse": 171.63,
+            "mape": 4.46
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 372.36,
+            "rmse": 419.26,
+            "mape": 14.92
+          },
+          "reference_benchmark": {
+            "mae": 95.79,
+            "rmse": 175.01,
+            "mape": 4.13
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 712.95,
+            "rmse": 746.35,
+            "mape": 27.57
+          },
+          "reference_benchmark": {
+            "mae": 64.1,
+            "rmse": 84.24,
+            "mape": 2.47
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 1340.99,
+            "rmse": 1347.58,
+            "mape": 51.71
+          },
+          "reference_benchmark": {
+            "mae": 80.31,
+            "rmse": 100.12,
+            "mape": 3.07
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 1905.45,
+            "rmse": 1915.07,
+            "mape": 73.46
+          },
+          "reference_benchmark": {
+            "mae": 68.57,
+            "rmse": 85.97,
+            "mape": 2.64
+          }
+        }
+      },
+      "Madhya Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 54.84,
+            "rmse": 65.64,
+            "mape": 3.35
+          },
+          "reference_benchmark": {
+            "mae": 39.15,
+            "rmse": 46.07,
+            "mape": 2.42
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 84.24,
+            "rmse": 147.98,
+            "mape": 6.55
+          },
+          "reference_benchmark": {
+            "mae": 73.15,
+            "rmse": 153.36,
+            "mape": 6.07
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 71.13,
+            "rmse": 156.1,
+            "mape": 6.05
+          },
+          "reference_benchmark": {
+            "mae": 59.39,
+            "rmse": 149.07,
+            "mape": 5.33
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 65.24,
+            "rmse": 83.68,
+            "mape": 4.1
+          },
+          "reference_benchmark": {
+            "mae": 46.72,
+            "rmse": 54.23,
+            "mape": 2.91
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 210.54,
+            "rmse": 228.83,
+            "mape": 13.22
+          },
+          "reference_benchmark": {
+            "mae": 44.24,
+            "rmse": 56.4,
+            "mape": 2.76
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 266.84,
+            "rmse": 281.39,
+            "mape": 16.82
+          },
+          "reference_benchmark": {
+            "mae": 51.83,
+            "rmse": 59.51,
+            "mape": 3.23
+          }
+        }
+      }
+    },
+    "onion": {
+      "Maharashtra": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 133.59,
+            "rmse": 160.2,
+            "mape": 5.83
+          },
+          "reference_benchmark": {
+            "mae": 125.71,
+            "rmse": 146.24,
+            "mape": 5.48
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 224.61,
+            "rmse": 265.93,
+            "mape": 9.94
+          },
+          "reference_benchmark": {
+            "mae": 137.13,
+            "rmse": 238.03,
+            "mape": 5.67
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 153.09,
+            "rmse": 186.37,
+            "mape": 6.64
+          },
+          "reference_benchmark": {
+            "mae": 141.97,
+            "rmse": 200.38,
+            "mape": 5.88
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 132.54,
+            "rmse": 163.55,
+            "mape": 6.02
+          },
+          "reference_benchmark": {
+            "mae": 113.37,
+            "rmse": 140.52,
+            "mape": 5.14
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 128.47,
+            "rmse": 171.86,
+            "mape": 5.54
+          },
+          "reference_benchmark": {
+            "mae": 91.72,
+            "rmse": 120.07,
+            "mape": 4.0
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 165.08,
+            "rmse": 193.18,
+            "mape": 7.13
+          },
+          "reference_benchmark": {
+            "mae": 113.22,
+            "rmse": 134.44,
+            "mape": 4.86
+          }
+        }
+      },
+      "Punjab": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 219.54,
+            "rmse": 256.1,
+            "mape": 8.21
+          },
+          "reference_benchmark": {
+            "mae": 127.9,
+            "rmse": 151.93,
+            "mape": 4.75
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 350.63,
+            "rmse": 404.32,
+            "mape": 13.09
+          },
+          "reference_benchmark": {
+            "mae": 166.34,
+            "rmse": 242.08,
+            "mape": 5.83
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 369.84,
+            "rmse": 423.72,
+            "mape": 13.76
+          },
+          "reference_benchmark": {
+            "mae": 141.96,
+            "rmse": 219.14,
+            "mape": 4.97
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 326.37,
+            "rmse": 391.15,
+            "mape": 11.99
+          },
+          "reference_benchmark": {
+            "mae": 156.73,
+            "rmse": 200.33,
+            "mape": 5.61
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 289.53,
+            "rmse": 336.28,
+            "mape": 10.6
+          },
+          "reference_benchmark": {
+            "mae": 143.18,
+            "rmse": 172.47,
+            "mape": 5.1
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 383.1,
+            "rmse": 433.02,
+            "mape": 14.31
+          },
+          "reference_benchmark": {
+            "mae": 177.21,
+            "rmse": 218.27,
+            "mape": 6.34
+          }
+        }
+      },
+      "Uttar Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 156.65,
+            "rmse": 198.28,
+            "mape": 6.38
+          },
+          "reference_benchmark": {
+            "mae": 145.55,
+            "rmse": 179.97,
+            "mape": 5.9
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 154.72,
+            "rmse": 193.67,
+            "mape": 6.0
+          },
+          "reference_benchmark": {
+            "mae": 123.79,
+            "rmse": 168.91,
+            "mape": 4.67
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 183.87,
+            "rmse": 217.35,
+            "mape": 7.33
+          },
+          "reference_benchmark": {
+            "mae": 159.01,
+            "rmse": 212.12,
+            "mape": 6.25
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 204.99,
+            "rmse": 255.34,
+            "mape": 8.12
+          },
+          "reference_benchmark": {
+            "mae": 114.73,
+            "rmse": 165.74,
+            "mape": 4.54
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 253.56,
+            "rmse": 299.67,
+            "mape": 10.17
+          },
+          "reference_benchmark": {
+            "mae": 118.27,
+            "rmse": 136.14,
+            "mape": 4.73
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 351.31,
+            "rmse": 400.02,
+            "mape": 13.63
+          },
+          "reference_benchmark": {
+            "mae": 158.73,
+            "rmse": 194.59,
+            "mape": 6.24
+          }
+        }
+      },
+      "Karnataka": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 200.62,
+            "rmse": 256.76,
+            "mape": 6.19
+          },
+          "reference_benchmark": {
+            "mae": 193.92,
+            "rmse": 232.39,
+            "mape": 5.86
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 270.89,
+            "rmse": 331.19,
+            "mape": 8.31
+          },
+          "reference_benchmark": {
+            "mae": 218.43,
+            "rmse": 285.36,
+            "mape": 6.51
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 271.65,
+            "rmse": 323.89,
+            "mape": 8.16
+          },
+          "reference_benchmark": {
+            "mae": 177.63,
+            "rmse": 217.65,
+            "mape": 5.34
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 240.54,
+            "rmse": 294.51,
+            "mape": 7.32
+          },
+          "reference_benchmark": {
+            "mae": 150.4,
+            "rmse": 187.87,
+            "mape": 4.66
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 308.95,
+            "rmse": 363.31,
+            "mape": 9.18
+          },
+          "reference_benchmark": {
+            "mae": 227.43,
+            "rmse": 293.42,
+            "mape": 6.75
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 213.64,
+            "rmse": 262.38,
+            "mape": 6.39
+          },
+          "reference_benchmark": {
+            "mae": 160.74,
+            "rmse": 199.25,
+            "mape": 4.84
+          }
+        }
+      },
+      "Madhya Pradesh": {
+        "1_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 109.25,
+            "rmse": 135.2,
+            "mape": 5.33
+          },
+          "reference_benchmark": {
+            "mae": 81.69,
+            "rmse": 106.52,
+            "mape": 3.93
+          }
+        },
+        "7_day": {
+          "sample_count": 38,
+          "state_xgboost": {
+            "mae": 185.9,
+            "rmse": 220.92,
+            "mape": 9.17
+          },
+          "reference_benchmark": {
+            "mae": 125.64,
+            "rmse": 179.73,
+            "mape": 5.87
+          }
+        },
+        "15_day": {
+          "sample_count": 37,
+          "state_xgboost": {
+            "mae": 126.39,
+            "rmse": 147.84,
+            "mape": 6.15
+          },
+          "reference_benchmark": {
+            "mae": 95.05,
+            "rmse": 143.14,
+            "mape": 4.42
+          }
+        },
+        "30_day": {
+          "sample_count": 34,
+          "state_xgboost": {
+            "mae": 122.3,
+            "rmse": 155.34,
+            "mape": 6.03
+          },
+          "reference_benchmark": {
+            "mae": 96.57,
+            "rmse": 119.64,
+            "mape": 4.73
+          }
+        },
+        "60_day": {
+          "sample_count": 30,
+          "state_xgboost": {
+            "mae": 160.49,
+            "rmse": 186.63,
+            "mape": 7.78
+          },
+          "reference_benchmark": {
+            "mae": 83.94,
+            "rmse": 102.89,
+            "mape": 4.05
+          }
+        },
+        "90_day": {
+          "sample_count": 26,
+          "state_xgboost": {
+            "mae": 118.32,
+            "rmse": 147.31,
+            "mape": 5.77
+          },
+          "reference_benchmark": {
+            "mae": 94.97,
+            "rmse": 116.75,
+            "mape": 4.54
+          }
+        }
+      }
+    }
+  }
+}

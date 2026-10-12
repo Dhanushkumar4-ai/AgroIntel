@@ -10,7 +10,7 @@ and appends new records to real_historical_prices_state.csv.
 import json
 import logging
 import time
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -139,9 +139,16 @@ class MandiIngestionJob:
         return None
 
     def fetch_live_records(self, limit: int = 1500) -> List[Dict[str, Any]]:
-        """Fetch newly published market price records from data.gov.in API."""
+        """Fetch newly published market price records from Agmarknet 2.0 API (primary) or data.gov.in (fallback)."""
+        # 1. Primary: Agmarknet 2.0 Official Public API
+        ag_records = self._fetch_agmarknet_v2_live()
+        if ag_records:
+            logger.info(f"Successfully fetched {len(ag_records)} live records from Agmarknet 2.0 API.")
+            return ag_records
+
+        # 2. Fallback: data.gov.in
         if not self.api_key:
-            logger.warning("No MARKET_DATA_API_KEY configured. Falling back to local cache.")
+            logger.warning("No MARKET_DATA_API_KEY configured and Agmarknet fallback returned empty.")
             return []
 
         params = {
@@ -150,13 +157,13 @@ class MandiIngestionJob:
             "limit": limit,
         }
         try:
-            logger.info("Connecting to data.gov.in AGMARKNET API...")
+            logger.info("Connecting to fallback data.gov.in AGMARKNET API...")
             with httpx.Client(timeout=12.0) as client:
                 resp = client.get(self.base_url, params=params)
                 if resp.status_code == 200:
                     data = resp.json()
                     records = data.get("records", [])
-                    logger.info(f"Successfully fetched {len(records)} raw records from API.")
+                    logger.info(f"Successfully fetched {len(records)} raw records from data.gov.in.")
                     return records
                 else:
                     logger.warning(f"data.gov.in API returned HTTP {resp.status_code}")
@@ -164,6 +171,56 @@ class MandiIngestionJob:
         except Exception as e:
             logger.warning(f"Network error during Mandi API fetch: {e}")
             return []
+
+    def _fetch_agmarknet_v2_live(self) -> List[Dict[str, Any]]:
+        """Fetch live records across all supported crops from official Agmarknet 2.0 public portal."""
+        today = date.today()
+        from_d = (today - timedelta(days=7)).strftime("%Y-%m-%d")
+        to_d = today.strftime("%Y-%m-%d")
+        crop_id_map = {"wheat": 1, "rice": 2, "maize": 4, "onion": 23, "potato": 24}
+        base_url = "https://api.agmarknet.gov.in/v1/dashboard-data/"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120",
+            "Origin": "https://agmarknet.gov.in",
+            "Referer": "https://agmarknet.gov.in/home",
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+        }
+
+        all_records = []
+        try:
+            with httpx.Client(timeout=15.0) as client:
+                for crop, cid in crop_id_map.items():
+                    payload = {
+                        "dashboard": "statewise_price_arrival_sp",
+                        "from_date": from_d,
+                        "to_date": to_d,
+                        "commodity": [cid],
+                        "limit": 50,
+                    }
+                    resp = client.post(base_url, headers=headers, json=payload)
+                    if resp.status_code == 200:
+                        records = resp.json().get("data", {}).get("records", [])
+                        for d in records:
+                            as_on_val = d.get("as_on")
+                            if as_on_val and as_on_val != "None":
+                                modal = float(as_on_val)
+                                raw_min = d.get("min_price")
+                                raw_max = d.get("max_price")
+                                min_val = float(raw_min) if raw_min and raw_min != "None" else None
+                                max_val = float(raw_max) if raw_max and raw_max != "None" else None
+                                all_records.append({
+                                    "commodity": crop,
+                                    "state": d.get("state_name"),
+                                    "arrival_date": to_d,
+                                    "modal_price": modal,
+                                    "min_price": round(min_val, 2) if min_val is not None else None,
+                                    "max_price": round(max_val, 2) if max_val is not None else None,
+                                    "source": "Agmarknet 2.0 Live",
+                                })
+        except Exception as e:
+            logger.warning(f"Error fetching from Agmarknet 2.0 live: {e}")
+        return all_records
 
     def validate_record(self, raw: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Validate and normalize a single mandi price record."""

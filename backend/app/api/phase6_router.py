@@ -44,6 +44,9 @@ class Phase6RecommendRequest(BaseModel):
     k: Optional[float] = Field(None, description="Potassium content (kg/ha)", example=50.0)
     previous_crop: Optional[str] = Field(None, description="Previous season crop", example="Rice")
     water_available_mm: Optional[float] = Field(None, description="Water/irrigation available (mm)")
+    temperature: Optional[float] = Field(None, description="Temperature (°C)", example=25.0)
+    humidity: Optional[float] = Field(None, description="Relative humidity (%)", example=70.0)
+    rainfall: Optional[float] = Field(None, description="Rainfall (mm)", example=800.0)
 
 
 @router.post("/recommend", summary="Full End-to-End Explainable Crop Recommendation")
@@ -65,6 +68,9 @@ def phase6_recommend(request: Phase6RecommendRequest):
         soil_npk={"N": request.n, "P": request.p, "K": request.k} if any(
             x is not None for x in [request.n, request.p, request.k]
         ) else None,
+        temperature=request.temperature,
+        humidity=request.humidity,
+        rainfall=request.rainfall,
         previous_crop=request.previous_crop,
         water_available_mm=request.water_available_mm,
     )

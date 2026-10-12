@@ -199,7 +199,7 @@ def recommend_crops(
 
         if rf_label:
             valid_seasons = CROP_SEASONS.get(rf_label, ["Kharif", "Rabi", "Zaid"])
-            if target_season in valid_seasons or "Kharif" in valid_seasons:
+            if target_season in valid_seasons or "Whole Year" in valid_seasons:
                 candidate_crops.append((crop_name, rf_label))
             else:
                 excluded_season.append(crop_name)
