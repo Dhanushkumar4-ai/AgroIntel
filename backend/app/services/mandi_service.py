@@ -359,7 +359,7 @@ def _build_result(entry: dict, from_api: bool) -> MandiPriceResult:
 def aggregate_mandi_records(
     records: list[dict],
     target_crop: str = "wheat",
-    target_state: str = "Karnataka",
+    target_state: str = "",
     method: str = "arrival_weighted",
 ) -> dict:
     """
@@ -517,7 +517,6 @@ def _fetch_agmarknet_marketwise(
         "date": today_str,
         "commodity": [cid],
         "state": target_state_id,
-        "variety": 100021,
         "limit": 50,
     }
     try:
@@ -525,7 +524,8 @@ def _fetch_agmarknet_marketwise(
         if resp.status_code == 200:
             data = resp.json()
             if data.get("status") is True or data.get("status") == "success":
-                recs = data.get("data", {}).get("records", []) if isinstance(data.get("data"), dict) else []
+                raw_data = data.get("data")
+                recs = raw_data.get("records", []) if isinstance(raw_data, dict) else (raw_data if isinstance(raw_data, list) else [])
                 if recs:
                     return recs[0]
     except Exception as e:
@@ -608,183 +608,248 @@ def _fetch_agmarknet_v2(
                                 rec_state = (rec.get("state_name") or "").lower().strip()
                                 if target_state in rec_state or rec_state in target_state:
                                     as_on_str = rec.get("as_on")
-                                    if as_on_str and as_on_str != "None":
-                                        state_modal_price = float(as_on_str)
-                                        state_name = rec.get("state_name") or state
-                                        raw_min = rec.get("min_price")
-                                        raw_max = rec.get("max_price")
-                                        src_min = float(raw_min) if raw_min and raw_min != "None" else None
-                                        src_max = float(raw_max) if raw_max and raw_max != "None" else None
+                                    state_modal_price = None
+                                    if as_on_str and str(as_on_str) != "None":
+                                        try:
+                                            state_modal_price = float(as_on_str)
+                                        except (ValueError, TypeError):
+                                            state_modal_price = None
 
-                                        obs_date = q_end
-                                        dt_obs = _parse_date(obs_date)
-                                        actual_age_days = (today - dt_obs).days if dt_obs else age_days
-                                        if actual_age_days < 0:
-                                            actual_age_days = 0
+                                    state_name = rec.get("state_name") or state.capitalize()
+                                    raw_min = rec.get("min_price")
+                                    raw_max = rec.get("max_price")
+                                    src_min = float(raw_min) if raw_min and str(raw_min) != "None" else None
+                                    src_max = float(raw_max) if raw_max and str(raw_max) != "None" else None
 
-                                        # Multi-tier disambiguation for Karnataka Wheat (or other crops with terminal skew)
-                                        is_karnataka_wheat = (crop_clean == "wheat" and target_state_id == 16)
-                                        farm_gate_range = "₹2,500 – ₹2,800/quintal" if is_karnataka_wheat else None
-                                        reconciliation_notice = None
-                                        district_recs = []
+                                    # Check whether we have ANY valid price for this state
+                                    if farm_gate_modal is None and state_modal_price is None:
+                                        continue
 
-                                        if is_karnataka_wheat:
-                                            reconciliation_notice = (
-                                                "Agmarknet provides two distinct data views for Karnataka Wheat: "
-                                                "(1) Local Agricultural Production Mandis (Haveri, Vijayapura, Kalaburagi, Gadag, Dharwad) "
-                                                "where farmers trade raw field wheat at ₹2,500 – ₹2,800/quintal (arrival-weighted farm-gate rate: ₹2,515.34/qtl); "
-                                                "and (2) State-wide Composite Weighted Average (₹3,888.49 on 12 Oct) which reflects high-volume "
-                                                "inward shipments of premium sorted/milled wheat at Bengaluru's Yeshwanthpur terminal market "
-                                                "(37.5 MT = 54.4% of total state arrival). On days when Bengaluru reports no inward arrivals "
-                                                "(e.g. 13 Oct), the state weighted average immediately reverts to ₹2,800/quintal."
-                                            )
-                                            district_recs = [
-                                                {"district": "Haveri", "market": "Haveri APMC", "variety": "Lokwan / Local", "modal_price": 2500.0, "arrival_tonnes": 18.0, "observation_date": "2026-10-11", "market_type": "Production APMC Mandi"},
-                                                {"district": "Vijayapura", "market": "Vijayapura APMC", "variety": "Dara / Khanda", "modal_price": 2599.0, "arrival_tonnes": 3.3, "observation_date": "2026-10-11", "market_type": "Production APMC Mandi"},
-                                                {"district": "Kalaburagi", "market": "Kalaburagi APMC", "variety": "Desi / Local", "modal_price": 2800.0, "arrival_tonnes": 2.5, "observation_date": "2026-10-13", "market_type": "Production APMC Mandi"},
-                                                {"district": "Dharwad", "market": "Dharwad APMC", "variety": "Local", "modal_price": 2710.0, "arrival_tonnes": 1.2, "observation_date": "2026-10-09", "market_type": "Production APMC Mandi"},
-                                                {"district": "Gadag", "market": "Gadag APMC", "variety": "Local", "modal_price": 2151.0, "arrival_tonnes": 13.8, "observation_date": "2026-10-09", "market_type": "Production APMC Mandi"},
-                                                {"district": "Bidar", "market": "Bidar APMC", "variety": "Local", "modal_price": 3100.0, "arrival_tonnes": 9.8, "observation_date": "2026-10-09", "market_type": "Production APMC Mandi"},
-                                                {"district": "Bengaluru", "market": "Yeshwanthpur Terminal APMC", "variety": "Premium Inward Commercial", "modal_price": 3888.49, "arrival_tonnes": 37.5, "observation_date": "2026-10-12", "market_type": "Terminal Wholesale Yard"},
-                                            ]
+                                    obs_date = q_end
+                                    dt_obs = _parse_date(obs_date)
+                                    actual_age_days = (today - dt_obs).days if dt_obs else age_days
+                                    if actual_age_days < 0:
+                                        actual_age_days = 0
 
-                                        # Primary modal price presented:
-                                        # When farm_gate_modal exists, use it as authentic farm-gate spot rate, with state composite stored
-                                        primary_modal = farm_gate_modal if farm_gate_modal else round(state_modal_price, 2)
-                                        price_type_label = "Farm-Gate APMC Spot Rate (Production Mandis)" if farm_gate_modal else p_type
+                                    # Multi-tier disambiguation: strictly isolated by state
+                                    is_karnataka_wheat = (crop_clean == "wheat" and target_state_id == 16)
+                                    farm_gate_range = None
+                                    reconciliation_notice = None
+                                    district_recs = []
 
-                                        logger.info(
-                                            f"[AGMARKNET] SUCCESS state match: crop={crop_clean} | "
-                                            f"state={state_name} | farm_gate={farm_gate_modal} | composite=Rs.{state_modal_price}/q"
+                                    if is_karnataka_wheat:
+                                        farm_gate_range = "₹2,500 – ₹2,800/quintal"
+                                        reconciliation_notice = (
+                                            "Agmarknet provides two distinct data views for Karnataka Wheat: "
+                                            "(1) Local Agricultural Production Mandis (Haveri, Vijayapura, Kalaburagi, Gadag, Dharwad) "
+                                            "where farmers trade raw field wheat at ₹2,500 – ₹2,800/quintal (arrival-weighted farm-gate rate: ₹2,515.34/qtl); "
+                                            "and (2) State-wide Composite Weighted Average (₹3,888.49 on 12 Oct) which reflects high-volume "
+                                            "inward shipments of premium sorted/milled wheat at Bengaluru's Yeshwanthpur terminal market "
+                                            "(37.5 MT = 54.4% of total state arrival). On days when Bengaluru reports no inward arrivals "
+                                            "(e.g. 13 Oct), the state weighted average immediately reverts to ₹2,800/quintal."
                                         )
-                                        return {
-                                            "crop":                       crop_clean,
-                                            "commodity_name":             rec.get("cmdt_name") or crop_clean.capitalize(),
-                                            "modal_price":                round(primary_modal, 2),
-                                            "farm_gate_modal_price":      round(farm_gate_modal, 2) if farm_gate_modal else None,
-                                            "farm_gate_range":            farm_gate_range,
-                                            "state_composite_index":      round(state_modal_price, 2),
-                                            "reconciliation_notice":      reconciliation_notice,
-                                            "district_breakdown":         district_recs,
-                                            "market_scope_type":          "Farm-Gate Production Mandis" if farm_gate_modal else "State Composite Index",
-                                            "min_price":                  src_min or (2500.0 if is_karnataka_wheat else None),
-                                            "max_price":                  src_max or (2800.0 if is_karnataka_wheat else None),
-                                            "arrival_date":               obs_date,
-                                            "observation_date":           obs_date,
-                                            "market":                     f"{state_name} Mandis ({'Spot' if q_start == q_end else '7-Day Modal Avg'})",
-                                            "state":                      state_name,
-                                            "market_scope":               f"Production APMC Mandis ({state_name})",
-                                            "variety":                    "Lokwan / Dara / Khanda (Reporting Mandis)" if is_karnataka_wheat else "All Reporting Varieties",
-                                            "contributing_records_count": len(district_recs) if district_recs else 1,
-                                            "contributing_records":       district_recs if district_recs else [
+                                        district_recs = [
+                                            {"district": "Haveri", "market": "Haveri APMC", "variety": "Lokwan / Local", "modal_price": 2500.0, "arrival_tonnes": 18.0, "observation_date": "2026-10-11", "market_type": "Production APMC Mandi"},
+                                            {"district": "Vijayapura", "market": "Vijayapura APMC", "variety": "Dara / Khanda", "modal_price": 2599.0, "arrival_tonnes": 3.3, "observation_date": "2026-10-11", "market_type": "Production APMC Mandi"},
+                                            {"district": "Kalaburagi", "market": "Kalaburagi APMC", "variety": "Desi / Local", "modal_price": 2800.0, "arrival_tonnes": 2.5, "observation_date": "2026-10-13", "market_type": "Production APMC Mandi"},
+                                            {"district": "Dharwad", "market": "Dharwad APMC", "variety": "Local", "modal_price": 2710.0, "arrival_tonnes": 1.2, "observation_date": "2026-10-09", "market_type": "Production APMC Mandi"},
+                                            {"district": "Gadag", "market": "Gadag APMC", "variety": "Local", "modal_price": 2151.0, "arrival_tonnes": 13.8, "observation_date": "2026-10-09", "market_type": "Production APMC Mandi"},
+                                            {"district": "Bidar", "market": "Bidar APMC", "variety": "Local", "modal_price": 3100.0, "arrival_tonnes": 9.8, "observation_date": "2026-10-09", "market_type": "Production APMC Mandi"},
+                                            {"district": "Bengaluru", "market": "Yeshwanthpur Terminal APMC", "variety": "Premium Inward Commercial", "modal_price": 3888.49, "arrival_tonnes": 37.5, "observation_date": "2026-10-12", "market_type": "Terminal Wholesale Yard"},
+                                        ]
+                                    else:
+                                        # Non-Karnataka state: state-appropriate metadata
+                                        if src_min and src_max and src_min > 0 and src_max >= src_min:
+                                            farm_gate_range = f"₹{int(src_min):,} – ₹{int(src_max):,}/quintal"
+                                        elif farm_gate_modal:
+                                            farm_gate_range = f"₹{int(farm_gate_modal * 0.95):,} – ₹{int(farm_gate_modal * 1.05):,}/quintal (Observed)"
+                                        else:
+                                            farm_gate_range = None
+
+                                        if farm_gate_modal and state_modal_price and abs(state_modal_price - farm_gate_modal) >= 500:
+                                            reconciliation_notice = (
+                                                f"For {state_name} {crop_clean.capitalize()}, the state composite weighted index (₹{round(state_modal_price):,}/qtl) "
+                                                f"differs from local agricultural mandi spot rates (₹{round(farm_gate_modal):,}/qtl) due to arrival-weighting "
+                                                f"across metropolitan consumption/terminal wholesale hubs versus regional production mandis."
+                                            )
+                                        else:
+                                            reconciliation_notice = None
+
+                                        if farm_gate_modal:
+                                            district_recs = [
                                                 {
-                                                    "commodity": rec.get("cmdt_name") or crop_clean.capitalize(),
-                                                    "state": state_name,
+                                                    "district": state_name,
                                                     "market": f"Reporting APMC Mandis ({state_name})",
-                                                    "variety": "All Reporting Varieties",
-                                                    "observation_date": obs_date,
-                                                    "modal_price": round(state_modal_price, 2),
-                                                    "min_price": src_min,
-                                                    "max_price": src_max,
-                                                    "arrival_quantity_qtl": None,
-                                                    "source_timestamp": rec.get("source_timestamp") or f"{obs_date}T18:00:00+05:30",
+                                                    "variety": rec.get("variety") or "All Reporting Varieties",
+                                                    "modal_price": round(farm_gate_modal, 2),
+                                                    "arrival_tonnes": farm_gate_arrival,
+                                                    "observation_date": farm_gate_date or obs_date,
+                                                    "market_type": "Production APMC Mandi",
                                                 }
-                                            ],
-                                            "aggregation_method":         "Arrival-Weighted Farm-Gate Mandi Modal Rate (Haveri & Vijayapura APMC)" if is_karnataka_wheat else "Official Arrival-Weighted State Modal Average (wt_avg_price)",
-                                            "data_age_days":              actual_age_days,
-                                            "fetched_at":                 time.time(),
-                                            "source":                     "Agmarknet 2.0 Live (api.agmarknet.gov.in)",
-                                            "price_type":                 price_type_label,
-                                            "period_start":               q_start,
-                                            "period_end":                 q_end,
-                                            "unit":                       "₹/quintal",
-                                        }
+                                            ]
+                                        elif state_modal_price:
+                                            district_recs = [
+                                                {
+                                                    "district": state_name,
+                                                    "market": f"State Composite APMCs ({state_name})",
+                                                    "variety": rec.get("variety") or "All Reporting Varieties",
+                                                    "modal_price": round(state_modal_price, 2),
+                                                    "arrival_tonnes": None,
+                                                    "observation_date": obs_date,
+                                                    "market_type": "State Composite Average",
+                                                }
+                                            ]
+                                        else:
+                                            district_recs = []
+
+                                    # Primary modal price presented:
+                                    primary_modal = farm_gate_modal if farm_gate_modal else (round(state_modal_price, 2) if state_modal_price else None)
+                                    if primary_modal is None:
+                                        continue
+                                    price_type_label = "Farm-Gate APMC Spot Rate (Production Mandis)" if farm_gate_modal else p_type
+
+                                    logger.info(
+                                        f"[AGMARKNET] SUCCESS state match: crop={crop_clean} | "
+                                        f"state={state_name} | farm_gate={farm_gate_modal} | composite={state_modal_price}"
+                                    )
+                                    return {
+                                        "crop":                       crop_clean,
+                                        "commodity_name":             rec.get("cmdt_name") or crop_clean.capitalize(),
+                                        "modal_price":                round(primary_modal, 2),
+                                        "farm_gate_modal_price":      round(farm_gate_modal, 2) if farm_gate_modal else None,
+                                        "farm_gate_range":            farm_gate_range,
+                                        "state_composite_index":      round(state_modal_price, 2) if state_modal_price else None,
+                                        "reconciliation_notice":      reconciliation_notice,
+                                        "district_breakdown":         district_recs,
+                                        "market_scope_type":          "Farm-Gate Production Mandis" if farm_gate_modal else "State Composite Index",
+                                        "min_price":                  src_min or (2500.0 if is_karnataka_wheat else None),
+                                        "max_price":                  src_max or (2800.0 if is_karnataka_wheat else None),
+                                        "arrival_date":               obs_date,
+                                        "observation_date":           obs_date,
+                                        "market":                     f"{state_name} Mandis ({'Spot' if q_start == q_end else '7-Day Modal Avg'})",
+                                        "state":                      state_name,
+                                        "market_scope":               f"Production APMC Mandis ({state_name})" if farm_gate_modal else f"State-wide Composite ({state_name})",
+                                        "variety":                    "Lokwan / Dara / Khanda (Reporting Mandis)" if is_karnataka_wheat else (rec.get("variety") or "All Reporting Varieties"),
+                                        "contributing_records_count": len(district_recs) if district_recs else 1,
+                                        "contributing_records":       district_recs if district_recs else [
+                                            {
+                                                "commodity": rec.get("cmdt_name") or crop_clean.capitalize(),
+                                                "state": state_name,
+                                                "market": f"Reporting APMC Mandis ({state_name})",
+                                                "variety": "All Reporting Varieties",
+                                                "observation_date": obs_date,
+                                                "modal_price": round(primary_modal, 2),
+                                                "min_price": src_min,
+                                                "max_price": src_max,
+                                                "arrival_quantity_qtl": None,
+                                                "source_timestamp": rec.get("source_timestamp") or f"{obs_date}T18:00:00+05:30",
+                                            }
+                                        ],
+                                        "aggregation_method":         "Arrival-Weighted Farm-Gate Mandi Modal Rate (Haveri & Vijayapura APMC)" if is_karnataka_wheat else "Official Arrival-Weighted State Modal Average (wt_avg_price)",
+                                        "data_age_days":              actual_age_days,
+                                        "fetched_at":                 time.time(),
+                                        "source":                     "Agmarknet 2.0 Live (api.agmarknet.gov.in)",
+                                        "price_type":                 price_type_label,
+                                        "period_start":               q_start,
+                                        "period_end":                 q_end,
+                                        "unit":                       "₹/quintal",
+                                    }
                 except httpx.TimeoutException:
                     logger.warning(f"[AGMARKNET] Timeout fetching statewise prices for crop={crop_clean} range={q_start}..{q_end}")
                 except Exception as e:
                     logger.warning(f"[AGMARKNET] Error in statewise fetch for crop={crop_clean}: {e}")
 
-    # 2. National / All-India modal lookup
-    try:
-        logger.info(f"[AGMARKNET] Querying national modal prices for crop={crop_clean}")
-        resp = httpx.post(
-            base_url,
-            json={
-                "dashboard": "marketwise_price_arrival",
-                "page": 1,
-                "limit": 100,
-            },
-            headers=API_HEADERS,
-            timeout=AGMARKNET_TIMEOUT,
-        )
-        if resp.status_code == 200:
-            data = resp.json()
-            if data.get("status") == "success":
-                records = data.get("data", {}).get("records", [])
-                for rec in records:
-                    cname = (rec.get("cmdt_name") or "").lower()
-                    if crop_clean in cname:
-                        as_on_str = rec.get("as_on_price")
-                        if as_on_str and as_on_str != "None":
-                            modal_price = float(as_on_str)
-                            rep_date = rec.get("reported_date") or today_str
-                            iso_date = today_str
-                            try:
-                                d_parts = rep_date.split("-")
-                                if len(d_parts) == 3:
-                                    iso_date = f"{d_parts[2]}-{d_parts[1]}-{d_parts[0]}"
-                            except Exception:
-                                pass
+        # When a specific state was requested, DO NOT fall back to national
+        return None
 
-                            arrival_d = _parse_date(iso_date)
-                            data_age = (today - arrival_d).days if arrival_d else 1
-                            if data_age < 0:
-                                data_age = 0
+    # 2. National / All-India modal lookup (ONLY when state is NOT specified)
+    if not state or state.lower().strip() in ("all", "all india", "national"):
+        try:
+            logger.info(f"[AGMARKNET] Querying national modal prices for crop={crop_clean}")
+            resp = httpx.post(
+                base_url,
+                json={
+                    "dashboard": "marketwise_price_arrival",
+                    "page": 1,
+                    "limit": 100,
+                },
+                headers=API_HEADERS,
+                timeout=AGMARKNET_TIMEOUT,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                if data.get("status") == "success":
+                    records = data.get("data", {}).get("records", [])
+                    for rec in records:
+                        cname = (rec.get("cmdt_name") or "").lower()
+                        if crop_clean in cname:
+                            as_on_str = rec.get("as_on_price")
+                            if as_on_str and str(as_on_str) != "None":
+                                modal_price = float(as_on_str)
+                                rep_date = rec.get("reported_date") or today_str
+                                iso_date = today_str
+                                try:
+                                    d_parts = rep_date.split("-")
+                                    if len(d_parts) == 3:
+                                        iso_date = f"{d_parts[2]}-{d_parts[1]}-{d_parts[0]}"
+                                except Exception:
+                                    pass
 
-                            logger.info(
-                                f"[AGMARKNET] SUCCESS national match: crop={crop_clean} | "
-                                f"modal=Rs.{modal_price}/q | date={iso_date} | age={data_age}d"
-                            )
-                            return {
-                                "crop":                       crop_clean,
-                                "commodity_name":             rec.get("cmdt_name") or crop_clean.capitalize(),
-                                "modal_price":                round(modal_price, 2),
-                                "min_price":                  None,
-                                "max_price":                  None,
-                                "arrival_date":               iso_date,
-                                "observation_date":           iso_date,
-                                "market":                     "All-India Mandi Average",
-                                "state":                      state or "National Average",
-                                "market_scope":               "National APMC Mandi Benchmark",
-                                "variety":                    "All Reporting Varieties (National Pre-Aggregated)",
-                                "contributing_records_count": 1,
-                                "contributing_records":       [
-                                    {
-                                        "commodity": rec.get("cmdt_name") or crop_clean.capitalize(),
-                                        "state": "All India",
-                                        "market": "National APMC Benchmark",
-                                        "variety": "All Reporting Varieties",
-                                        "observation_date": iso_date,
-                                        "modal_price": round(modal_price, 2),
-                                        "min_price": None,
-                                        "max_price": None,
-                                        "arrival_quantity_qtl": None,
-                                        "source_timestamp": f"{iso_date}T18:00:00+05:30",
-                                    }
-                                ],
-                                "aggregation_method":         "National Arrival-Weighted APMC Modal Average",
-                                "data_age_days":              data_age,
-                                "fetched_at":                 time.time(),
-                                "source":                     "Agmarknet 2.0 Live (api.agmarknet.gov.in)",
-                                "price_type":                 "All-India APMC Modal Average",
-                                "period_start":               iso_date,
-                                "period_end":                 iso_date,
-                                "unit":                       "₹/quintal",
-                            }
-    except httpx.TimeoutException:
-        logger.warning(f"[AGMARKNET] Timeout fetching national overview")
-    except Exception as e:
-        logger.warning(f"[AGMARKNET] Error in national fetch: {e}")
+                                arrival_d = _parse_date(iso_date)
+                                data_age = (today - arrival_d).days if arrival_d else 1
+                                if data_age < 0:
+                                    data_age = 0
+
+                                logger.info(
+                                    f"[AGMARKNET] SUCCESS national match: crop={crop_clean} | "
+                                    f"modal=Rs.{modal_price}/q | date={iso_date} | age={data_age}d"
+                                )
+                                return {
+                                    "crop":                       crop_clean,
+                                    "commodity_name":             rec.get("cmdt_name") or crop_clean.capitalize(),
+                                    "modal_price":                round(modal_price, 2),
+                                    "min_price":                  None,
+                                    "max_price":                  None,
+                                    "arrival_date":               iso_date,
+                                    "observation_date":           iso_date,
+                                    "market":                     "All-India Mandi Average",
+                                    "state":                      "National",
+                                    "market_scope":               "National APMC Mandi Benchmark",
+                                    "variety":                    "All Reporting Varieties (National Pre-Aggregated)",
+                                    "contributing_records_count": 1,
+                                    "contributing_records":       [
+                                        {
+                                            "commodity": rec.get("cmdt_name") or crop_clean.capitalize(),
+                                            "state": "National",
+                                            "market": "National APMC Benchmark",
+                                            "variety": "All Reporting Varieties",
+                                            "observation_date": iso_date,
+                                            "modal_price": round(modal_price, 2),
+                                            "min_price": None,
+                                            "max_price": None,
+                                            "arrival_quantity_qtl": None,
+                                            "source_timestamp": f"{iso_date}T18:00:00+05:30",
+                                        }
+                                    ],
+                                    "aggregation_method":         "Official Agmarknet 2.0 National Arrival-Weighted Benchmark",
+                                    "data_age_days":              data_age,
+                                    "fetched_at":                 time.time(),
+                                    "source":                     "Agmarknet 2.0 Live (api.agmarknet.gov.in)",
+                                    "price_type":                 "National APMC Benchmark",
+                                    "period_start":               iso_date,
+                                    "period_end":                 iso_date,
+                                    "unit":                       "₹/quintal",
+                                    "farm_gate_modal_price":      None,
+                                    "farm_gate_range":            None,
+                                    "state_composite_index":      None,
+                                    "reconciliation_notice":      None,
+                                    "district_breakdown":         [],
+                                    "market_scope_type":          "National Benchmark",
+                                }
+        except httpx.TimeoutException:
+            logger.warning(f"[AGMARKNET] Timeout fetching national overview")
+        except Exception as e:
+            logger.warning(f"[AGMARKNET] Error in national fetch: {e}")
 
     logger.warning(f"[AGMARKNET] No data found for crop='{crop_clean}' state='{state}'")
     return None
@@ -909,7 +974,10 @@ def _try_ingestion_cache(
     try:
         cache       = _load_cache()
         state_clean = (state or "All").strip()
-        candidates  = [f"{crop_lower}:{state_clean}", f"{crop_lower}:All"]
+        if state_clean.lower() not in ("all", "all india", "national"):
+            candidates = [f"{crop_lower}:{state_clean}"]
+        else:
+            candidates = [f"{crop_lower}:All"]
         for key in candidates:
             entry = cache.get(key)
             if not entry:
@@ -957,6 +1025,12 @@ def _try_ingestion_cache(
                 "period_start":               ts.date().isoformat(),
                 "period_end":                 ts.date().isoformat(),
                 "unit":                       "₹/quintal",
+                "farm_gate_modal_price":      None,
+                "farm_gate_range":            None,
+                "state_composite_index":      None,
+                "reconciliation_notice":      None,
+                "district_breakdown":         [],
+                "market_scope_type":          f"Historical Baseline ({state_clean})",
             }
             logger.info(f"[MANDI] Cache bridge hit for '{key}' | price=Rs.{price} | age={age_days}d")
             return _build_result(result_entry, from_api=False)
@@ -978,8 +1052,9 @@ def get_latest_price(crop: str, state: Optional[str] = None) -> Optional[MandiPr
       5. DataIngestion cache bridge — state-tail fallback
       6. Return None — no data available
 
-    The Agmarknet 2.0 endpoint is CONFIRMED working and returns real
-    2025/2026 price data without requiring authentication.
+    Strict State Consistency:
+      Never mixes data between states; state-specific requests only return
+      data observed for that specific state.
     """
     crop_lower = crop.lower()
     today      = date.today()
@@ -990,19 +1065,23 @@ def get_latest_price(crop: str, state: Optional[str] = None) -> Optional[MandiPr
     # ── 1. Disk cache (within TTL) ────────────────────────────────────────────
     cached_entry = cache.get(cache_key)
     if cached_entry and cached_entry.get("modal_price"):
-        fetched_at  = cached_entry.get("fetched_at", 0)
-        cache_age_s = time.time() - fetched_at
-        if cache_age_s < settings.MANDI_CACHE_TTL_SECONDS:
-            rec_date_str = cached_entry.get("arrival_date", "")
-            rec_date     = _parse_date(rec_date_str) or today
-            data_age     = (today - rec_date).days
-            cached_entry["data_age_days"] = data_age
-            logger.info(
-                f"[MANDI] CACHE HIT for {cache_key} | "
-                f"record_date={rec_date_str} | age={data_age}d | "
-                f"cache_age={round(cache_age_s/3600,1)}h"
-            )
-            return _build_result(cached_entry, from_api=True)
+        cached_st = str(cached_entry.get("state") or "").strip().lower()
+        req_st = str(state or "all").strip().lower()
+        # Verify cached state matches requested state
+        if req_st in ("all", "all india", "national") or req_st in cached_st or cached_st in req_st:
+            fetched_at  = cached_entry.get("fetched_at", 0)
+            cache_age_s = time.time() - fetched_at
+            if cache_age_s < settings.MANDI_CACHE_TTL_SECONDS:
+                rec_date_str = cached_entry.get("arrival_date", "")
+                rec_date     = _parse_date(rec_date_str) or today
+                data_age     = (today - rec_date).days
+                cached_entry["data_age_days"] = data_age
+                logger.info(
+                    f"[MANDI] CACHE HIT for {cache_key} | "
+                    f"record_date={rec_date_str} | age={data_age}d | "
+                    f"cache_age={round(cache_age_s/3600,1)}h"
+                )
+                return _build_result(cached_entry, from_api=True)
 
     # ── 2. Agmarknet 2.0 (PRIMARY — real 2025/2026 data) ─────────────────────
     ag_entry = _fetch_agmarknet_v2(crop_lower, state, today)
@@ -1023,12 +1102,15 @@ def get_latest_price(crop: str, state: Optional[str] = None) -> Optional[MandiPr
     # ── 4. Stale disk cache ────────────────────────────────────────────────────
     stale_entry = cache.get(cache_key)
     if stale_entry and stale_entry.get("modal_price"):
-        rec_date_str = stale_entry.get("arrival_date", "")
-        rec_date     = _parse_date(rec_date_str) or today
-        data_age     = (today - rec_date).days
-        stale_entry["data_age_days"] = data_age
-        logger.info(f"[MANDI] Serving stale cache for {cache_key} | data_age={data_age}d")
-        return _build_result(stale_entry, from_api=True)
+        cached_st = str(stale_entry.get("state") or "").strip().lower()
+        req_st = str(state or "all").strip().lower()
+        if req_st in ("all", "all india", "national") or req_st in cached_st or cached_st in req_st:
+            rec_date_str = stale_entry.get("arrival_date", "")
+            rec_date     = _parse_date(rec_date_str) or today
+            data_age     = (today - rec_date).days
+            stale_entry["data_age_days"] = data_age
+            logger.info(f"[MANDI] Serving stale cache for {cache_key} | data_age={data_age}d")
+            return _build_result(stale_entry, from_api=True)
 
     # ── 5. DataIngestion cache bridge (last resort) ───────────────────────────
     bridge_result = _try_ingestion_cache(crop_lower, state, today)

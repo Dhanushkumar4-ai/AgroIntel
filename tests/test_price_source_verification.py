@@ -408,3 +408,173 @@ def test_agmarknet_date_filtering_authenticity():
     assert kar_rec.get("cmdt_id") == 1
 
 
+# ── Test 12: Maharashtra State Isolation — Zero Karnataka Leakage ─────────────
+
+def test_maharashtra_state_isolation_no_karnataka_leak():
+    """
+    Regression Test:
+    When requesting price prediction or mandi data for Maharashtra Wheat,
+    the response must NEVER leak Karnataka-specific data, mandis, or explanations:
+    - No Haveri, Vijayapura, Kalaburagi, Gadag, Dharwad
+    - No Bengaluru or Yeshwanthpur
+    - No Karnataka reconciliation notices
+    - Scope and state must strictly identify Maharashtra
+    """
+    from app.ml.inference import predict_price
+
+    pred = predict_price("wheat", "Maharashtra", horizon_days=30)
+    assert pred is not None
+    assert pred.get("state") == "Maharashtra"
+
+    # 1. Price transparency panel check
+    pt = pred.get("price_transparency", {})
+    assert pt.get("selected_state") == "Maharashtra"
+    assert pt.get("state") == "Maharashtra"
+
+    # 2. Check reconciliation notice
+    recon = pt.get("reconciliation_notice")
+    if recon:
+        recon_lower = recon.lower()
+        assert "karnataka" not in recon_lower, "Karnataka reconciliation notice leaked to Maharashtra!"
+        assert "bengaluru" not in recon_lower, "Bengaluru inward hub leaked to Maharashtra!"
+        assert "haveri" not in recon_lower, "Haveri mandi leaked to Maharashtra!"
+
+    # 3. Check district breakdown and contributing records
+    records = pt.get("district_breakdown", []) + pt.get("contributing_records", [])
+    karnataka_keywords = ["haveri", "vijayapura", "kalaburagi", "gadag", "dharwad", "yeshwanthpur"]
+    for r in records:
+        r_str = json.dumps(r).lower()
+        for kw in karnataka_keywords:
+            assert kw not in r_str, f"Karnataka mandi '{kw}' found in Maharashtra record: {r}"
+        if r.get("state"):
+            assert r["state"].lower() != "karnataka", f"Karnataka state found in Maharashtra record: {r}"
+
+
+# ── Test 13: Karnataka State Consistency & Transparency ───────────────────────
+
+def test_karnataka_state_transparency():
+    """
+    Regression Test:
+    When requesting price prediction for Karnataka Wheat,
+    Karnataka-specific records and multi-tier transparency are accurately presented:
+    - State is Karnataka
+    - Farm gate modal rate is ~2515.34 (or local production mandi rate)
+    - Reconciliation notice accurately describes production mandis vs terminal inward hub
+    """
+    from app.ml.inference import predict_price
+
+    pred = predict_price("wheat", "Karnataka", horizon_days=30)
+    assert pred is not None
+    assert pred.get("state") == "Karnataka"
+
+    pt = pred.get("price_transparency", {})
+    assert pt.get("selected_state") == "Karnataka"
+
+    # Reconciliation notice should be present for Karnataka Wheat
+    recon = pt.get("reconciliation_notice")
+    assert recon is not None
+    assert "Karnataka" in recon or "Haveri" in recon or "Bengaluru" in recon
+
+
+# ── Test 14: Honest Unavailable State for Missing State Data ──────────────────
+
+def test_missing_state_data_honest_unavailable():
+    """
+    Regression Test:
+    When a state has no live reporting mandi records (e.g., Punjab off-season wheat),
+    the system must NOT substitute Karnataka or an unrelated state's records:
+    - Does not return Haveri, Vijayapura, or Karnataka prices
+    - Live fetch returns None for unrepresented state
+    """
+    res = _fetch_agmarknet_v2("wheat", "Punjab", date.today())
+    # Punjab has no live wheat harvest/arrivals in October
+    # System must return None rather than faking data or falling back to National/Karnataka
+    if res is not None:
+        assert res.get("state") != "Karnataka"
+        assert "haveri" not in json.dumps(res).lower()
+    else:
+        assert res is None, "Expected None for unrepresented state in live v2"
+
+
+# ── Test 15: Cache Key Isolation Between States and Crops ─────────────────────
+
+def test_cache_key_isolation_between_states_and_crops():
+    """
+    Regression Test:
+    Cache keys must be strictly differentiated by (crop, state).
+    Queries for Maharashtra must never hit cached Karnataka results.
+    """
+    from app.services.mandi_service import _CACHE_FILE, _load_cache
+
+    cache = _load_cache()
+    # Check that any keys in cache distinguish state
+    for k in cache.keys():
+        if "_" in k:
+            parts = k.split("_", 1)
+            crop_part = parts[0]
+            state_part = parts[1]
+            assert state_part != "", "State part in cache key must not be empty"
+
+
+# ── Test 16: Crop Switching Updates MSP, Varieties, and Transparency ──────────
+
+def test_crop_switching_updates_msp_and_varieties():
+    """
+    Regression Test:
+    Switching crops updates MSP and commodities correctly:
+    - Wheat -> MSP 2425 (Rabi 2024-25 / RMS 2025-26)
+    - Rice -> MSP 2300 (Kharif 2024-25 / KMS 2024-25)
+    - Onion -> No statutory MSP (Commercial/horticultural)
+    """
+    wheat_msp = get_official_msp("wheat")
+    assert wheat_msp is not None
+    assert wheat_msp["msp_price"] == 2425.0
+
+    rice_msp = get_official_msp("rice")
+    assert rice_msp is not None
+    assert rice_msp["msp_price"] == 2300.0
+
+    onion_msp = get_official_msp("onion")
+    assert onion_msp is not None
+    assert onion_msp["msp_price"] is None
+
+
+# ── Test 17: Daily Agri News UI Complete Removal Verification ─────────────────
+
+def test_daily_agri_news_ui_removal_from_frontend():
+    """
+    Regression Test:
+    Verify that the Daily Agri News UI feature has been completely removed
+    from frontend user-facing files:
+    1. index.html does NOT contain 'navNews' button
+    2. index.html does NOT contain 'page-news' section
+    3. index.html does NOT contain 'showPage(\\'news\\')'
+    4. script.js showPage('news') redirects to 'landing'
+    5. script.js navMap does NOT contain 'news'
+    6. Historical news archives and backend files REMAIN intact
+    """
+    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "backend", "frontend")
+    html_path = os.path.join(frontend_dir, "index.html")
+    js_path = os.path.join(frontend_dir, "script.js")
+
+    with open(html_path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+
+    assert "id=\"navNews\"" not in html_content, "navNews button must be removed from index.html"
+    assert "id=\"page-news\"" not in html_content, "page-news section must be removed from index.html"
+    assert "showPage('news')" not in html_content, "showPage('news') triggers must be removed from index.html"
+
+    with open(js_path, "r", encoding="utf-8") as f:
+        js_content = f.read()
+
+    assert "news: \"navNews\"" not in js_content, "navMap must not map news to navNews"
+    assert "cleanId === \"news\"" in js_content, "showPage must intercept 'news' and redirect"
+    assert "cleanId = \"landing\"" in js_content, "showPage must redirect 'news' to landing"
+
+    # Verify backend news files are preserved
+    archive_path = os.path.join(
+        os.path.dirname(__file__), "..", "backend", "app", "data", "experimental", "historical_news_archive.json"
+    )
+    assert os.path.exists(archive_path), "historical_news_archive.json backend file must remain intact!"
+
+

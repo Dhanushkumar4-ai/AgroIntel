@@ -29,6 +29,19 @@ async function initApp() {
     populateStateSelects();
     setDefaultSelections();
     checkHealth();
+    setupEventListeners();
+}
+
+function setupEventListeners() {
+    const markPredStale = () => {
+        const el = document.getElementById("predResults");
+        if (el && el.innerHTML.trim()) {
+            el.classList.add("results-stale");
+        }
+    };
+    document.getElementById("predState")?.addEventListener("change", markPredStale);
+    document.getElementById("predCrop")?.addEventListener("change", markPredStale);
+    document.getElementById("predHorizon")?.addEventListener("change", markPredStale);
 }
 
 // ─── Load indian_districts.json (Single Load, Single Source) ─────────────────
@@ -60,16 +73,12 @@ async function loadIndianDistricts() {
 
 // ─── Populate State Selects ──────────────────────────────────────────────────
 function populateStateSelects() {
-    // State select dropdowns across Recommendation, Prediction, Advisory, and News
-    const stateSelectIds = ["recState", "predState", "advState", "newsFilterState"];
+    // State select dropdowns across Recommendation, Prediction, and Advisory
+    const stateSelectIds = ["recState", "predState", "advState"];
     stateSelectIds.forEach(id => {
         const sel = document.getElementById(id);
         if (!sel) return;
-        if (id === "newsFilterState") {
-            sel.innerHTML = '<option value="">All States / National</option>';
-        } else {
-            sel.innerHTML = '<option value="">Select State</option>';
-        }
+        sel.innerHTML = '<option value="">Select State</option>';
 
         if (supportedStates.length === 0) {
             sel.innerHTML = '<option value="">Unable to load states</option>';
@@ -141,7 +150,10 @@ function setDefaultSelections() {
 
 // ─── Page Navigation ─────────────────────────────────────────────────────────
 function showPage(pageId) {
-    const cleanId = pageId.replace(/^(view-|page-)/, "");
+    let cleanId = pageId.replace(/^(view-|page-)/, "");
+    if (cleanId === "news") {
+        cleanId = "landing";
+    }
 
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     const target = document.getElementById(`page-${cleanId}`) || document.getElementById(`view-${cleanId}`);
@@ -152,12 +164,8 @@ function showPage(pageId) {
     }
 
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("nav-active"));
-    const navMap = { recommendation: "navRecommend", prediction: "navPrediction", advisory: "navAdvisory", news: "navNews" };
+    const navMap = { recommendation: "navRecommend", prediction: "navPrediction", advisory: "navAdvisory" };
     if (navMap[cleanId]) document.getElementById(navMap[cleanId])?.classList.add("nav-active");
-
-    if (cleanId === "news") {
-        loadNews();
-    }
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -498,6 +506,8 @@ function renderRecResults(data) {
 // ─── Price Prediction ─────────────────────────────────────────────────────────
 // IMPORTANT: This function calls ONLY /api/predict — never /api/phase6/recommend
 // District is NOT used in price prediction.
+let currentPredRequestId = 0;
+
 async function submitPricePred(event) {
     event.preventDefault();
     const btn  = document.getElementById("btnPred");
@@ -514,6 +524,12 @@ async function submitPricePred(event) {
         return;
     }
 
+    const requestId = ++currentPredRequestId;
+    const predResultsEl = document.getElementById("predResults");
+    if (predResultsEl && predResultsEl.innerHTML.trim()) {
+        predResultsEl.classList.add("results-stale");
+    }
+
     try {
         // Call ONLY /api/predict — no district, no phase6 recommend
         let predUrl = `/api/predict?crop=${encodeURIComponent(crop)}&horizon_days=${horizon}`;
@@ -525,13 +541,28 @@ async function submitPricePred(event) {
             throw new Error(err.detail || "Price forecast could not be retrieved.");
         }
         const predData = await predRes.json();
+
+        // Discard stale response if a newer request was dispatched while waiting
+        if (requestId !== currentPredRequestId) {
+            console.log(`[AgroIntel] Discarding stale prediction response #${requestId} (latest #${currentPredRequestId})`);
+            return;
+        }
+
         renderPredResults(predData, crop, parseInt(horizon), state);
+        if (predResultsEl) predResultsEl.classList.remove("results-stale");
 
     } catch (err) {
-        showToast(err.message, "error");
-        document.getElementById("predResults").innerHTML = errorCard(err.message);
+        if (requestId === currentPredRequestId) {
+            showToast(err.message, "error");
+            if (predResultsEl) {
+                predResultsEl.classList.remove("results-stale");
+                predResultsEl.innerHTML = errorCard(err.message);
+            }
+        }
     } finally {
-        setLoading(btn, spin, false);
+        if (requestId === currentPredRequestId) {
+            setLoading(btn, spin, false);
+        }
     }
 }
 
@@ -751,31 +782,68 @@ function renderPredResults(predData, crop, horizon, inputState) {
     // ── Price Transparency & Agmarknet Provenance ─────────────────────────────
     const pt = predData.price_transparency || predData.market?.price_transparency || {};
     const ptCommodity = pt.commodity_name || capitalize(crop);
-    const ptVariety = pt.variety || 'All Reporting Varieties';
-    const ptScope = pt.market_scope || mktName || 'State-wide';
+    const ptVariety = pt.variety || predData.variety || 'All Reporting Varieties';
+
+    // State context resolution
+    const activeState = (inputState && inputState.toLowerCase() !== 'all')
+        ? inputState
+        : (predData.state && predData.state.toLowerCase() !== 'all' ? predData.state : 'National Benchmark');
+    const isNationalScope = !inputState || inputState.toLowerCase() === 'all' || activeState.toLowerCase().includes('national');
+    const stateLabel = isNationalScope ? 'National Benchmark' : activeState;
+    const ptScope = pt.market_scope || predData.market_scope || (isNationalScope ? 'National APMC Mandi Benchmark' : `State-wide Scope (${stateLabel})`);
     const ptObsDate = pt.observation_date || obsDate || '—';
     const ptStatus = pt.price_status || (dataAgeDays === 0 ? 'LIVE_TODAY' : dataAgeDays === 1 ? 'PREVIOUS_DAY' : 'HISTORICAL_FALLBACK');
     const ptStatusLabel = pt.status_label || (ptStatus === 'LIVE_TODAY' ? 'Live Today (Same-Day APMC)' : ptStatus === 'PREVIOUS_DAY' ? 'Previous-Day Observation (1 day old)' : 'Historical Baseline');
     const ptStatusClass = ptStatus === 'LIVE_TODAY' ? 'badge-price-live' :
                           ptStatus === 'PREVIOUS_DAY' ? 'badge-price-prev' :
                           ptStatus === 'STALE' ? 'badge-price-stale' : 'badge-price-fallback';
-    const ptMethod = pt.aggregation_method || (dataSource && dataSource.toLowerCase().includes('agmarknet') ? 'Official Agmarknet 2.0 arrival-weighted average' : 'APMC Mandi Reported Modal Rate');
+    const ptMethod = pt.aggregation_method || predData.aggregation_method || (dataSource && dataSource.toLowerCase().includes('agmarknet') ? 'Official Agmarknet 2.0 arrival-weighted average' : 'APMC Mandi Reported Modal Rate');
     const ptRecordsCount = pt.contributing_records_count || (isMandiAvailable ? 1 : 0);
     const ptSource = pt.source || sourceLabel;
     const ptSourceUrl = pt.source_url || 'https://agmarknet.gov.in';
     const ptTimestamp = pt.source_timestamp ? formatDate(pt.source_timestamp) : (predData.price_cached_time ? formatDate(predData.price_cached_time) : 'Verified');
 
-    // Multi-tier prices
-    const isWheatKar = crop.toLowerCase() === 'wheat' && (inputState || '').toLowerCase() === 'karnataka';
-    const farmGatePrice = pt.farm_gate_modal_price || (isWheatKar ? 2515.34 : curPriceNum);
-    const farmGateRange = pt.farm_gate_range || (isWheatKar ? '₹2,500 – ₹2,800/quintal' : (minPrice != null && maxPrice != null ? `₹${Math.round(minPrice).toLocaleString('en-IN')} – ₹${Math.round(maxPrice).toLocaleString('en-IN')}` : null));
-    const stateComposite = pt.state_composite_index || (isWheatKar ? 3888.49 : null);
-    const reconNotice = pt.reconciliation_notice || (isWheatKar ?
-        "Agmarknet reports two distinct price metrics for Karnataka Wheat: (1) Local Agricultural Production Mandis (Haveri, Vijayapura, Kalaburagi, Gadag, Dharwad) where farmers trade raw field wheat at ₹2,500 – ₹2,800/quintal (arrival-weighted farm-gate rate: ₹2,515.34/qtl); and (2) State-wide Composite Weighted Average (₹3,888.49 on 12 Oct) which reflects high-volume inward shipments of premium sorted/milled wheat at Bengaluru's Yeshwanthpur terminal market (37.5 MT = 54.4% of total state arrival). On days when Bengaluru reports no inward arrivals (e.g. 13 Oct), the state weighted average immediately reverts to ₹2,800/quintal." : null);
+    // Multi-tier prices - Strictly from response (no hardcoded state defaults)
+    const farmGatePrice = (typeof pt.farm_gate_modal_price === 'number')
+        ? pt.farm_gate_modal_price
+        : ((typeof predData.farm_gate_modal_price === 'number')
+            ? predData.farm_gate_modal_price
+            : ((typeof predData.market?.farm_gate_modal_price === 'number') ? predData.market.farm_gate_modal_price : curPriceNum));
 
-    const districtRecs = (Array.isArray(pt.district_breakdown) && pt.district_breakdown.length > 0)
+    const farmGateRange = pt.farm_gate_range || predData.farm_gate_range || predData.market?.farm_gate_range ||
+        (minPrice != null && maxPrice != null ? `₹${Math.round(minPrice).toLocaleString('en-IN')} – ₹${Math.round(maxPrice).toLocaleString('en-IN')}/quintal` : null);
+
+    const stateComposite = (typeof pt.state_composite_index === 'number')
+        ? pt.state_composite_index
+        : ((typeof predData.state_composite_index === 'number')
+            ? predData.state_composite_index
+            : ((typeof predData.market?.state_composite_index === 'number') ? predData.market.state_composite_index : null));
+
+    // Reconciliation Notice - strictly state-isolated
+    let reconNotice = pt.reconciliation_notice || predData.reconciliation_notice || predData.market?.reconciliation_notice || null;
+    if (reconNotice) {
+        const reqStateLower = activeState.toLowerCase();
+        // Prevent cross-state contamination if notice is state-specific
+        if (reqStateLower !== 'karnataka' && reconNotice.toLowerCase().includes('karnataka')) {
+            reconNotice = null;
+        }
+    }
+
+    // Filter district records strictly by the requested state
+    const rawDistrictRecs = (Array.isArray(pt.district_breakdown) && pt.district_breakdown.length > 0)
         ? pt.district_breakdown
-        : (Array.isArray(pt.contributing_records) && pt.contributing_records.length > 0 ? pt.contributing_records : []);
+        : ((Array.isArray(predData.district_breakdown) && predData.district_breakdown.length > 0)
+            ? predData.district_breakdown
+            : ((Array.isArray(pt.contributing_records) && pt.contributing_records.length > 0)
+                ? pt.contributing_records
+                : (Array.isArray(predData.contributing_records) ? predData.contributing_records : [])));
+
+    const districtRecs = rawDistrictRecs.filter(r => {
+        if (isNationalScope) return true;
+        const rState = (r.state || '').trim().toLowerCase();
+        const reqStateLower = activeState.trim().toLowerCase();
+        return !rState || rState === reqStateLower || rState === 'all';
+    });
 
     const districtRows = districtRecs.map(r => `
         <tr style="border-bottom:1px solid rgba(255,255,255,0.06)">
@@ -803,7 +871,7 @@ function renderPredResults(predData, crop, horizon, inputState) {
             <div class="pred-meta">
                 <h3 style="margin:0;font-size:1.4rem">${cropDisplay} Price Outlook</h3>
                 <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
-                    <span style="font-size:0.82rem;opacity:0.8">📍 State: <strong>${inputState || 'National'}</strong></span>
+                    <span style="font-size:0.82rem;opacity:0.8">📍 State: <strong>${stateLabel}</strong></span>
                     <span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:2px 8px;border-radius:12px;font-size:0.74rem;font-weight:600">${forecastScope}</span>
                 </div>
             </div>
@@ -822,12 +890,16 @@ function renderPredResults(predData, crop, horizon, inputState) {
                     <div style="font-size:0.78rem;opacity:0.75;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">${farmGatePrice ? 'Farm-Gate APMC Spot Rate' : obsLabel}</div>
                     <span class="badge ${ptStatusClass}" style="font-size:0.7rem;padding:2px 8px;font-weight:600">${ptStatusLabel}</span>
                 </div>
+                ${displaySpotNum != null ? `
                 <div style="font-size:1.8rem;font-weight:800;color:#34d399;margin:8px 0">₹${Math.round(displaySpotNum).toLocaleString('en-IN')} <span style="font-size:0.85rem;font-weight:500;opacity:0.7">/ quintal</span></div>
+                ` : `
+                <div style="font-size:1.3rem;font-weight:700;color:#94a3b8;margin:8px 0;font-style:italic">Price Unavailable</div>
+                `}
                 <div style="font-size:0.75rem;opacity:0.8;margin-top:4px;line-height:1.5">
-                    <div><strong>Market Scope:</strong> ${pt.market_scope || mktName}</div>
+                    <div><strong>Market Scope:</strong> ${ptScope}</div>
                     <div><strong>Variety:</strong> ${ptVariety}</div>
                     ${farmGateRange ? `<div style="color:#38bdf8"><strong>Observed Mandi Range:</strong> ${farmGateRange}</div>` : ''}
-                    ${stateComposite ? `<div style="color:#fbbf24"><strong>State-wide Composite Index:</strong> ₹${Math.round(stateComposite).toLocaleString('en-IN')}/qtl (Terminal Weighted)</div>` : ''}
+                    ${stateComposite != null ? `<div style="color:#fbbf24"><strong>State-wide Composite Index:</strong> ₹${Math.round(stateComposite).toLocaleString('en-IN')}/qtl (Arrival-Weighted)</div>` : ''}
                     <div><strong>Source:</strong> ${sourceLabel}</div>
                     <div><strong>Observed:</strong> ${formatDate(ptObsDate)}</div>
                 </div>
@@ -863,32 +935,53 @@ function renderPredResults(predData, crop, horizon, inputState) {
 
             <!-- Multi-Tier Metric Summary Grid -->
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;margin-bottom:14px;font-size:0.8rem">
+                <!-- Tier 1: Farm-Gate Mandi Spot Rate -->
                 <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.25);border-radius:6px;padding:12px">
                     <div style="color:#4ade80;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">1. Farm-Gate Mandi Spot Rate</div>
-                    <div style="font-size:1.2rem;font-weight:800;color:#34d399;margin-top:2px">₹${Math.round(displaySpotNum).toLocaleString('en-IN')}/qtl</div>
-                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">Agricultural Production Mandis (Haveri, Vijayapura, Kalaburagi)</div>
+                    ${farmGatePrice != null ? `
+                    <div style="font-size:1.2rem;font-weight:800;color:#34d399;margin-top:2px">₹${Math.round(farmGatePrice).toLocaleString('en-IN')}/qtl</div>
+                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">Agricultural Production Mandis (${stateLabel})</div>
+                    ` : `
+                    <div style="font-size:0.84rem;font-weight:600;color:#94a3b8;margin-top:6px;font-style:italic">Farm-gate price unavailable for this state</div>
+                    <div style="color:#64748b;font-size:0.70rem;margin-top:2px">No APMC production mandi reports for ${stateLabel}</div>
+                    `}
                 </div>
 
-                ${stateComposite ? `
+                <!-- Tier 2: State Composite Index -->
                 <div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:6px;padding:12px">
                     <div style="color:#fbbf24;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">2. State Composite Index</div>
+                    ${stateComposite != null ? `
                     <div style="font-size:1.2rem;font-weight:800;color:#fbbf24;margin-top:2px">₹${Math.round(stateComposite).toLocaleString('en-IN')}/qtl</div>
-                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">Terminal Weighted (Includes Bengaluru Inward Hub)</div>
-                </div>` : ''}
+                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">State-wide Arrival-Weighted Index (${stateLabel})</div>
+                    ` : `
+                    <div style="font-size:0.84rem;font-weight:600;color:#94a3b8;margin-top:6px;font-style:italic">State composite index unavailable</div>
+                    <div style="color:#64748b;font-size:0.70rem;margin-top:2px">Aggregate index unavailable for ${stateLabel}</div>
+                    `}
+                </div>
 
-                ${mspPrice ? `
+                <!-- Tier 3: Statutory MSP Floor -->
                 <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.25);border-radius:6px;padding:12px">
                     <div style="color:#c084fc;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">3. Statutory MSP Floor</div>
+                    ${mspPrice != null ? `
                     <div style="font-size:1.2rem;font-weight:800;color:#c084fc;margin-top:2px">₹${Math.round(mspPrice).toLocaleString('en-IN')}/qtl</div>
                     <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">${mspSeason || 'Guaranteed Minimum Support Price'}</div>
-                </div>` : ''}
+                    ` : `
+                    <div style="font-size:0.84rem;font-weight:600;color:#94a3b8;margin-top:6px;font-style:italic">No Statutory MSP</div>
+                    <div style="color:#64748b;font-size:0.70rem;margin-top:2px">Commercial / Horticultural Commodity</div>
+                    `}
+                </div>
 
-                ${isPredAvailable ? `
+                <!-- Tier 4: Model Forecast -->
                 <div style="background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.25);border-radius:6px;padding:12px">
                     <div style="color:#38bdf8;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">4. 30-Day Model Forecast</div>
+                    ${isPredAvailable ? `
                     <div style="font-size:1.2rem;font-weight:800;color:#38bdf8;margin-top:2px">${predPriceDisplay}</div>
                     <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">${modelName} (Statistical Trajectory)</div>
-                </div>` : ''}
+                    ` : `
+                    <div style="font-size:0.84rem;font-weight:600;color:#fbbf24;margin-top:6px">Forecast Unavailable</div>
+                    <div style="color:#64748b;font-size:0.70rem;margin-top:2px">No validated forecasting model</div>
+                    `}
+                </div>
             </div>
 
             <!-- Reconciliation Explanation Banner -->
@@ -932,12 +1025,12 @@ function renderPredResults(predData, crop, horizon, inputState) {
             </div>` : ''}
 
             <!-- Contributing Mandis & Variety Breakdown Table -->
-            ${districtRows ? `
             <div style="margin-top:12px">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                     <span style="font-size:0.78rem;font-weight:700;color:#f1f5f9;text-transform:uppercase;letter-spacing:0.5px">Official Agmarknet Mandi & Variety Breakdown</span>
                     <span style="font-size:0.72rem;color:#94a3b8">${districtRecs.length} Reporting Mandi Yard${districtRecs.length !== 1 ? 's' : ''}</span>
                 </div>
+                ${districtRows ? `
                 <div style="overflow-x:auto;border:1px solid rgba(255,255,255,0.08);border-radius:6px">
                     <table style="width:100%;border-collapse:collapse;font-size:0.76rem;text-align:left">
                         <thead>
@@ -955,8 +1048,11 @@ function renderPredResults(predData, crop, horizon, inputState) {
                             ${districtRows}
                         </tbody>
                     </table>
-                </div>
-            </div>` : ''}
+                </div>` : `
+                <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:16px;text-align:center;color:#94a3b8;font-size:0.82rem;font-style:italic">
+                    Individual APMC mandi breakdown unavailable for ${stateLabel} on the selected date.
+                </div>`}
+            </div>
         </div>
 
         <!-- 30-DAY PRICE FORECAST GRAPH -->
@@ -1373,209 +1469,5 @@ function errorCard(msg) {
         <h3>Something went wrong</h3>
         <p>${msg}</p>
     </div>`;
-}
-
-// ─── Daily Agricultural News Intelligence ──────────────────────────────────
-let activeNewsArticles = [];
-
-async function loadNews() {
-    const container = document.getElementById("newsGridContainer");
-    if (!container) return;
-
-    const crop   = document.getElementById("newsFilterCrop")?.value || "";
-    const state  = document.getElementById("newsFilterState")?.value || "";
-    const impact = document.getElementById("newsFilterImpact")?.value || "";
-    const verif  = document.getElementById("newsFilterVerif")?.value || "";
-
-    const queryParams = new URLSearchParams();
-    if (crop)   queryParams.set("crop", crop);
-    if (state)  queryParams.set("state", state);
-    if (impact) queryParams.set("market_effect", impact);
-    if (verif)  queryParams.set("verification_status", verif);
-    queryParams.set("limit", "50");
-
-    try {
-        const [newsRes, statusRes] = await Promise.all([
-            fetch(`/api/news?${queryParams.toString()}`),
-            fetch(`/api/news/status`)
-        ]);
-
-        if (statusRes.ok) {
-            const statusData = await statusRes.json();
-            updateNewsStatusBanner(statusData);
-        }
-
-        if (!newsRes.ok) throw new Error(`HTTP ${newsRes.status}`);
-        const newsData = await newsRes.json();
-        activeNewsArticles = newsData.articles || [];
-        renderNewsArticles(activeNewsArticles);
-
-    } catch (err) {
-        console.error("[AgroIntel] Failed to load agricultural news:", err);
-        container.innerHTML = `
-        <div class="placeholder-card glass-card" style="grid-column: 1 / -1;">
-            <div class="ph-icon">⚠️</div>
-            <h3>Unable to load news</h3>
-            <p>Could not connect to the news intelligence service. Click Refresh Feeds to retry.</p>
-        </div>`;
-    }
-}
-
-function filterNews() {
-    loadNews();
-}
-
-async function refreshNewsFeeds() {
-    const btn = document.getElementById("btnNewsRefresh");
-    const ico = document.getElementById("newsRefreshIcon");
-    if (btn) btn.disabled = true;
-    if (ico) ico.classList.add("spin-ico");
-
-    try {
-        showToast("Triggering daily RSS ingestion & verification...", "info");
-        const res = await fetch("/api/news/refresh", { method: "POST" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-
-        const newCount = data.ingestion_summary?.new_articles ?? 0;
-        const verifiedClusters = data.processing_summary?.verified_clusters ?? 0;
-        showToast(`Ingested ${newCount} new articles; verified ${verifiedClusters} event clusters.`, "success");
-
-        await loadNews();
-    } catch (err) {
-        console.error("[AgroIntel] News refresh failed:", err);
-        showToast("Failed to refresh feeds. Check network or server logs.", "error");
-    } finally {
-        if (btn) btn.disabled = false;
-        if (ico) ico.classList.remove("spin-ico");
-    }
-}
-
-function updateNewsStatusBanner(status) {
-    if (!status) return;
-
-    const countVal  = document.getElementById("newsCountVal");
-    const sourcesVal = document.getElementById("newsSourcesVal");
-    const freshVal  = document.getElementById("newsFreshnessStatusVal");
-    const label     = document.getElementById("newsFreshnessLabel");
-    const sub       = document.getElementById("newsLastUpdated");
-    const pulse     = document.getElementById("newsFreshnessPulse");
-
-    if (countVal) countVal.textContent = status.verified_events_count || status.total_articles_stored || "—";
-    if (sourcesVal) sourcesVal.textContent = `${status.sources_active || 0}/${status.total_sources_audited || 0}`;
-    if (freshVal) {
-        freshVal.textContent = status.freshness_status || "FRESH";
-        freshVal.style.color = status.freshness_status === "STALE" ? "#f87171" :
-                               status.freshness_status === "DUE_FOR_REFRESH" ? "#fbbf24" : "#4ade80";
-    }
-
-    if (label) label.textContent = `Daily RSS Pipeline: ${status.sources_active || 0} Active Feeds`;
-
-    if (sub) {
-        if (status.last_successful_fetch_time) {
-            const d = new Date(status.last_successful_fetch_time);
-            sub.textContent = `Last fetched: ${d.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })} IST`;
-        } else {
-            sub.textContent = "Pipeline initialized";
-        }
-    }
-
-    if (pulse) {
-        pulse.classList.toggle("pulse-warn", status.freshness_status !== "FRESH");
-    }
-}
-
-function renderNewsArticles(articles) {
-    const container = document.getElementById("newsGridContainer");
-    if (!container) return;
-
-    if (!articles || articles.length === 0) {
-        container.innerHTML = `
-        <div class="placeholder-card glass-card" style="grid-column: 1 / -1;">
-            <span class="material-symbols-rounded ph-icon-sym">filter_alt_off</span>
-            <h3>No Articles Found</h3>
-            <p>No agricultural news matching the selected filters was found. Try clearing filters or refreshing feeds.</p>
-        </div>`;
-        return;
-    }
-
-    const html = articles.map(art => {
-        const title   = art.title || "Agricultural Intelligence Update";
-        const link    = art.link || "#";
-        const source  = art.source || "Agri Source";
-        const summary = art.summary || "";
-        const pubDate = formatDate(art.published_at || art.published_date);
-        const ageDays = art.age_days != null ? `${art.age_days}d ago` : '';
-
-        const effect = (art.market_effect || "UNCERTAIN").toUpperCase();
-        const effectClass = effect === "BULLISH" ? "badge-impact-bullish" :
-                            effect === "BEARISH" ? "badge-impact-bearish" :
-                            effect === "MIXED"   ? "badge-impact-mixed" : "badge-impact-uncertain";
-        const effectIcon  = effect === "BULLISH" ? "trending_up" :
-                            effect === "BEARISH" ? "trending_down" :
-                            effect === "MIXED"   ? "swap_horiz" : "help_outline";
-
-        const verif = (art.verification_status || "UNVERIFIED").toUpperCase();
-        const verifClass = verif === "VERIFIED"    ? "badge-verif-verified" :
-                           verif === "CORROBORATED" ? "badge-verif-corrob" :
-                           verif === "CONFLICTING"  ? "badge-verif-conflict" : "badge-verif-single";
-        const verifIcon  = verif === "VERIFIED"    ? "verified" :
-                           verif === "CORROBORATED" ? "group" :
-                           verif === "CONFLICTING"  ? "warning" : "article";
-
-        const crops  = Array.isArray(art.crops) ? art.crops : [];
-        const states = Array.isArray(art.states) ? art.states : [];
-
-        const scoreObj = art.relevance_score;
-        const score = typeof scoreObj === 'number' ? Math.round(scoreObj) :
-                      (scoreObj?.composite_score ? Math.round(scoreObj.composite_score) : 60);
-
-        const tierLabel = (art.source_reliability >= 0.9) ? "Tier 1 Official" : "Tier 2 National";
-
-        return `
-        <div class="news-card glass-card">
-            <div>
-                <div class="news-card-meta">
-                    <div class="news-source-tag">
-                        <span>${source}</span>
-                        <span class="news-tier-badge">${tierLabel}</span>
-                    </div>
-                    <div class="news-date-tag">${pubDate} ${ageDays ? `· ${ageDays}` : ''}</div>
-                </div>
-
-                <h3 class="news-card-title">
-                    <a href="${link}" target="_blank" rel="noopener noreferrer">${title}</a>
-                </h3>
-
-                <p class="news-card-summary">${summary}</p>
-
-                <div class="news-badges-wrap">
-                    <span class="badge ${effectClass}">
-                        <span class="material-symbols-rounded" style="font-size:0.85rem">${effectIcon}</span>
-                        ${effect} (${art.severity || 'MED'} · ${art.geographic_scope || 'NATIONAL'})
-                    </span>
-                    <span class="badge ${verifClass}">
-                        <span class="material-symbols-rounded" style="font-size:0.85rem">${verifIcon}</span>
-                        ${verif}
-                    </span>
-                    <span class="badge badge-score" title="Multi-factor score incorporating crop, geo, severity, source reliability, and recency decay">
-                        ⭐ ${score}/100
-                    </span>
-                    ${crops.map(c => `<span class="badge badge-crop">🌾 ${capitalize(c)}</span>`).join('')}
-                    ${states.map(s => `<span class="badge badge-state">📍 ${s}</span>`).join('')}
-                </div>
-            </div>
-
-            <div class="news-card-footer">
-                <span style="color:#64748b;font-size:0.75rem">Pub: ${pubDate}</span>
-                <a href="${link}" target="_blank" rel="noopener noreferrer" class="news-link-btn">
-                    <span>Source Article</span>
-                    <span class="material-symbols-rounded" style="font-size:0.95rem">open_in_new</span>
-                </a>
-            </div>
-        </div>`;
-    }).join('');
-
-    container.innerHTML = html;
 }
 

@@ -61,6 +61,18 @@ class NewsProcessingJob:
     def __init__(self):
         self.config = DEFAULT_NEWS_SCORING_CONFIG
 
+    def _extract_state(self, text: str) -> Optional[str]:
+        state, _ = extract_entities(text)
+        return state
+
+    def _extract_crop(self, text: str) -> Optional[str]:
+        _, crop = extract_entities(text)
+        return crop
+
+    def _classify_event(self, text: str) -> Tuple[str, float]:
+        res = classify_market_impact(text)
+        return res["event_type"], res["confidence"]
+
     def process_articles(self, articles: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], int]:
         """
         Filter non-ag articles and extract structured events with market impact classification.
@@ -194,9 +206,9 @@ class NewsProcessingJob:
         conflicting_count = 0
 
         for key, ev_list in clusters.items():
-            sources = {e["source_name"] for e in ev_list}
-            tiers = {e["tier"] for e in ev_list}
-            effects = {e["market_effect"] for e in ev_list if e["market_effect"] in ["BULLISH", "BEARISH"]}
+            sources = {e.get("source_name", "Unknown") for e in ev_list}
+            tiers = {e.get("tier", "TIER_4") for e in ev_list}
+            effects = {e.get("market_effect") for e in ev_list if e.get("market_effect") in ["BULLISH", "BEARISH"]}
 
             # Verification logic
             if "BULLISH" in effects and "BEARISH" in effects:
@@ -234,8 +246,8 @@ class NewsProcessingJob:
                 "unique_sources": len(sources),
                 "sources": list(sources),
                 "verification_status": status,
-                "sample_title": ev_list[0]["title"],
-                "market_effect": ev_list[0]["market_effect"],
+                "sample_title": ev_list[0].get("title", ""),
+                "market_effect": ev_list[0].get("market_effect", "UNCERTAIN"),
             })
 
         # Sort events by composite relevance and freshness
