@@ -401,6 +401,7 @@ def predict_crop_price(
         freshness     = mandi_res.freshness_label   # Fresh / Recent / Historical
         current_price_source = f"{mandi_res.source} — {freshness}"
         current_price_date   = mandi_res.arrival_date
+        observation_date     = mandi_res.observation_date or mandi_res.arrival_date
         data_age_days        = mandi_res.data_age_days
         price_timestamp      = mandi_res.arrival_date
         price_type           = getattr(mandi_res, "price_type", "APMC Modal Average")
@@ -409,14 +410,30 @@ def predict_crop_price(
         price_unit           = getattr(mandi_res, "unit", "₹/quintal")
         min_price            = getattr(mandi_res, "min_price", None)
         max_price            = getattr(mandi_res, "max_price", None)
-        # data_status mirrors freshness for the frontend badge
-        market_data_status   = freshness.upper()   # FRESH / RECENT / HISTORICAL
+        msp_price            = getattr(mandi_res, "msp_price", None)
+        msp_season           = getattr(mandi_res, "msp_season", None)
+        variety              = getattr(mandi_res, "variety", "All Reporting Varieties (State-wide Pre-Aggregated)")
+        market_scope         = getattr(mandi_res, "market_scope", f"State-wide Scope ({state or 'All'})")
+        contributing_count   = getattr(mandi_res, "contributing_records_count", 1)
+        contributing_recs    = getattr(mandi_res, "contributing_records", [])
+        aggregation_method   = getattr(mandi_res, "aggregation_method", "Official Arrival-Weighted State Modal Average (wt_avg_price)")
+        price_transparency   = mandi_res.to_transparency_dict()
+        market_data_status   = mandi_res.price_status
         logger.warning(
             f"[PRICE_SOURCE] {crop_lower}: ₹{current_price}/q "
             f"from {current_price_source} | market={mandi_res.market} | "
             f"record_date={current_price_date} | age={data_age_days}d | fallback=No"
         )
     else:
+        from app.core.constants import get_official_msp
+        msp_info = get_official_msp(crop_lower)
+        msp_price = msp_info.get("msp_price") if msp_info else None
+        msp_season = msp_info.get("season") if msp_info else None
+        variety = "All Varieties (Historical APMC Aggregate)"
+        market_scope = f"Historical APMC Scope ({state or 'National'})"
+        contributing_count = 1
+        contributing_recs = []
+        aggregation_method = "Historical APMC State Average (Baseline)"
         price_type   = "Historical APMC Baseline"
         price_unit   = "₹/quintal"
         min_price    = None
@@ -438,6 +455,7 @@ def predict_crop_price(
                 state_label          = state_clean
                 current_price_source = f"Historical State APMC Baseline ({state_label})"
                 current_price_date   = rec_date_str
+                observation_date     = rec_date_str
                 price_timestamp      = rec_date_str
                 period_start         = rec_date_str
                 period_end           = rec_date_str
@@ -446,6 +464,7 @@ def predict_crop_price(
                 current_price        = round(mean_hist_price, 2)
                 current_price_source = "National APMC Historical Baseline (Fallback)"
                 current_price_date   = hist_end_date
+                observation_date     = hist_end_date
                 data_age_days        = (date.today() - _parse_date(hist_end_date)).days if _parse_date(hist_end_date) else 7
                 price_timestamp      = hist_end_date
                 period_start         = hist_end_date
@@ -456,11 +475,43 @@ def predict_crop_price(
             current_price        = last_hist_price
             current_price_source = "National APMC Historical Baseline"
             current_price_date   = hist_end_date
+            observation_date     = hist_end_date
             data_age_days        = (date.today() - _parse_date(hist_end_date)).days if _parse_date(hist_end_date) else 7
             price_timestamp      = hist_end_date
             period_start         = hist_end_date
             period_end           = hist_end_date
             market_data_status   = "HISTORICAL_FALLBACK"
+
+        price_transparency = {
+            "source":                     current_price_source,
+            "source_url":                 "https://agmarknet.gov.in",
+            "observation_date":           observation_date,
+            "selected_state":             state or "National",
+            "state":                      state or "National",
+            "market_scope":               market_scope,
+            "commodity":                  crop_lower.capitalize(),
+            "commodity_name":             crop_lower.capitalize(),
+            "variety":                    variety,
+            "modal_price":                round(float(current_price), 2) if current_price else None,
+            "modal_price_display":        f"₹{round(float(current_price)):,}/quintal" if current_price else "Live price unavailable",
+            "min_price":                  None,
+            "max_price":                  None,
+            "msp_price":                  msp_price,
+            "msp_season":                 msp_season,
+            "msp_difference":             round(float(current_price) - msp_price, 2) if (current_price and msp_price) else None,
+            "contributing_records_count": contributing_count,
+            "contributing_records":       contributing_recs,
+            "aggregation_method":         aggregation_method,
+            "last_successful_fetch_time": "Historical APMC Archive",
+            "source_timestamp":           "Historical APMC Archive",
+            "data_age_days":              data_age_days or 0,
+            "price_status":               market_data_status,
+            "status_label":               f"Historical Fallback ({data_age_days or 0}d old)",
+            "is_live":                    False,
+            "is_stale":                   True,
+            "is_fallback":                True,
+            "unit":                       price_unit,
+        }
 
         logger.info(
             f"[PRICE_SOURCE] {crop_lower}: ₹{current_price}/q "
@@ -666,6 +717,15 @@ def predict_crop_price(
         "unit": price_unit,
         "min_price": min_price,
         "max_price": max_price,
+        "observation_date": observation_date,
+        "price_transparency": price_transparency,
+        "msp_price": msp_price,
+        "msp_season": msp_season,
+        "variety": variety,
+        "market_scope": market_scope,
+        "contributing_records_count": contributing_count,
+        "contributing_records": contributing_recs,
+        "aggregation_method": aggregation_method,
         "reference_benchmark": crop_meta.get("reference_benchmark"),
         "benchmark_outperformed": crop_meta.get("benchmark_outperformed", True),
         "uncertainty_basis": "Estimated Error Range (Holdout RMSE Basis)",

@@ -159,6 +159,64 @@ MANDI_TO_RF_LABEL: dict[str, str] = {
 PRICE_PREDICTION_CROPS = ["wheat", "rice", "maize", "potato", "onion"]
 
 
+# ── Official Government Minimum Support Prices (MSP) ──────────────────────────
+# Source: Cabinet Committee on Economic Affairs (CCEA) & Ministry of Agriculture & Farmers Welfare
+# Units: ₹/quintal (100 kg)
+# NOTE: MSP is a statutory floor price, NEVER to be substituted for current market spot/modal price.
+OFFICIAL_MSP: dict[str, dict] = {
+    "wheat": {
+        "msp_price": 2425.0,
+        "season": "RMS 2025-26",
+        "description": "CCEA Minimum Support Price for Wheat (FAQ Grade)",
+        "source": "Cabinet Committee on Economic Affairs (CCEA)",
+        "effective_year": "2025-26",
+    },
+    "rice": {
+        "msp_price": 2300.0,
+        "season": "KMS 2024-25",
+        "description": "CCEA Minimum Support Price for Paddy Common (Grade A: ₹2,320)",
+        "source": "Cabinet Committee on Economic Affairs (CCEA)",
+        "effective_year": "2024-25",
+    },
+    "paddy": {
+        "msp_price": 2300.0,
+        "season": "KMS 2024-25",
+        "description": "CCEA Minimum Support Price for Paddy Common",
+        "source": "Cabinet Committee on Economic Affairs (CCEA)",
+        "effective_year": "2024-25",
+    },
+    "maize": {
+        "msp_price": 2225.0,
+        "season": "KMS 2024-25",
+        "description": "CCEA Minimum Support Price for Maize",
+        "source": "Cabinet Committee on Economic Affairs (CCEA)",
+        "effective_year": "2024-25",
+    },
+    "potato": {
+        "msp_price": None,
+        "season": "N/A",
+        "description": "No Central Statutory MSP (Eligible for State Market Intervention Scheme / MIS)",
+        "source": "Ministry of Agriculture (Horticulture Division)",
+        "effective_year": "2024-26",
+    },
+    "onion": {
+        "msp_price": None,
+        "season": "N/A",
+        "description": "No Central Statutory MSP (Procured via Price Stabilisation Fund PSF / NAFED / NCCF)",
+        "source": "Department of Consumer Affairs (Price Stabilisation Fund)",
+        "effective_year": "2024-26",
+    },
+}
+
+
+def get_official_msp(crop: str) -> dict | None:
+    """Retrieve official government MSP details for a commodity."""
+    if not crop:
+        return None
+    return OFFICIAL_MSP.get(crop.strip().lower())
+
+
+
 # ── Price Model Feature Columns ───────────────────────────────────────────────
 # Exactly 11 features matching implementation plan specification.
 

@@ -1,0 +1,271 @@
+{
+  "status": "success",
+  "message": "Data fetched successfully.",
+  "pagination": {
+    "total_count": 12,
+    "total_pages": 1,
+    "current_page": 1,
+    "next_page": null,
+    "previous_page": null,
+    "items_per_page": 50
+  },
+  "data": {
+    "columns": [
+      {
+        "key": "state_info",
+        "columns": [
+          {
+            "key": "cmdt_grp_name",
+            "title": "Commodity Group"
+          },
+          {
+            "key": "cmdt_name",
+            "title": "Commodity"
+          },
+          {
+            "key": "state_name",
+            "title": "State/UT"
+          },
+          {
+            "key": "unit_name_price",
+            "title": "Price Unit"
+          }
+        ]
+      },
+      {
+        "key": "wt_avg_price",
+        "title": "Weighted Average Price",
+        "columns": [
+          {
+            "key": "as_on",
+            "title": "As on selected dates"
+          },
+          {
+            "key": "one_yr_ago",
+            "title": "1 Year ago"
+          },
+          {
+            "key": "two_yr_ago",
+            "title": "2 Years ago"
+          },
+          {
+            "key": "three_yr_ago",
+            "title": "3 Years ago"
+          }
+        ]
+      },
+      {
+        "key": "deviation_from_msp",
+        "title": "Deviation from Selected Duration",
+        "columns": [
+          {
+            "key": "deviation_percent_one_yr",
+            "title": "1 Year ago"
+          },
+          {
+            "key": "deviation_percent_two_yr",
+            "title": "2 Years ago"
+          },
+          {
+            "key": "deviation_percent_three_yr",
+            "title": "3 Years ago"
+          }
+        ]
+      }
+    ],
+    "records": [
+      {
+        "as_on": "2640.00",
+        "cmdt_id": 1,
+        "state_id": 5,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": null,
+        "state_name": "Bihar",
+        "two_yr_ago": "2740.78",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2450.00",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": null,
+        "deviation_percent_two_yr": "-3.7",
+        "deviation_percent_three_yr": "7.8"
+      },
+      {
+        "as_on": "2100.00",
+        "cmdt_id": 1,
+        "state_id": 7,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2476.00",
+        "state_name": "Chattisgarh",
+        "two_yr_ago": "2000.00",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2212.84",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "-15.2",
+        "deviation_percent_two_yr": "5.0",
+        "deviation_percent_three_yr": "-5.1"
+      },
+      {
+        "as_on": "2790.32",
+        "cmdt_id": 1,
+        "state_id": 11,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2553.72",
+        "state_name": "Gujarat",
+        "two_yr_ago": "3244.16",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2575.59",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "9.3",
+        "deviation_percent_two_yr": "-14.0",
+        "deviation_percent_three_yr": "8.3"
+      },
+      {
+        "as_on": "3888.49",
+        "cmdt_id": 1,
+        "state_id": 16,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": null,
+        "state_name": "Karnataka",
+        "two_yr_ago": null,
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "3191.00",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": null,
+        "deviation_percent_two_yr": null,
+        "deviation_percent_three_yr": "21.9"
+      },
+      {
+        "as_on": "2638.96",
+        "cmdt_id": 1,
+        "state_id": 19,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2468.93",
+        "state_name": "Madhya Pradesh",
+        "two_yr_ago": "2737.11",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2495.54",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "6.9",
+        "deviation_percent_two_yr": "-3.6",
+        "deviation_percent_three_yr": "5.7"
+      },
+      {
+        "as_on": "3541.09",
+        "cmdt_id": 1,
+        "state_id": 20,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2783.12",
+        "state_name": "Maharashtra",
+        "two_yr_ago": "3033.30",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "3558.55",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "27.2",
+        "deviation_percent_two_yr": "16.7",
+        "deviation_percent_three_yr": "-0.5"
+      },
+      {
+        "as_on": null,
+        "cmdt_id": 1,
+        "state_id": 25,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2702.50",
+        "state_name": "NCT of Delhi",
+        "two_yr_ago": "2992.50",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2600.00",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": null,
+        "deviation_percent_two_yr": null,
+        "deviation_percent_three_yr": null
+      },
+      {
+        "as_on": "2734.84",
+        "cmdt_id": 1,
+        "state_id": 29,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2451.60",
+        "state_name": "Rajasthan",
+        "two_yr_ago": "2662.03",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2445.27",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "11.6",
+        "deviation_percent_two_yr": "2.7",
+        "deviation_percent_three_yr": "11.8"
+      },
+      {
+        "as_on": "2499.00",
+        "cmdt_id": 1,
+        "state_id": 32,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": null,
+        "state_name": "Telangana",
+        "two_yr_ago": null,
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "1959.00",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": null,
+        "deviation_percent_two_yr": null,
+        "deviation_percent_three_yr": "27.6"
+      },
+      {
+        "as_on": "2551.52",
+        "cmdt_id": 1,
+        "state_id": 34,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2522.35",
+        "state_name": "Uttar Pradesh",
+        "two_yr_ago": "2665.69",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2337.98",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "1.2",
+        "deviation_percent_two_yr": "-4.3",
+        "deviation_percent_three_yr": "9.1"
+      },
+      {
+        "as_on": "2590.00",
+        "cmdt_id": 1,
+        "state_id": 35,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": null,
+        "state_name": "Uttarakhand",
+        "two_yr_ago": null,
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2250.00",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": null,
+        "deviation_percent_two_yr": null,
+        "deviation_percent_three_yr": "15.1"
+      },
+      {
+        "as_on": "2835.60",
+        "cmdt_id": 1,
+        "state_id": 36,
+        "cmdt_name": "Wheat",
+        "one_yr_ago": "2610.03",
+        "state_name": "West Bengal",
+        "two_yr_ago": "2494.11",
+        "cmdt_grp_id": 1,
+        "three_yr_ago": "2749.57",
+        "cmdt_grp_name": "Cereals",
+        "unit_name_price": "Rs./Quintal",
+        "deviation_percent_one_yr": "8.6",
+        "deviation_percent_two_yr": "13.7",
+        "deviation_percent_three_yr": "3.1"
+      }
+    ]
+  }
+}
