@@ -511,6 +511,12 @@ def predict_crop_price(
             "is_stale":                   True,
             "is_fallback":                True,
             "unit":                       price_unit,
+            "farm_gate_modal_price":      round(float(current_price), 2) if current_price else None,
+            "farm_gate_range":            None,
+            "state_composite_index":      round(float(current_price), 2) if current_price else None,
+            "reconciliation_notice":      None,
+            "district_breakdown":         [],
+            "market_scope_type":          market_scope,
         }
 
         logger.info(

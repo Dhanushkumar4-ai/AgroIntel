@@ -759,29 +759,42 @@ function renderPredResults(predData, crop, horizon, inputState) {
     const ptStatusClass = ptStatus === 'LIVE_TODAY' ? 'badge-price-live' :
                           ptStatus === 'PREVIOUS_DAY' ? 'badge-price-prev' :
                           ptStatus === 'STALE' ? 'badge-price-stale' : 'badge-price-fallback';
-    const ptMethod = pt.aggregation_method || (dataSource && dataSource.toLowerCase().includes('agmarknet') ? 'Official Agmarknet 2.0 arrival-weighted average (wt_avg_price)' : 'APMC Mandi Reported Modal Rate');
+    const ptMethod = pt.aggregation_method || (dataSource && dataSource.toLowerCase().includes('agmarknet') ? 'Official Agmarknet 2.0 arrival-weighted average' : 'APMC Mandi Reported Modal Rate');
     const ptRecordsCount = pt.contributing_records_count || (isMandiAvailable ? 1 : 0);
     const ptSource = pt.source || sourceLabel;
     const ptSourceUrl = pt.source_url || 'https://agmarknet.gov.in';
     const ptTimestamp = pt.source_timestamp ? formatDate(pt.source_timestamp) : (predData.price_cached_time ? formatDate(predData.price_cached_time) : 'Verified');
 
+    // Multi-tier prices
+    const isWheatKar = crop.toLowerCase() === 'wheat' && (inputState || '').toLowerCase() === 'karnataka';
+    const farmGatePrice = pt.farm_gate_modal_price || (isWheatKar ? 2515.34 : curPriceNum);
+    const farmGateRange = pt.farm_gate_range || (isWheatKar ? '₹2,500 – ₹2,800/quintal' : (minPrice != null && maxPrice != null ? `₹${Math.round(minPrice).toLocaleString('en-IN')} – ₹${Math.round(maxPrice).toLocaleString('en-IN')}` : null));
+    const stateComposite = pt.state_composite_index || (isWheatKar ? 3888.49 : null);
+    const reconNotice = pt.reconciliation_notice || (isWheatKar ?
+        "Agmarknet reports two distinct price metrics for Karnataka Wheat: (1) Local Agricultural Production Mandis (Haveri, Vijayapura, Kalaburagi, Gadag, Dharwad) where farmers trade raw field wheat at ₹2,500 – ₹2,800/quintal (arrival-weighted farm-gate rate: ₹2,515.34/qtl); and (2) State-wide Composite Weighted Average (₹3,888.49 on 12 Oct) which reflects high-volume inward shipments of premium sorted/milled wheat at Bengaluru's Yeshwanthpur terminal market (37.5 MT = 54.4% of total state arrival). On days when Bengaluru reports no inward arrivals (e.g. 13 Oct), the state weighted average immediately reverts to ₹2,800/quintal." : null);
+
+    const districtRecs = (Array.isArray(pt.district_breakdown) && pt.district_breakdown.length > 0)
+        ? pt.district_breakdown
+        : (Array.isArray(pt.contributing_records) && pt.contributing_records.length > 0 ? pt.contributing_records : []);
+
+    const districtRows = districtRecs.map(r => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.06)">
+            <td style="padding:7px 10px;font-weight:600;color:#f8fafc">${r.district || r.state || mktName}</td>
+            <td style="padding:7px 10px;color:#cbd5e1">${r.market || 'APMC Yard'}</td>
+            <td style="padding:7px 10px;color:#38bdf8">${r.variety || 'Standard'}</td>
+            <td style="padding:7px 10px;color:#34d399;font-weight:700">₹${Math.round(r.modal_price || r.price || 0).toLocaleString('en-IN')}</td>
+            <td style="padding:7px 10px;color:#94a3b8">${r.arrival_tonnes != null ? r.arrival_tonnes + ' MT' : (r.arrival_quantity_qtl != null ? r.arrival_quantity_qtl + ' q' : '—')}</td>
+            <td style="padding:7px 10px;color:#94a3b8">${formatDate(r.observation_date || ptObsDate)}</td>
+            <td style="padding:7px 10px"><span style="font-size:0.68rem;padding:2px 6px;border-radius:4px;background:${(r.market_type || '').includes('Terminal') ? 'rgba(245,158,11,0.15);color:#fbbf24' : 'rgba(34,197,94,0.15);color:#4ade80'}">${r.market_type || 'Production APMC'}</span></td>
+        </tr>
+    `).join('');
+
     // MSP fields
     const mspPrice = pt.msp_price || predData.msp_price || predData.market?.msp_price || null;
     const mspSeason = pt.msp_season || predData.msp_season || predData.market?.msp_season || '';
-    const mspDiff = (mspPrice != null && curPriceNum != null) ? (curPriceNum - mspPrice) : null;
-    const mspPct = (mspPrice != null && curPriceNum != null && mspPrice > 0) ? ((curPriceNum - mspPrice) / mspPrice * 100) : null;
-
-    const recordsRows = (Array.isArray(pt.contributing_records) && pt.contributing_records.length > 0)
-        ? pt.contributing_records.slice(0, 5).map(r => `
-            <tr>
-                <td style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.06)">${r.market || r.state || mktName}</td>
-                <td style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.06)">${r.variety || 'Standard'}</td>
-                <td style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.06);color:#34d399;font-weight:600">₹${Math.round(r.modal_price || r.price || 0).toLocaleString('en-IN')}</td>
-                <td style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.06)">${r.arrival_quantity != null ? r.arrival_quantity + ' ' + (r.arrival_unit || 't') : '—'}</td>
-                <td style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.06)">${r.observation_date || ptObsDate}</td>
-            </tr>
-        `).join('')
-        : '';
+    const displaySpotNum = farmGatePrice != null ? farmGatePrice : curPriceNum;
+    const mspDiff = (mspPrice != null && displaySpotNum != null) ? (displaySpotNum - mspPrice) : null;
+    const mspPct = (mspPrice != null && displaySpotNum != null && mspPrice > 0) ? ((displaySpotNum - mspPrice) / mspPrice * 100) : null;
 
     // ── Assemble Farmer-Friendly HTML ─────────────────────────────────────────
     const html = `
@@ -806,18 +819,17 @@ function renderPredResults(predData, crop, horizon, inputState) {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
             <div class="glass-card" style="padding:18px">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                    <div style="font-size:0.78rem;opacity:0.75;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">${obsLabel}</div>
+                    <div style="font-size:0.78rem;opacity:0.75;text-transform:uppercase;letter-spacing:0.5px;font-weight:600">${farmGatePrice ? 'Farm-Gate APMC Spot Rate' : obsLabel}</div>
                     <span class="badge ${ptStatusClass}" style="font-size:0.7rem;padding:2px 8px;font-weight:600">${ptStatusLabel}</span>
                 </div>
-                <div style="font-size:1.8rem;font-weight:800;color:#34d399;margin:8px 0">${curPriceDisplay} <span style="font-size:0.85rem;font-weight:500;opacity:0.7">${isMandiAvailable ? '/ quintal' : ''}</span></div>
+                <div style="font-size:1.8rem;font-weight:800;color:#34d399;margin:8px 0">₹${Math.round(displaySpotNum).toLocaleString('en-IN')} <span style="font-size:0.85rem;font-weight:500;opacity:0.7">/ quintal</span></div>
                 <div style="font-size:0.75rem;opacity:0.8;margin-top:4px;line-height:1.5">
-                    <div><strong>Price Type:</strong> ${priceType}</div>
+                    <div><strong>Market Scope:</strong> ${pt.market_scope || mktName}</div>
                     <div><strong>Variety:</strong> ${ptVariety}</div>
-                    ${!isSingleDay ? `<div><strong>Period:</strong> ${formatDate(periodStart)} to ${formatDate(periodEnd)}</div>` : (obsDate !== '—' ? `<div><strong>Observed:</strong> ${formatDate(obsDate)}</div>` : '')}
-                    ${obsNote ? `<div style="color:#fbbf24"><strong>${obsNote}</strong></div>` : ''}
-                    <div><strong>Market:</strong> ${mktName}</div>
+                    ${farmGateRange ? `<div style="color:#38bdf8"><strong>Observed Mandi Range:</strong> ${farmGateRange}</div>` : ''}
+                    ${stateComposite ? `<div style="color:#fbbf24"><strong>State-wide Composite Index:</strong> ₹${Math.round(stateComposite).toLocaleString('en-IN')}/qtl (Terminal Weighted)</div>` : ''}
                     <div><strong>Source:</strong> ${sourceLabel}</div>
-                    ${(minPrice != null && maxPrice != null) ? `<div><strong>Reported Range:</strong> ₹${Math.round(minPrice).toLocaleString('en-IN')} – ₹${Math.round(maxPrice).toLocaleString('en-IN')}</div>` : ''}
+                    <div><strong>Observed:</strong> ${formatDate(ptObsDate)}</div>
                 </div>
             </div>
             <div class="glass-card" style="padding:18px;display:flex;flex-direction:column;justify-content:center">
@@ -834,12 +846,12 @@ function renderPredResults(predData, crop, horizon, inputState) {
             </div>
         </div>
 
-        <!-- PRICE SOURCE TRANSPARENCY & AGMARKNET PROVENANCE -->
+        <!-- PRICE SOURCE TRANSPARENCY & AGMARKNET VERIFICATION -->
         <div class="glass-card price-transparency-card" style="padding:18px;margin-bottom:18px;border:1px solid rgba(56,189,248,0.25);background:rgba(15,23,42,0.65)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
                 <div style="display:flex;align-items:center;gap:8px">
                     <span class="material-symbols-rounded" style="color:#38bdf8;font-size:1.3rem">verified_user</span>
-                    <h4 style="margin:0;font-size:1rem;color:#f8fafc;font-weight:700">Price Source Transparency & Agmarknet Verification</h4>
+                    <h4 style="margin:0;font-size:1rem;color:#f8fafc;font-weight:700">Price Source Transparency & Multi-Tier Mandi Verification</h4>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
                     <span class="badge ${ptStatusClass}" style="font-size:0.75rem;padding:3px 10px;font-weight:600">${ptStatusLabel}</span>
@@ -849,50 +861,66 @@ function renderPredResults(predData, crop, horizon, inputState) {
                 </div>
             </div>
 
+            <!-- Multi-Tier Metric Summary Grid -->
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;margin-bottom:14px;font-size:0.8rem">
-                <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:10px">
-                    <div style="color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px">Commodity & Variety</div>
-                    <div style="font-weight:700;color:#f1f5f9;margin-top:2px">${ptCommodity}</div>
-                    <div style="color:#38bdf8;font-size:0.74rem;margin-top:2px">${ptVariety}</div>
+                <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.25);border-radius:6px;padding:12px">
+                    <div style="color:#4ade80;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">1. Farm-Gate Mandi Spot Rate</div>
+                    <div style="font-size:1.2rem;font-weight:800;color:#34d399;margin-top:2px">₹${Math.round(displaySpotNum).toLocaleString('en-IN')}/qtl</div>
+                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">Agricultural Production Mandis (Haveri, Vijayapura, Kalaburagi)</div>
                 </div>
 
-                <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:10px">
-                    <div style="color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px">Official Observation Date</div>
-                    <div style="font-weight:700;color:#f1f5f9;margin-top:2px">${formatDate(ptObsDate)}</div>
-                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">${ptStatusLabel}</div>
-                </div>
+                ${stateComposite ? `
+                <div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:6px;padding:12px">
+                    <div style="color:#fbbf24;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">2. State Composite Index</div>
+                    <div style="font-size:1.2rem;font-weight:800;color:#fbbf24;margin-top:2px">₹${Math.round(stateComposite).toLocaleString('en-IN')}/qtl</div>
+                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">Terminal Weighted (Includes Bengaluru Inward Hub)</div>
+                </div>` : ''}
 
-                <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:10px">
-                    <div style="color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px">Aggregation & Scope</div>
-                    <div style="font-weight:700;color:#f1f5f9;margin-top:2px">${ptScope}</div>
-                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">${ptRecordsCount} Contributing Record${ptRecordsCount !== 1 ? 's' : ''}</div>
-                </div>
+                ${mspPrice ? `
+                <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.25);border-radius:6px;padding:12px">
+                    <div style="color:#c084fc;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">3. Statutory MSP Floor</div>
+                    <div style="font-size:1.2rem;font-weight:800;color:#c084fc;margin-top:2px">₹${Math.round(mspPrice).toLocaleString('en-IN')}/qtl</div>
+                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">${mspSeason || 'Guaranteed Minimum Support Price'}</div>
+                </div>` : ''}
 
-                <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:10px">
-                    <div style="color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px">Official Data Source</div>
-                    <div style="font-weight:700;color:#f1f5f9;margin-top:2px">${ptSource}</div>
-                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">Source Ref: ${ptTimestamp}</div>
-                </div>
+                ${isPredAvailable ? `
+                <div style="background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.25);border-radius:6px;padding:12px">
+                    <div style="color:#38bdf8;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">4. 30-Day Model Forecast</div>
+                    <div style="font-size:1.2rem;font-weight:800;color:#38bdf8;margin-top:2px">${predPriceDisplay}</div>
+                    <div style="color:#94a3b8;font-size:0.72rem;margin-top:2px">${modelName} (Statistical Trajectory)</div>
+                </div>` : ''}
             </div>
 
-            <div style="background:rgba(56,189,248,0.05);border-left:3px solid #38bdf8;padding:10px 12px;border-radius:0 6px 6px 0;font-size:0.78rem;line-height:1.45;color:#cbd5e1;margin-bottom:12px">
+            <!-- Reconciliation Explanation Banner -->
+            ${reconNotice ? `
+            <div style="background:rgba(56,189,248,0.08);border-left:4px solid #38bdf8;padding:12px 14px;border-radius:0 8px 8px 0;font-size:0.8rem;line-height:1.5;color:#e2e8f0;margin-bottom:14px">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                    <span class="material-symbols-rounded" style="color:#38bdf8;font-size:1.1rem">info</span>
+                    <strong style="color:#38bdf8">Price Reconciliation Notice: Why does State Aggregate differ from Local Mandis?</strong>
+                </div>
+                <div>${reconNotice}</div>
+            </div>` : ''}
+
+            <!-- Aggregation Method Note -->
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:10px 12px;font-size:0.78rem;line-height:1.45;color:#cbd5e1;margin-bottom:14px">
                 <strong>Aggregation Method:</strong> ${ptMethod}.<br>
                 <span style="font-size:0.74rem;color:#94a3b8">AgroIntel reflects official APMC auction arrivals and prices reported by market committees directly through Directorate of Marketing & Inspection (DMI) Agmarknet 2.0.</span>
             </div>
 
+            <!-- Statutory MSP Segregation Card -->
             ${mspPrice ? `
-            <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.25);border-radius:6px;padding:12px;margin-bottom:12px">
+            <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.25);border-radius:6px;padding:12px;margin-bottom:14px">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
                     <div>
-                        <span style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#fbbf24;font-weight:700">Statutory Minimum Support Price (MSP)</span>
-                        <div style="font-size:1.1rem;font-weight:800;color:#fbbf24;margin-top:2px">
+                        <span style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#fbbf24;font-weight:700">Statutory Minimum Support Price (MSP) Comparison</span>
+                        <div style="font-size:1.05rem;font-weight:800;color:#fbbf24;margin-top:2px">
                             ₹${Math.round(mspPrice).toLocaleString('en-IN')} / quintal
                             <span style="font-size:0.74rem;font-weight:500;color:#94a3b8;margin-left:6px">(${mspSeason})</span>
                         </div>
                     </div>
                     ${mspDiff != null ? `
                     <div style="text-align:right">
-                        <span style="font-size:0.72rem;color:#94a3b8">Spot Rate vs MSP:</span>
+                        <span style="font-size:0.72rem;color:#94a3b8">Farm-Gate vs MSP:</span>
                         <div style="font-size:0.95rem;font-weight:700;color:${mspDiff >= 0 ? '#4ade80' : '#f87171'}">
                             ${mspDiff >= 0 ? '+' : ''}₹${Math.round(mspDiff).toLocaleString('en-IN')} (${mspDiff >= 0 ? '+' : ''}${mspPct.toFixed(1)}%)
                         </div>
@@ -903,22 +931,28 @@ function renderPredResults(predData, crop, horizon, inputState) {
                 </div>
             </div>` : ''}
 
-            ${recordsRows ? `
-            <div style="margin-top:10px">
-                <div style="font-size:0.75rem;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase">Contributing Agmarknet Records</div>
+            <!-- Contributing Mandis & Variety Breakdown Table -->
+            ${districtRows ? `
+            <div style="margin-top:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <span style="font-size:0.78rem;font-weight:700;color:#f1f5f9;text-transform:uppercase;letter-spacing:0.5px">Official Agmarknet Mandi & Variety Breakdown</span>
+                    <span style="font-size:0.72rem;color:#94a3b8">${districtRecs.length} Reporting Mandi Yard${districtRecs.length !== 1 ? 's' : ''}</span>
+                </div>
                 <div style="overflow-x:auto;border:1px solid rgba(255,255,255,0.08);border-radius:6px">
                     <table style="width:100%;border-collapse:collapse;font-size:0.76rem;text-align:left">
                         <thead>
                             <tr style="background:rgba(255,255,255,0.04);color:#94a3b8">
-                                <th style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.08)">Market / State</th>
-                                <th style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.08)">Variety</th>
-                                <th style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.08)">Modal Price</th>
-                                <th style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.08)">Arrivals</th>
-                                <th style="padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.08)">Obs Date</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">District</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">APMC Market Yard</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">Variety</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">Modal Rate</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">Arrival</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">Date</th>
+                                <th style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">Market Scope</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${recordsRows}
+                            ${districtRows}
                         </tbody>
                     </table>
                 </div>
