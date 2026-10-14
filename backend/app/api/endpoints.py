@@ -179,6 +179,7 @@ def predict(
             # Advisory
             "recommendation":        result.get("recommendation", "WAIT"),
             "recommendation_reason": result.get("recommendation_reason", ""),
+            "advisory":              result.get("advisory") or {"decision": result.get("recommendation", "WAIT"), "reason": result.get("recommendation_reason", "")},
             "black_swan_warning":    result.get("black_swan_warning"),
             "storage_cost_pct":      result.get("storage_cost_pct"),
             "net_expected_change":   result.get("net_expected_change"),

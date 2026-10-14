@@ -780,6 +780,7 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
         "state":                 state,
         "current_price":         current_price,
         "predicted_price":       predicted_price,
+        "percent_change":        percent_change,
         "predictions":           best_predictions,
         "forecast_series":       forecast_series,
         "historical_series":     historical_series,

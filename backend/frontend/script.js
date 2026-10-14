@@ -598,8 +598,21 @@ function renderPredResults(predData, crop, horizon, inputState) {
 
     const cropDisplay = capitalize(crop);
 
-    const recAction = predData.recommendation || predData.advisory?.decision || null;
-    const recReason = predData.recommendation_reason || predData.advisory?.reason || null;
+    const recAction = predData.recommendation || predData.advisory?.decision || (isPredAvailable ? 'WAIT' : null);
+    const recReason = predData.recommendation_reason || predData.advisory?.reason || 
+        (recAction === 'HOLD' ? 'The forecast suggests the price may rise enough to justify waiting after estimated holding costs. Future prices are not guaranteed.' :
+         recAction === 'SELL' ? 'The expected price increase may not cover the estimated cost of holding the crop, so selling now may be preferable under the configured rules.' :
+         'The available price data is stale or insufficient for a reliable recommendation. Check again when updated market data is available.');
+
+    const storageCostPct = typeof predData.storage_cost_pct === 'number' 
+        ? predData.storage_cost_pct 
+        : (typeof predData.decision_score?.estimated_storage_cost_percent === 'number' 
+            ? predData.decision_score.estimated_storage_cost_percent 
+            : null);
+
+    const recColor = recAction === 'HOLD' ? '#4ade80' : (recAction === 'SELL' ? '#f87171' : '#fbbf24');
+    const recBg = recAction === 'HOLD' ? 'rgba(34,197,94,0.18)' : (recAction === 'SELL' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)');
+    const recBorder = recAction === 'HOLD' ? '#22c55e' : (recAction === 'SELL' ? '#ef4444' : '#f59e0b');
 
     // ── Assemble Simplified Farmer-Friendly HTML ─────────────────────────────
     const html = `
@@ -652,16 +665,56 @@ function renderPredResults(predData, crop, horizon, inputState) {
                     `}
                 </div>
             </div>
-
-            ${recAction ? `
-            <div style="margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                <div style="display:flex;align-items:center;gap:8px">
-                    <span style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;font-weight:600">Market Decision:</span>
-                    <span style="font-size:0.85rem;font-weight:800;padding:3px 10px;border-radius:5px;background:${recAction === 'HOLD' ? 'rgba(34,197,94,0.18)' : (recAction === 'SELL' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)')};color:${recAction === 'HOLD' ? '#4ade80' : (recAction === 'SELL' ? '#f87171' : '#fbbf24')};letter-spacing:0.5px">${recAction}</span>
-                </div>
-                ${recReason ? `<div style="font-size:0.84rem;color:#cbd5e1;line-height:1.45;flex:1">${recReason}</div>` : ''}
-            </div>` : ''}
         </div>
+
+        <!-- 2. Restored Farmer's Market Recommendation (SELL / HOLD / WAIT) -->
+        ${recAction ? `
+        <div class="glass-card" style="padding:18px 20px;margin-bottom:18px;border-left:4px solid ${recBorder};background:rgba(255,255,255,0.02)">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:10px">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px">Market Recommendation:</span>
+                    <span style="font-size:1.1rem;font-weight:800;padding:4px 16px;border-radius:6px;background:${recBg};color:${recColor};letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.2)">${recAction}</span>
+                </div>
+                <div style="font-size:0.76rem;color:#94a3b8">
+                    Forecast Horizon: <strong style="color:#f8fafc">${horizon} Days</strong>
+                </div>
+            </div>
+
+            <div style="font-size:0.92rem;color:#f1f5f9;line-height:1.55;margin-bottom:14px">
+                ${recReason}
+            </div>
+
+            <!-- Decision Inputs Breakdown -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;padding:12px 14px;background:rgba(0,0,0,0.25);border-radius:8px;border:1px solid rgba(255,255,255,0.06);margin-bottom:10px">
+                <div>
+                    <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;font-weight:600">Current Mandi Price</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:#34d399;margin-top:2px">
+                        ${displaySpotNum != null ? `₹${Math.round(displaySpotNum).toLocaleString('en-IN')} <span style="font-size:0.7rem;font-weight:500;color:#94a3b8">/ qtl</span>` : '—'}
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;font-weight:600">Expected Price (${horizon}d)</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:#a78bfa;margin-top:2px">
+                        ${isPredAvailable ? `₹${Math.round(predPriceNum).toLocaleString('en-IN')} <span style="font-size:0.7rem;font-weight:500;color:#94a3b8">/ qtl</span>` : '—'}
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;font-weight:600">Expected Change</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:${diffVal != null && diffVal >= 0 ? '#4ade80' : '#f87171'};margin-top:2px">
+                        ${(diffVal !== null && changePct !== null) ? `${diffVal >= 0 ? '+' : ''}₹${Math.round(Math.abs(diffVal)).toLocaleString('en-IN')} (${diffVal >= 0 ? '+' : ''}${changePct.toFixed(1)}%)` : '—'}
+                    </div>
+                </div>
+                ${storageCostPct != null ? `
+                <div>
+                    <div style="font-size:0.68rem;color:#94a3b8;text-transform:uppercase;font-weight:600">Est. Holding Cost</div>
+                    <div style="font-size:0.95rem;font-weight:700;color:#fbbf24;margin-top:2px">${storageCostPct.toFixed(1)}%</div>
+                </div>` : ''}
+            </div>
+
+            <div style="font-size:0.72rem;color:#94a3b8">
+                ℹ️ Model-based decision guidance based on configured decision rules and estimated holding decay. Future prices and profits are not guaranteed.
+            </div>
+        </div>` : ''}
 
         <!-- 2. Simplified Price Graph with Horizon Tabs -->
         ${isPredAvailable ? `
