@@ -137,6 +137,11 @@ async def security_and_timing_middleware(request: Request, call_next):
     response.headers["X-XSS-Protection"] = "1; mode=block"
 
     path = request.url.path
+    if path == "/" or path.endswith(".html") or path.endswith(".js") or path.endswith(".css"):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+
     if not path.startswith("/static") and not path.endswith(".css") and not path.endswith(".js"):
         logger.info(
             f"HTTP {request.method} {path} -> {response.status_code} ({latency_ms} ms)"
