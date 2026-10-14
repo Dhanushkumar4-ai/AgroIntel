@@ -199,25 +199,26 @@ def test_statutory_msp_segregation():
 
 def test_observation_date_semantics_previous_day():
     """
-    If a record was observed on 2026-10-12 and queried on 2026-10-13,
+    If a record was observed yesterday,
     it must be explicitly flagged as PREVIOUS_DAY and 'Previous-Day Observation (1 day old)'.
     Under no circumstances should the system overwrite observation_date with today's date!
     """
+    yesterday_str = (date.today() - timedelta(days=1)).isoformat()
     res = MandiPriceResult(
         crop="wheat",
         modal_price=3888.49,
-        arrival_date="2026-10-12",
-        observation_date="2026-10-12",
+        arrival_date=yesterday_str,
+        observation_date=yesterday_str,
         state="Karnataka",
         source="agmarknet_v2",
         price_status="PREVIOUS_DAY",
         status_label="Previous-Day Observation (1 day old)",
     )
     d = res.to_transparency_dict()
-    assert d["observation_date"] == "2026-10-12"
+    assert d["observation_date"] == yesterday_str
     assert d["price_status"] == "PREVIOUS_DAY"
     assert "Previous-Day" in d["status_label"]
-    assert d["observation_date"] != "2026-10-13"
+    assert d["observation_date"] != date.today().isoformat()
 
 
 def test_observation_date_same_day():
