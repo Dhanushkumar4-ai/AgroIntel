@@ -518,6 +518,7 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
             "observation_date":   observation_date_str or None,
             "market_name":        market_name,
             "data_age_days":      data_age_days,
+            "price_status":       live_data.get("price_status") or ("LIVE_TODAY" if (data_age_days is not None and data_age_days == 0) else ("PREVIOUS_DAY" if (data_age_days is not None and data_age_days == 1) else ("STALE" if (data_age_days is not None and data_age_days > 1) else "HISTORICAL_FALLBACK"))),
             "price_data_source":  price_data_source,
             "price_cached_time":  price_cached_time,
             "forecast_scope":     forecast_scope,
@@ -545,30 +546,23 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
 
     if data_age_days is not None and data_age_days > 14:
         recommendation = "WAIT"
-        reason = (f"The latest Mandi price observation is {data_age_days} days old. "
-                  f"Market conditions may have changed. "
-                  f"Verify current local Mandi rates before making a transaction decision.")
+        reason = "The available price data is stale or insufficient for a reliable recommendation. Check again when updated market data is available."
     elif net_expected_change > uncertainty_threshold:
         recommendation = "HOLD"
-        reason = (f"The {horizon_days}-day forecast projects a gross price increase of {percent_change:+.1f}%. "
-                  f"After accounting for {horizon_days}-day holding and storage costs ({storage_cost_pct:.1f}%), "
-                  f"the net expected gain is {net_expected_change:+.1f}%. "
-                  f"Holding inventory is economically favorable.")
+        reason = (f"The forecast suggests the price may rise enough (+{percent_change:.1f}%) "
+                  f"to justify waiting after estimated holding costs ({storage_cost_pct:.1f}%). Future prices are not guaranteed.")
     elif percent_change <= -uncertainty_threshold:
         recommendation = "SELL"
-        reason = (f"The {horizon_days}-day forecast indicates an expected price decline of {abs(percent_change):.1f}% "
-                  f"(from Rs.{current_price:,.0f} to Rs.{predicted_price:,.0f}/q). "
-                  f"Selling at current observed Mandi rates locks in value and avoids downside risk.")
+        reason = (f"Prices are expected to decline ({percent_change:.1f}%) over the {horizon_days}-day horizon, "
+                  f"so selling now at current market rates is recommended to avoid downside risk.")
     else:
         recommendation = "SELL" if net_expected_change < 0 else "WAIT"
         if recommendation == "SELL":
-            reason = (f"Projected price movement ({percent_change:+.1f}%) does not cover estimated "
-                      f"{horizon_days}-day holding and storage decay costs ({storage_cost_pct:.1f}%), "
-                      f"resulting in a net expected return of {net_expected_change:+.1f}%. "
-                      f"Selling current harvest is recommended.")
+            reason = (f"The expected price increase (+{percent_change:.1f}%) may not cover the estimated "
+                      f"cost of holding the crop ({storage_cost_pct:.1f}%), so selling now may be preferable under the configured rules.")
         else:
-            reason = (f"The {horizon_days}-day forecast indicates marginal price movement ({percent_change:+.1f}%), "
-                      f"remaining within model uncertainty bounds. Prices are expected to remain relatively stable.")
+            reason = (f"Projected price movement (+{percent_change:.1f}%) remains within model uncertainty bounds, "
+                      f"so waiting for clearer market signals is recommended.")
 
     # ── Black Swan context ────────────────────────────────────────────────────
     black_swan_info = None
@@ -581,8 +575,8 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
         }
         if recommendation == "HOLD" and percent_change < 8.0:
             recommendation = "WAIT"
-            reason = (f"An active market disruption ({active_event['label']}) "
-                      f"introduces significant price uncertainty. Verify local conditions before acting.")
+            reason = (f"Active market disruption ({active_event['label']}) "
+                      f"introduces price volatility. Waiting for stable market signals is recommended.")
 
     # ── News Intelligence Integration & Forecast Alignment ───────────────────
     news_intelligence = {
@@ -637,17 +631,11 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
         if align_res["forecast_alignment"] == "CONFLICTING":
             if recommendation == "HOLD":
                 recommendation = "WAIT"
-                reason += (
-                    f" Additionally, conflicting agricultural news signals ({align_res['aggregate_market_signal']}) "
-                    f"create market uncertainty. Exercising caution is strongly recommended."
-                )
+                reason = "Conflicting agricultural news signals create price uncertainty. Waiting for clearer market trends is recommended."
         elif align_res["forecast_alignment"] == "WEAKENING":
             if recommendation == "HOLD" and net_expected_change < 6.0:
                 recommendation = "WAIT"
-                reason += (
-                    f" Furthermore, recent verified news reports indicate {align_res['aggregate_market_signal'].lower()} "
-                    f"headwinds that could erode projected holding gains."
-                )
+                reason = "Recent verified market news indicates bearish headwinds that could erode holding gains. Waiting is recommended."
     except Exception as e:
         logger.debug(f"News intelligence advisory integration note: {e}")
 
@@ -813,6 +801,7 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
         "observation_date":           observation_date_str or None,
         "market_name":                market_name,
         "data_age_days":              data_age_days,
+        "price_status":               live_data.get("price_status") or ("LIVE_TODAY" if (data_age_days is not None and data_age_days == 0) else ("PREVIOUS_DAY" if (data_age_days is not None and data_age_days == 1) else ("STALE" if (data_age_days is not None and data_age_days > 1) else "HISTORICAL_FALLBACK"))),
         "price_data_source":          price_data_source,
         "price_cached_time":          price_cached_time,
         "price_data_quality":         live_data.get("data_quality", "unknown"),
@@ -826,6 +815,12 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
         "max_price":                  live_data.get("max_price"),
         "msp_price":                  live_data.get("msp_price"),
         "msp_season":                 live_data.get("msp_season"),
+        "farm_gate_modal_price":      live_data.get("farm_gate_modal_price"),
+        "farm_gate_range":            live_data.get("farm_gate_range"),
+        "state_composite_index":      live_data.get("state_composite_index"),
+        "reconciliation_notice":      live_data.get("reconciliation_notice"),
+        "district_breakdown":         live_data.get("district_breakdown", []),
+        "market_scope_type":          live_data.get("market_scope_type", f"State-wide Scope ({state})"),
         "variety":                    live_data.get("variety", "All Reporting Varieties (State-wide Pre-Aggregated)"),
         "market_scope":               live_data.get("market_scope", f"State-wide Scope ({state})"),
         "contributing_records_count": live_data.get("contributing_records_count", 1),
@@ -833,10 +828,13 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
         "aggregation_method":         live_data.get("aggregation_method", "Official Arrival-Weighted State Modal Average (wt_avg_price)"),
         "price_transparency":         live_data.get("price_transparency") or {
             "source":                     price_data_source,
+            "source_url":                 "https://agmarknet.gov.in",
             "observation_date":           observation_date_str,
             "selected_state":             state,
+            "state":                      state,
             "market_scope":               live_data.get("market_scope", f"State-wide Scope ({state})"),
             "commodity":                  crop.capitalize(),
+            "commodity_name":             crop.capitalize(),
             "variety":                    live_data.get("variety", "All Reporting Varieties (State-wide Pre-Aggregated)"),
             "modal_price":                round(float(current_price), 2) if current_price else None,
             "modal_price_display":        f"₹{round(float(current_price)):,}/quintal" if current_price else "—",
@@ -844,6 +842,12 @@ def predict_price(crop: str, state: str = "All", horizon_days: int = 30) -> dict
             "max_price":                  live_data.get("max_price"),
             "msp_price":                  live_data.get("msp_price"),
             "msp_season":                 live_data.get("msp_season"),
+            "farm_gate_modal_price":      live_data.get("farm_gate_modal_price"),
+            "farm_gate_range":            live_data.get("farm_gate_range"),
+            "state_composite_index":      live_data.get("state_composite_index"),
+            "reconciliation_notice":      live_data.get("reconciliation_notice"),
+            "district_breakdown":         live_data.get("district_breakdown", []),
+            "market_scope_type":          live_data.get("market_scope_type", f"State-wide Scope ({state})"),
             "contributing_records_count": live_data.get("contributing_records_count", 1),
             "contributing_records":       live_data.get("contributing_records", []),
             "aggregation_method":         live_data.get("aggregation_method", "Official Arrival-Weighted State Modal Average (wt_avg_price)"),

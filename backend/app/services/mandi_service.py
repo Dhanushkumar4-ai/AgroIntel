@@ -568,10 +568,15 @@ def _fetch_agmarknet_v2(
             mw_rec = _fetch_agmarknet_marketwise(crop_clean, cid, target_state_id, today_str) if target_state_id else None
             farm_gate_modal = None
             farm_gate_date = None
+            farm_gate_arrival = None
             if mw_rec and mw_rec.get("as_on_price") and mw_rec.get("as_on_price") != "None":
                 try:
                     farm_gate_modal = float(mw_rec["as_on_price"])
                     farm_gate_date = mw_rec.get("reported_date")
+                    if mw_rec.get("arrival_quantity"):
+                        farm_gate_arrival = float(mw_rec["arrival_quantity"])
+                    elif mw_rec.get("arrival_tonnes"):
+                        farm_gate_arrival = float(mw_rec["arrival_tonnes"])
                 except (ValueError, TypeError):
                     farm_gate_modal = None
 
